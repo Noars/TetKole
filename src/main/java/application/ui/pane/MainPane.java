@@ -2,7 +2,7 @@ package application.ui.pane;
 
 import application.Main;
 import application.ui.buttons.Buttons;
-import utils.imageButton;
+import utils.ImageButton;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -31,7 +31,7 @@ public class MainPane extends BorderPane {
 
     public Button createPlayStopAudioFileButton(Main main) {
         Button playStopAudioFile = new Buttons("Ajouter un fichier audio");
-        playStopAudioFile.setGraphic(imageButton.createAddButtonImageView("images/add.png"));
+        playStopAudioFile.setGraphic(ImageButton.createAddButtonImageView("images/add.png"));
         playStopAudioFile.getStyleClass().add("noColor");
         playStopAudioFile.setContentDisplay(ContentDisplay.TOP);
         playStopAudioFile.setPrefHeight(250);

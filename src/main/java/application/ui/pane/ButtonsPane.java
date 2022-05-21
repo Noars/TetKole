@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import utils.imageButton;
+import utils.ImageButton;
 
 public class ButtonsPane extends BorderPane {
 
@@ -36,7 +36,7 @@ public class ButtonsPane extends BorderPane {
 
     public Button createPlayStopAudioFileButton(Main main) {
         Button playStopAudioFile = new Buttons();
-        playStopAudioFile.setGraphic(imageButton.createButtonImageView("images/play.png"));
+        playStopAudioFile.setGraphic(ImageButton.createButtonImageView("images/play.png"));
         playStopAudioFile.getStyleClass().add("blue");
         playStopAudioFile.setContentDisplay(ContentDisplay.TOP);
         playStopAudioFile.setPrefHeight(50);
@@ -55,7 +55,7 @@ public class ButtonsPane extends BorderPane {
 
     public Button createRecordButton(Main main){
         Button record = new Buttons();
-        record.setGraphic(imageButton.createButtonImageView("images/record.png"));
+        record.setGraphic(ImageButton.createButtonImageView("images/record.png"));
         record.getStyleClass().add("blue");
         record.setContentDisplay(ContentDisplay.TOP);
         record.setPrefHeight(50);

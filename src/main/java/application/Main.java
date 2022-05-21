@@ -45,6 +45,7 @@ public class Main extends Application {
         optionsPane = new OptionsPane(this, primaryStage);
         mainPane = new MainPane(this, this.widthScreen);
         buttonsPane = new ButtonsPane(this, this.widthScreen);
+        emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
         decoratedPane.setCenter(mainPane);
