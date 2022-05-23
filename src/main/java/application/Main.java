@@ -1,6 +1,8 @@
 package application;
 
 import application.ui.pane.*;
+import utils.wave.WaveFormService;
+import application.ui.pane.WavePane;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -16,13 +18,13 @@ public class Main extends Application {
     @Getter
     DecoratedPane decoratedPane;
     @Getter
-    MainPane mainPane;
-    @Getter
     ButtonsPane buttonsPane;
     @Getter
     OptionsPane optionsPane;
     @Getter
     EmptyPane emptyPane;
+
+    WavePane wavePane;
 
     int widthScreen, heightScreen;
 
@@ -43,12 +45,12 @@ public class Main extends Application {
         primaryStage.setTitle("TranslateAudioFiles");
 
         optionsPane = new OptionsPane(this, primaryStage);
-        mainPane = new MainPane(this, this.widthScreen);
-        buttonsPane = new ButtonsPane(this, this.widthScreen);
+        buttonsPane = new ButtonsPane(this, primaryStage, this.widthScreen);
+        wavePane = new WavePane(200, 32);
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
-        decoratedPane.setCenter(mainPane);
+        decoratedPane.setCenter(wavePane);
         decoratedPane.setBottom(buttonsPane);
 
         Scene scene = new Scene(decoratedPane, primaryStage.getWidth(), primaryStage.getHeight());
@@ -65,9 +67,13 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
-    public void goToMain(Stage primaryStage){
+    public void goToHome(Stage primaryStage){
         primaryStage.getScene().setRoot(decoratedPane);
-        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(mainPane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
+    }
+
+    public void useAudioFile(String pathAudioFile){
+        wavePane.getWaveService().startService(pathAudioFile, WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
     }
 }

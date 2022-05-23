@@ -1,7 +1,9 @@
 package application.ui.pane;
 
 import application.Main;
-import application.ui.buttons.Buttons;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import utils.buttons.Buttons;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -9,7 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import utils.ImageButton;
+import utils.buttons.ImageButton;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ButtonsPane extends BorderPane {
 
@@ -17,21 +22,26 @@ public class ButtonsPane extends BorderPane {
     boolean runningRecord = false;
 
     HBox hbox;
+    FileChooser fileChooser = new FileChooser();
 
-    public ButtonsPane(Main main, int widthScreen){
+    public ButtonsPane(Main main, Stage primaryStage, int widthScreen){
         super();
         this.setWidth(widthScreen);
 
+        Button newAudioFile = createNewAudioFileButton(main, primaryStage);
+        Button returnBack = createReturnBackButton(main);
         Button playStopAudioFile = createPlayStopAudioFileButton(main);
         Button record = createRecordButton(main);
+        Button seeJsonFolder = createSeeJsonFolder(main);
 
-        hbox = new HBox(playStopAudioFile, record);
+        hbox = new HBox(newAudioFile, returnBack, playStopAudioFile, record, seeJsonFolder);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(hbox, Pos.CENTER);
         this.setCenter(hbox);
 
         this.setStyle("-fx-background-color: #535e65");
+        this.extensionAudioFiles();
     }
 
     public Button createPlayStopAudioFileButton(Main main) {
@@ -70,5 +80,59 @@ public class ButtonsPane extends BorderPane {
             }
         });
         return record;
+    }
+
+    public Button createNewAudioFileButton(Main main, Stage primaryStage){
+        Button newAudioFile = new Buttons();
+        newAudioFile.setGraphic(ImageButton.createButtonImageView("images/add.png"));
+        newAudioFile.getStyleClass().add("blue");
+        newAudioFile.setContentDisplay(ContentDisplay.TOP);
+        newAudioFile.setPrefHeight(50);
+        newAudioFile.setPrefWidth(300);
+        newAudioFile.setOnAction((e) -> {
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null){
+                main.useAudioFile(String.valueOf(file));
+            }
+        });
+        return  newAudioFile;
+    }
+
+    public Button createReturnBackButton(Main main){
+        Button returnBack = new Buttons();
+        returnBack.setGraphic(ImageButton.createButtonImageView("images/back.png"));
+        returnBack.getStyleClass().add("blue");
+        returnBack.setContentDisplay(ContentDisplay.TOP);
+        returnBack.setPrefHeight(50);
+        returnBack.setPrefWidth(300);
+        returnBack.setOnAction((e) -> {
+
+        });
+        return  returnBack;
+    }
+
+    public Button createSeeJsonFolder(Main main){
+        Button seeJsonFolder = new Buttons();
+        seeJsonFolder.setGraphic(ImageButton.createButtonImageView("images/folder.png"));
+        seeJsonFolder.getStyleClass().add("blue");
+        seeJsonFolder.setContentDisplay(ContentDisplay.TOP);
+        seeJsonFolder.setPrefHeight(50);
+        seeJsonFolder.setPrefWidth(300);
+        seeJsonFolder.setOnAction((e) -> {
+            try {
+                String pathFolder = "C://Users//" + System.getProperty("user.name") + "//Documents";
+                Runtime.getRuntime().exec("explorer.exe /select," + pathFolder);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        return  seeJsonFolder;
+    }
+
+    public void extensionAudioFiles(){
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("MP3 Files", "*.mp3"),
+                new FileChooser.ExtensionFilter("WAV Files", "*.wav")
+        );
     }
 }
