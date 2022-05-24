@@ -1,6 +1,7 @@
 package application.ui.pane;
 
 import application.Main;
+import application.ui.files.RecordVoice;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utils.buttons.Buttons;
@@ -23,16 +24,19 @@ public class ButtonsPane extends BorderPane {
 
     HBox hbox;
     FileChooser fileChooser = new FileChooser();
+    RecordVoice recordVoice;
 
-    public ButtonsPane(Main main, Stage primaryStage, int widthScreen){
+    public ButtonsPane(Main main, Stage primaryStage, int widthScreen, String folderPath){
         super();
         this.setWidth(widthScreen);
+
+        recordVoice = new RecordVoice(folderPath);
 
         Button newAudioFile = createNewAudioFileButton(main, primaryStage);
         Button returnBack = createReturnBackButton(main);
         Button playStopAudioFile = createPlayStopAudioFileButton(main);
-        Button record = createRecordButton(main);
-        Button seeJsonFolder = createSeeJsonFolder(main);
+        Button record = createRecordButton();
+        Button seeJsonFolder = createSeeJsonFolder();
 
         hbox = new HBox(newAudioFile, returnBack, playStopAudioFile, record, seeJsonFolder);
         hbox.setSpacing(5);
@@ -63,7 +67,7 @@ public class ButtonsPane extends BorderPane {
         return playStopAudioFile;
     }
 
-    public Button createRecordButton(Main main){
+    public Button createRecordButton(){
         Button record = new Buttons();
         record.setGraphic(ImageButton.createButtonImageView("images/record.png"));
         record.getStyleClass().add("blue");
@@ -73,9 +77,11 @@ public class ButtonsPane extends BorderPane {
         record.setOnAction((e) -> {
             if (runningRecord) {
                 runningRecord = false;
+                recordVoice.stopRecording();
                 ((ImageView) record.getGraphic()).setImage(new Image("images/record.png"));
             } else {
                 runningRecord = true;
+                recordVoice.startRecording();
                 ((ImageView) record.getGraphic()).setImage(new Image("images/stopRecord.png"));
             }
         });
@@ -111,7 +117,7 @@ public class ButtonsPane extends BorderPane {
         return  returnBack;
     }
 
-    public Button createSeeJsonFolder(Main main){
+    public Button createSeeJsonFolder(){
         Button seeJsonFolder = new Buttons();
         seeJsonFolder.setGraphic(ImageButton.createButtonImageView("images/folder.png"));
         seeJsonFolder.getStyleClass().add("blue");
@@ -120,7 +126,7 @@ public class ButtonsPane extends BorderPane {
         seeJsonFolder.setPrefWidth(300);
         seeJsonFolder.setOnAction((e) -> {
             try {
-                String pathFolder = "C://Users//" + System.getProperty("user.name") + "//Documents";
+                String pathFolder = "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\translateAudioFiles\\JsonFiles";
                 Runtime.getRuntime().exec("explorer.exe /select," + pathFolder);
             } catch (IOException ex) {
                 ex.printStackTrace();

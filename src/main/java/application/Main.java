@@ -1,6 +1,8 @@
 package application;
 
+import application.ui.files.RecordVoice;
 import application.ui.pane.*;
+import utils.save.SaveFolder;
 import utils.wave.WaveFormService;
 import application.ui.pane.WavePane;
 import javafx.application.Application;
@@ -24,6 +26,8 @@ public class Main extends Application {
     @Getter
     EmptyPane emptyPane;
 
+    SaveFolder saveFolder = new SaveFolder();
+    RecordVoice recordVoice;
     WavePane wavePane;
 
     int widthScreen, heightScreen;
@@ -33,7 +37,9 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
+
+        saveFolder.createSaveFolderWindows();
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         this.widthScreen = (int) dimension.getWidth();
@@ -44,8 +50,9 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TranslateAudioFiles");
 
+
         optionsPane = new OptionsPane(this, primaryStage);
-        buttonsPane = new ButtonsPane(this, primaryStage, this.widthScreen);
+        buttonsPane = new ButtonsPane(this, primaryStage, this.widthScreen, saveFolder.getFolderPath());
         wavePane = new WavePane(200, 32);
         emptyPane = new EmptyPane();
 
