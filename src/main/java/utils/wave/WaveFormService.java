@@ -3,6 +3,7 @@ package utils.wave;
 import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;
@@ -13,13 +14,13 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import application.ui.pane.WavePane;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import ws.schild.jave.Encoder;
-import ws.schild.jave.EncoderException;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.encode.AudioAttributes;
 import ws.schild.jave.encode.EncodingAttributes;
@@ -40,6 +41,9 @@ public class WaveFormService extends Service<Boolean> {
 	private Encoder encoder;
 	private ConvertProgressListener listener = new ConvertProgressListener();
 	private WaveFormJob waveFormJob;
+	private Media audioFile;
+	private MediaPlayer mediaPlayer;
+	private double ratioAudio = 0;
 
 	public enum WaveFormJob {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM;
@@ -67,6 +71,39 @@ public class WaveFormService extends Service<Boolean> {
 		}
 
 		restart();
+	}
+
+	public void setupMediaPlayer(String path){
+		audioFile = new Media(new File(path).toURI().toString());
+		mediaPlayer = new MediaPlayer(audioFile);
+
+		mediaPlayer.setOnReady(new Runnable() {
+			@Override
+			public void run() {
+				Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+				double duration = audioFile.getDuration().toSeconds();
+
+				if (dimension.getWidth() > duration){
+					ratioAudio = duration / dimension.getWidth();
+				}else {
+					ratioAudio = dimension.getWidth() / duration;
+				}
+			}
+		});
+	}
+
+	public void playStopMediaPlayer(boolean status){
+		if (audioFile != null){
+			if (status){
+				mediaPlayer.play();
+			}else{
+				mediaPlayer.pause();
+			}
+		}
+	}
+
+	public double getRatioAudio(){
+		return ratioAudio;
 	}
 
 	public void done() {
@@ -109,7 +146,7 @@ public class WaveFormService extends Service<Boolean> {
 				return true;
 			}
 
-			private float[] processFromNoWavFile(String fileFormat) throws IOException, UnsupportedAudioFileException, EncoderException {
+			private float[] processFromNoWavFile(String fileFormat) throws IOException {
 				int randomN = random.nextInt(99999);
 
 				File temporalDecodedFile = File.createTempFile("decoded_" + randomN, ".wav");
@@ -146,7 +183,7 @@ public class WaveFormService extends Service<Boolean> {
 					attributes.setAudioAttributes(audio);
 
 					encoder = encoder != null ? encoder : new Encoder();
-					encoder.encode(new MultimediaObject(sourceFile), destinationFile, attributes, (EncoderProgressListener) listener);
+					encoder.encode(new MultimediaObject(sourceFile), destinationFile, attributes, listener);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -178,7 +215,7 @@ public class WaveFormService extends Service<Boolean> {
 
 						int arrayCellValue;
 
-						while (pcmDecodedInput.readNBytes(buffer, 0, BUFFER_SIZE) > 0)
+						while (pcmDecodedInput.readNBytes(buffer, 0, BUFFER_SIZE) > 0){
 							for (int i = 0; i < buffer.length - 1; i += 2) {
 
 								arrayCellValue = (int) (((((buffer[i + 1] << 8) | buffer[i] & 0xff) << 16) / 32767) * WAVEFORM_HEIGHT_COEFFICIENT);
@@ -196,6 +233,7 @@ public class WaveFormService extends Service<Boolean> {
 									arrayCellPosition += 2;
 								}
 							}
+						}
 
 						return finalAmplitudes;
 					} catch (Exception ex) {

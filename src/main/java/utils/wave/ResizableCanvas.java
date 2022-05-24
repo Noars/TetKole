@@ -8,12 +8,12 @@ public class ResizableCanvas extends Canvas {
     public final GraphicsContext gc = getGraphicsContext2D();
 
     @Override
-    public double minHeight(double width) {
+    public double minHeight(double height) {
         return 1;
     }
 
     @Override
-    public double minWidth(double height) {
+    public double minWidth(double width) {
         return 1;
     }
 
@@ -23,8 +23,8 @@ public class ResizableCanvas extends Canvas {
     }
 
     @Override
-    public double prefHeight(double width) {
-        return minHeight(width);
+    public double prefHeight(double height) {
+        return minHeight(height);
     }
 
     @Override

@@ -11,6 +11,7 @@ public class WavePane extends WaveFormPane {
 	private final WaveFormService waveService;
 
 	private boolean recalculateWaveData;
+	private int step = 0;
 
 	public WavePane(int width, int height) {
 		super(width, height);
@@ -37,6 +38,14 @@ public class WavePane extends WaveFormPane {
 
 	}
 
+	public int timeAudio(){
+		return (int) (getTimerXPosition() * waveService.getRatioAudio());
+	}
+
+	public void setStep(int value){
+		this.step = value;
+	}
+
 	public PaintService getAnimationService() {
 		return animationService;
 	}
@@ -54,10 +63,6 @@ public class WavePane extends WaveFormPane {
 		clear();
 	}
 
-	public boolean isPainterServiceRunning() {
-		return animationService.isRunning();
-	}
-
 	public class PaintService extends AnimationTimer {
 
 		private volatile SimpleBooleanProperty running = new SimpleBooleanProperty(false);
@@ -72,16 +77,13 @@ public class WavePane extends WaveFormPane {
 			running.set(true);
 		}
 
-		public WavePane getWaveVisualization() {
-			return WavePane.this;
-		}
-
 		@Override
 		public void handle(long nanos) {
 
-			if (nanos >= previousNanos + 100000 * 1000) { //
+			if (nanos >= previousNanos + 100000 * 1000) {
 				previousNanos = nanos;
-				setTimerXPosition(getTimerXPosition() + 1);
+				setTimerXPosition(getTimerXPosition() + step);
+				setTimerAudio(timeAudio());
 			}
 
 			if (getWaveService().getResultingWaveform() == null || recalculateWaveData) {

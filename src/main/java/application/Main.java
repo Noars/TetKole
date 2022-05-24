@@ -27,7 +27,6 @@ public class Main extends Application {
     EmptyPane emptyPane;
 
     SaveFolder saveFolder = new SaveFolder();
-    RecordVoice recordVoice;
     WavePane wavePane;
 
     int widthScreen, heightScreen;
@@ -45,15 +44,15 @@ public class Main extends Application {
         this.widthScreen = (int) dimension.getWidth();
         this.heightScreen = (int) dimension.getHeight();
 
-        primaryStage.setWidth(this.widthScreen / 1.5);
-        primaryStage.setHeight(this.heightScreen / 1.5);
+        primaryStage.setWidth(this.widthScreen * 0.8);
+        primaryStage.setHeight(this.heightScreen * 0.8);
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TranslateAudioFiles");
 
 
         optionsPane = new OptionsPane(this, primaryStage);
-        buttonsPane = new ButtonsPane(this, primaryStage, this.widthScreen, saveFolder.getFolderPath());
         wavePane = new WavePane(200, 32);
+        buttonsPane = new ButtonsPane(this, primaryStage, wavePane, this.widthScreen, saveFolder.getFolderPath());
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -78,9 +77,5 @@ public class Main extends Application {
         primaryStage.getScene().setRoot(decoratedPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
-    }
-
-    public void useAudioFile(String pathAudioFile){
-        wavePane.getWaveService().startService(pathAudioFile, WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
     }
 }

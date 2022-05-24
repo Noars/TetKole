@@ -17,6 +17,10 @@ public class WaveFormPane extends ResizableCanvas {
 	private int mouseXPosition = -1;
 	private WavePane wavePane;
 
+	private int hoursAudioTime = 0;
+	private int minutesAudioTime = 0;
+	private int secondsAudioTime = 0;
+
 	public WaveFormPane(int width, int height) {
 		defaultWave = new float[width];
 		this.width = width;
@@ -24,8 +28,9 @@ public class WaveFormPane extends ResizableCanvas {
 		this.setWidth(width);
 		this.setHeight(height);
 
-		for (int i = 0; i < width; i++)
+		for (int i = 0; i < width; i++){
 			defaultWave[i] = 0.28802148f;
+		}
 		waveData = defaultWave;
 
 		backgroundColor = Color.web("#252525");
@@ -44,6 +49,12 @@ public class WaveFormPane extends ResizableCanvas {
 
 	public int getTimerXPosition() {
 		return timerXPosition;
+	}
+
+	public void setTimerAudio(int timerAudio){
+		this.hoursAudioTime = timerAudio / 3600;
+		this.minutesAudioTime = timerAudio / 60;
+		this.secondsAudioTime = timerAudio % 60;
 	}
 
 	public void setTimerXPosition(int timerXPosition) {
@@ -70,7 +81,7 @@ public class WaveFormPane extends ResizableCanvas {
 		gc.fillRect(0, 0, width, height);
 
 		gc.setStroke(foregroundColor);
-		if (waveData != null)
+		if (waveData != null){
 			for (int i = 0; i < waveData.length; i++) {
 				if (!wavePane.getAnimationService().isRunning()) {
 					clear();
@@ -81,12 +92,14 @@ public class WaveFormPane extends ResizableCanvas {
 				int y2 = y1 + 2 * value;
 				gc.strokeLine(i, y1, i, y2);
 			}
+		}
 
 		gc.setFill(transparentForeground);
 		gc.fillRect(0, 0, timerXPosition, height);
 
 		gc.setFill(Color.WHITE);
 		gc.fillOval(timerXPosition, 0, 1, height);
+		gc.strokeText(hoursAudioTime + "h:" + minutesAudioTime + "min:" + secondsAudioTime + "s", timerXPosition + 5, 15, 500);
 
 		if (mouseXPosition != -1) {
 			gc.setFill(mouseXColor);

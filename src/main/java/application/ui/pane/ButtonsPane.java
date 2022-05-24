@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import utils.buttons.ImageButton;
+import utils.wave.WaveFormService;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,15 +27,15 @@ public class ButtonsPane extends BorderPane {
     FileChooser fileChooser = new FileChooser();
     RecordVoice recordVoice;
 
-    public ButtonsPane(Main main, Stage primaryStage, int widthScreen, String folderPath){
+    public ButtonsPane(Main main, Stage primaryStage, WavePane wavePane, int widthScreen, String folderPath){
         super();
         this.setWidth(widthScreen);
 
         recordVoice = new RecordVoice(folderPath);
 
-        Button newAudioFile = createNewAudioFileButton(main, primaryStage);
+        Button newAudioFile = createNewAudioFileButton(wavePane, primaryStage);
         Button returnBack = createReturnBackButton(main);
-        Button playStopAudioFile = createPlayStopAudioFileButton(main);
+        Button playStopAudioFile = createPlayStopAudioFileButton(wavePane);
         Button record = createRecordButton();
         Button seeJsonFolder = createSeeJsonFolder();
 
@@ -48,7 +49,7 @@ public class ButtonsPane extends BorderPane {
         this.extensionAudioFiles();
     }
 
-    public Button createPlayStopAudioFileButton(Main main) {
+    public Button createPlayStopAudioFileButton(WavePane wavePane) {
         Button playStopAudioFile = new Buttons();
         playStopAudioFile.setGraphic(ImageButton.createButtonImageView("images/play.png"));
         playStopAudioFile.getStyleClass().add("blue");
@@ -58,9 +59,13 @@ public class ButtonsPane extends BorderPane {
         playStopAudioFile.setOnAction((e) -> {
             if (runningAudio) {
                 runningAudio = false;
+                wavePane.getWaveService().playStopMediaPlayer(false);
+                wavePane.setStep(0);
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/play.png"));
             } else {
                 runningAudio = true;
+                wavePane.getWaveService().playStopMediaPlayer(true);
+                wavePane.setStep(1);
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/pause.png"));
             }
         });
@@ -88,7 +93,7 @@ public class ButtonsPane extends BorderPane {
         return record;
     }
 
-    public Button createNewAudioFileButton(Main main, Stage primaryStage){
+    public Button createNewAudioFileButton(WavePane wavePane, Stage primaryStage){
         Button newAudioFile = new Buttons();
         newAudioFile.setGraphic(ImageButton.createButtonImageView("images/add.png"));
         newAudioFile.getStyleClass().add("blue");
@@ -98,7 +103,8 @@ public class ButtonsPane extends BorderPane {
         newAudioFile.setOnAction((e) -> {
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null){
-                main.useAudioFile(String.valueOf(file));
+                wavePane.getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
+                wavePane.getWaveService().setupMediaPlayer(String.valueOf(file));
             }
         });
         return  newAudioFile;
@@ -137,8 +143,7 @@ public class ButtonsPane extends BorderPane {
 
     public void extensionAudioFiles(){
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("MP3 Files", "*.mp3"),
-                new FileChooser.ExtensionFilter("WAV Files", "*.wav")
+                new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav")
         );
     }
 }
