@@ -43,6 +43,8 @@ public class WaveFormService extends Service<Boolean> {
 	private WaveFormJob waveFormJob;
 	private Media audioFile;
 	private MediaPlayer mediaPlayer;
+	private double dimensionWidth = 0;
+	private double durationAudioFile = 0;
 	private double ratioAudio = 0;
 
 	public enum WaveFormJob {
@@ -80,14 +82,9 @@ public class WaveFormService extends Service<Boolean> {
 		mediaPlayer.setOnReady(new Runnable() {
 			@Override
 			public void run() {
-				Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-				double duration = audioFile.getDuration().toSeconds();
-
-				if (dimension.getWidth() > duration){
-					ratioAudio = duration / dimension.getWidth();
-				}else {
-					ratioAudio = dimension.getWidth() / duration;
-				}
+				dimensionWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+				durationAudioFile = audioFile.getDuration().toSeconds();
+				ratioAudio = dimensionWidth / durationAudioFile;
 			}
 		});
 	}

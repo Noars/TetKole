@@ -10,16 +10,15 @@ public class WaveFormPane extends ResizableCanvas {
 	private Color backgroundColor;
 	private Color foregroundColor;
 	private Color transparentForeground;
-	private Color mouseXColor = Color.rgb(255, 255, 255, 0.7);
 	protected int width;
 	protected int height;
-	private int timerXPosition = 0;
-	private int mouseXPosition = -1;
+	private double timerXPosition = 0;
 	private WavePane wavePane;
+	private WaveFormService waveFormService;
 
-	private int hoursAudioTime = 0;
-	private int minutesAudioTime = 0;
-	private int secondsAudioTime = 0;
+	private double leftBorder;
+	private double rightBorder;
+	private final int sizeBorder = 10;
 
 	public WaveFormPane(int width, int height) {
 		defaultWave = new float[width];
@@ -27,6 +26,8 @@ public class WaveFormPane extends ResizableCanvas {
 		this.height = height;
 		this.setWidth(width);
 		this.setHeight(height);
+		this.leftBorder = width / 3.0;
+		this.rightBorder = (2 * width) / 3.0;
 
 		for (int i = 0; i < width; i++){
 			defaultWave[i] = 0.28802148f;
@@ -35,7 +36,6 @@ public class WaveFormPane extends ResizableCanvas {
 
 		backgroundColor = Color.web("#252525");
 		setForeground(Color.ORANGE);
-
 	}
 
 	public void setWaveData(float[] waveData) {
@@ -47,22 +47,12 @@ public class WaveFormPane extends ResizableCanvas {
 		transparentForeground = Color.rgb((int) ( foregroundColor.getRed() * 255 ), (int) ( foregroundColor.getGreen() * 255 ), (int) ( foregroundColor.getBlue() * 255 ), 0.3);
 	}
 
-	public int getTimerXPosition() {
+	public double getTimerXPosition() {
 		return timerXPosition;
 	}
 
-	public void setTimerAudio(int timerAudio){
-		this.hoursAudioTime = timerAudio / 3600;
-		this.minutesAudioTime = timerAudio / 60;
-		this.secondsAudioTime = timerAudio % 60;
-	}
-
-	public void setTimerXPosition(int timerXPosition) {
+	public void setTimerXPosition(double timerXPosition) {
 		this.timerXPosition = timerXPosition;
-	}
-
-	public void setMouseXPosition(int mouseXPosition) {
-		this.mouseXPosition = mouseXPosition;
 	}
 
 	public void clear() {
@@ -72,7 +62,7 @@ public class WaveFormPane extends ResizableCanvas {
 		gc.fillRect(0, 0, width, height);
 
 		gc.setStroke(foregroundColor);
-		gc.strokeLine(0, height / 2, width, height / 2);
+		gc.strokeLine(0, height / 2.0, width, height / 2.0);
 	}
 
 	public void paintWaveForm() {
@@ -94,21 +84,67 @@ public class WaveFormPane extends ResizableCanvas {
 			}
 		}
 
-		gc.setFill(transparentForeground);
-		gc.fillRect(0, 0, timerXPosition, height);
-
 		gc.setFill(Color.WHITE);
 		gc.fillOval(timerXPosition, 0, 1, height);
-		gc.strokeText(hoursAudioTime + "h:" + minutesAudioTime + "min:" + secondsAudioTime + "s", timerXPosition + 5, 15, 500);
 
-		if (mouseXPosition != -1) {
-			gc.setFill(mouseXColor);
-			gc.fillRect(mouseXPosition, 0, 3, height);
-		}
+		gc.setFill(Color.WHITE);
+		gc.fillRect(this.leftBorder, 0, this.sizeBorder, height);
+		gc.strokeText(this.calculTimeLeftBorder(), this.leftBorder - 60, 15, 500);
+		gc.fillRect(this.rightBorder, 0, this.sizeBorder, height);
+		gc.strokeText(this.calculTimeRightBorder(), this.rightBorder + 15, 15, 500);
+
+		gc.setFill(transparentForeground);
+		gc.fillRect(0, 0, this.leftBorder, height);
+		gc.fillRect((this.rightBorder + this.sizeBorder), 0, width, height);
+
+	}
+
+	public String calculTimeLeftBorder(){
+		int time = (int) (this.leftBorder / waveFormService.getRatioAudio());
+		int hoursLeftBorderTime = time / 3600;
+		int minutesLeftBorderTime = time /60;
+		int secondsLeftBorderTime = time % 60;
+		return hoursLeftBorderTime + "h:" + minutesLeftBorderTime + "min:" + secondsLeftBorderTime + "s";
+	}
+
+	public String calculTimeRightBorder(){
+		int time = (int) (this.rightBorder / waveFormService.getRatioAudio());
+		int hoursRightBorderTime = time / 3600;
+		int minutesRightBorderTime = time /60;
+		int secondsRightBorderTime = time % 60;
+		return hoursRightBorderTime + "h:" + minutesRightBorderTime + "min:" + secondsRightBorderTime + "s";
 	}
 
 	public void setWaveVisualization(WavePane wavePane) {
 		this.wavePane = wavePane;
+	}
+
+	public double getLeftBorder(){
+		return this.leftBorder;
+	}
+
+	public void setLeftBorder(double value){
+		if (value < (this.rightBorder - this.sizeBorder - 1)){
+			this.leftBorder = value;
+		}
+	}
+
+	public double getRightBorder(){
+		return this.rightBorder;
+	}
+
+	public void setRightBorder(double value){
+		if (value > (this.leftBorder + this.sizeBorder)){
+			this.rightBorder = value;
+		}
+	}
+
+	public int getSizeBorder(){
+		return this.sizeBorder;
+	}
+
+	public void sendWaveService(WaveFormService waveFormService){
+		this.waveFormService = waveFormService;
 	}
 
 }

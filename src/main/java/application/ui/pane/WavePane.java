@@ -11,13 +11,17 @@ public class WavePane extends WaveFormPane {
 	private final WaveFormService waveService;
 
 	private boolean recalculateWaveData;
-	private int step = 0;
+	private double stepPixel = 0;
+
+	private boolean isLeftBorder = false;
+	private boolean isRightBorder = false;
 
 	public WavePane(int width, int height) {
 		super(width, height);
 		super.setWaveVisualization(this);
 		waveService = new WaveFormService(this);
 		animationService = new PaintService();
+		super.sendWaveService(this.waveService);
 
 		widthProperty().addListener((observable , oldValue , newValue) -> {
 			this.width = Math.round(newValue.floatValue());
@@ -32,18 +36,41 @@ public class WavePane extends WaveFormPane {
 			clear();
 		});
 
-		setOnMouseMoved(m -> this.setMouseXPosition((int) m.getX()));
-		setOnMouseDragged(m -> this.setMouseXPosition((int) m.getX()));
-		setOnMouseExited(m -> this.setMouseXPosition(-1));
+		setOnMouseMoved(event -> {
+			if ((event.getX() >= super.getLeftBorder()) && (event.getX() <= (super.getLeftBorder() + super.getSizeBorder()))){
+				this.isLeftBorder = true;
+			}else if ((event.getX() >= super.getRightBorder()) && (event.getX() <= (super.getRightBorder() + super.getSizeBorder()))) {
+				this.isRightBorder = true;
+			}
+		});
+		setOnMouseDragged(event -> {
+			if (this.isLeftBorder){
+				super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));
+			}else if (this.isRightBorder) {
+				super.setRightBorder(event.getX() - (super.getSizeBorder() / 2.0));
+			}
+		});
+		setOnMouseDragReleased(event -> {
+			this.isLeftBorder = false;
+			this.isRightBorder = false;
+		});
+		setOnMouseReleased(event -> {
+			this.isLeftBorder = false;
+			this.isRightBorder = false;
+		});
+		setOnMouseExited(event -> {
+			this.isLeftBorder = false;
+			this.isRightBorder = false;
+		});
 
 	}
 
-	public int timeAudio(){
-		return (int) (getTimerXPosition() * waveService.getRatioAudio());
-	}
-
-	public void setStep(int value){
-		this.step = value;
+	public void setStep(boolean value){
+		if (value){
+            this.stepPixel = waveService.getRatioAudio();
+        }else {
+            this.stepPixel = 0.0;
+        }
 	}
 
 	public PaintService getAnimationService() {
@@ -80,10 +107,9 @@ public class WavePane extends WaveFormPane {
 		@Override
 		public void handle(long nanos) {
 
-			if (nanos >= previousNanos + 100000 * 1000) {
+			if (nanos >= (previousNanos + 999999999)) {
 				previousNanos = nanos;
-				setTimerXPosition(getTimerXPosition() + step);
-				setTimerAudio(timeAudio());
+				setTimerXPosition(getTimerXPosition() + stepPixel);
 			}
 
 			if (getWaveService().getResultingWaveform() == null || recalculateWaveData) {

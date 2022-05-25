@@ -1,9 +1,7 @@
 package application;
 
-import application.ui.files.RecordVoice;
 import application.ui.pane.*;
 import utils.save.SaveFolder;
-import utils.wave.WaveFormService;
 import application.ui.pane.WavePane;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -11,23 +9,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lombok.Getter;
 
 import java.awt.*;
 
 public class Main extends Application {
 
-    @Getter
     DecoratedPane decoratedPane;
-    @Getter
     ButtonsPane buttonsPane;
-    @Getter
     OptionsPane optionsPane;
-    @Getter
     EmptyPane emptyPane;
-
-    SaveFolder saveFolder = new SaveFolder();
     WavePane wavePane;
+    SaveFolder saveFolder = new SaveFolder();
 
     int widthScreen, heightScreen;
 
@@ -51,8 +43,8 @@ public class Main extends Application {
 
 
         optionsPane = new OptionsPane(this, primaryStage);
-        wavePane = new WavePane(200, 32);
-        buttonsPane = new ButtonsPane(this, primaryStage, wavePane, this.widthScreen, saveFolder.getFolderPath());
+        wavePane = new WavePane(this.widthScreen, this.heightScreen);
+        buttonsPane = new ButtonsPane(this, primaryStage, this.widthScreen, saveFolder.getFolderPath());
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -78,4 +70,14 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
     }
+
+    public void setNewWavePane(Stage primaryStage){
+        wavePane = new WavePane(this.widthScreen, this.heightScreen);
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
+    }
+
+    public WavePane getWavePane(){
+        return this.wavePane;
+    }
+
 }
