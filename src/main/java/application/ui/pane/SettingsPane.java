@@ -9,11 +9,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class OptionsPane extends BorderPane {
+public class SettingsPane extends BorderPane {
 
     HBox hbox;
 
-    public OptionsPane(Main main, Stage primaryStage){
+    public SettingsPane(Main main, Stage primaryStage){
         super();
 
         GridPane gridPane = new GridPane();
@@ -50,6 +50,6 @@ public class OptionsPane extends BorderPane {
         BorderPane.setAlignment(gridPane, Pos.CENTER);
         this.setCenter(hbox);
 
-        this.setStyle("-fx-background-color: #535e65; -fx-background-radius: 0 0 15 15");
+        this.setStyle("-fx-background-color: #535e65");
     }
 }

@@ -1,7 +1,7 @@
 package application;
 
 import application.ui.pane.*;
-import utils.save.SaveFolder;
+import utils.files.SaveFolder;
 import application.ui.pane.WavePane;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,9 +16,10 @@ public class Main extends Application {
 
     DecoratedPane decoratedPane;
     ButtonsPane buttonsPane;
-    OptionsPane optionsPane;
+    SettingsPane settingsPane;
     EmptyPane emptyPane;
     WavePane wavePane;
+    RecordPane recordPane;
     SaveFolder saveFolder = new SaveFolder();
 
     int widthScreen, heightScreen;
@@ -42,9 +43,10 @@ public class Main extends Application {
         primaryStage.setTitle("TranslateAudioFiles");
 
 
-        optionsPane = new OptionsPane(this, primaryStage);
+        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
+        settingsPane = new SettingsPane(this, primaryStage);
         wavePane = new WavePane(this.widthScreen, this.heightScreen);
-        buttonsPane = new ButtonsPane(this, primaryStage, this.widthScreen, saveFolder.getFolderPath());
+        buttonsPane = new ButtonsPane(this, primaryStage);
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -61,7 +63,7 @@ public class Main extends Application {
     }
 
     public void goToOption(Stage primaryStage){
-        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(optionsPane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(settingsPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
@@ -69,6 +71,11 @@ public class Main extends Application {
         primaryStage.getScene().setRoot(decoratedPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
+    }
+
+    public void goToRecord(Stage primaryStage){
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(recordPane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
     public void setNewWavePane(Stage primaryStage){

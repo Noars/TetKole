@@ -28,9 +28,22 @@
     -fx-background-color: derive( #3f4152 , 20% );
 }
 
-.text {
+.textLabel {
     -fx-font-weight: bold;
     -fx-text-fill: white;
+    -fx-font-family: Futura;
+}
+
+.errorLabel {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: red;
+    -fx-font-family: Futura;
+}
+
+.textField {
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
     -fx-font-family: Futura;
 }
 
