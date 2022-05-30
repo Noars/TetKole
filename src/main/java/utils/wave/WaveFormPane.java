@@ -102,7 +102,7 @@ public class WaveFormPane extends ResizableCanvas {
 	public String calculTimeLeftBorder(){
 		int time = (int) (this.leftBorder / waveFormService.getRatioAudio());
 		int hoursLeftBorderTime = time / 3600;
-		int minutesLeftBorderTime = time /60;
+		int minutesLeftBorderTime = (time % 3600) / 60;
 		int secondsLeftBorderTime = time % 60;
 		return hoursLeftBorderTime + "h:" + minutesLeftBorderTime + "min:" + secondsLeftBorderTime + "s";
 	}
@@ -110,7 +110,7 @@ public class WaveFormPane extends ResizableCanvas {
 	public String calculTimeRightBorder(){
 		int time = (int) (this.rightBorder / waveFormService.getRatioAudio());
 		int hoursRightBorderTime = time / 3600;
-		int minutesRightBorderTime = time /60;
+		int minutesRightBorderTime = (time % 3600) / 60;
 		int secondsRightBorderTime = time % 60;
 		return hoursRightBorderTime + "h:" + minutesRightBorderTime + "min:" + secondsRightBorderTime + "s";
 	}
