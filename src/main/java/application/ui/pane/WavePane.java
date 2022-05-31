@@ -16,7 +16,7 @@ public class WavePane extends WaveFormPane {
 	private boolean isLeftBorder = false;
 	private boolean isRightBorder = false;
 
-	public WavePane(int width, int height) {
+	public WavePane(ButtonsPane buttonsPane, int width, int height) {
 		super(width, height);
 		super.setWaveVisualization(this);
 		waveService = new WaveFormService(this);
@@ -37,18 +37,24 @@ public class WavePane extends WaveFormPane {
 		});
 
 		setOnMouseMoved(event -> {
-			if ((event.getX() >= super.getLeftBorder()) && (event.getX() <= (super.getLeftBorder() + super.getSizeBorder()))){
+			if ((event.getX() >= (super.getLeftBorder() - super.getSizeBorder())) && (event.getX() <= super.getLeftBorder())){
 				this.isLeftBorder = true;
 			}else if ((event.getX() >= super.getRightBorder()) && (event.getX() <= (super.getRightBorder() + super.getSizeBorder()))) {
 				this.isRightBorder = true;
+			}else {
+				this.isLeftBorder = false;
+				this.isRightBorder = false;
 			}
 		});
 		setOnMouseDragged(event -> {
+			buttonsPane.stopMusic();
+			waveService.playStopMediaPlayer("stop");
 			if (this.isLeftBorder){
 				super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));
 			}else if (this.isRightBorder) {
 				super.setRightBorder(event.getX() - (super.getSizeBorder() / 2.0));
 			}
+			waveService.startTimeMediaPlayer(super.getCurrentTime());
 		});
 		setOnMouseDragReleased(event -> {
 			this.isLeftBorder = false;

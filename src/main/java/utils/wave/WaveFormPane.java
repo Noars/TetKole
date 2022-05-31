@@ -3,6 +3,8 @@ package utils.wave;
 import application.ui.pane.WavePane;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
+
 public class WaveFormPane extends ResizableCanvas {
 
 	private final float[] defaultWave;
@@ -12,7 +14,7 @@ public class WaveFormPane extends ResizableCanvas {
 	private Color transparentForeground;
 	protected int width;
 	protected int height;
-	private double timerXPosition = 0;
+	private double timerXPosition;
 	private WavePane wavePane;
 	private WaveFormService waveFormService;
 
@@ -28,6 +30,7 @@ public class WaveFormPane extends ResizableCanvas {
 		this.setHeight(height);
 		this.leftBorder = width / 3.0;
 		this.rightBorder = (2 * width) / 3.0;
+		this.timerXPosition = this.leftBorder;
 
 		for (int i = 0; i < width; i++){
 			defaultWave[i] = 0.28802148f;
@@ -84,35 +87,75 @@ public class WaveFormPane extends ResizableCanvas {
 			}
 		}
 
-		gc.setFill(Color.WHITE);
+		gc.setFill(Color.RED);
 		gc.fillOval(timerXPosition, 0, 1, height);
 
 		gc.setFill(Color.WHITE);
-		gc.fillRect(this.leftBorder, 0, this.sizeBorder, height);
-		gc.strokeText(this.calculTimeLeftBorder(), this.leftBorder - 60, 15, 500);
+		gc.fillRect(this.leftBorder - this.sizeBorder, 0, this.sizeBorder, height);
+		gc.strokeText(this.calculTimeLeftBorder(), this.posLeftStrokeText(), this.adjustPosYStrokeText(), 500);
 		gc.fillRect(this.rightBorder, 0, this.sizeBorder, height);
-		gc.strokeText(this.calculTimeRightBorder(), this.rightBorder + 15, 15, 500);
+		gc.strokeText(this.calculTimeRightBorder(), this.posRightStrokeText(), 15, 500);
 
 		gc.setFill(transparentForeground);
-		gc.fillRect(0, 0, this.leftBorder, height);
+		gc.fillRect(0, 0, this.leftBorder - this.sizeBorder, height);
 		gc.fillRect((this.rightBorder + this.sizeBorder), 0, width, height);
 
 	}
 
+	public double posLeftStrokeText(){
+		double dimensionWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		if (this.leftBorder < (dimensionWidth / 4)){
+			return this.leftBorder + 5;
+		}else {
+			return this.leftBorder - 110;
+		}
+	}
+
+	public double posRightStrokeText(){
+		double dimensionWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		if (this.rightBorder > ((dimensionWidth / 4) * 3)){
+			return this.rightBorder - 110;
+		}else {
+			return this.rightBorder + 25;
+		}
+	}
+
+	public int adjustPosYStrokeText(){
+		if ((this.rightBorder - this.leftBorder) < 100.0){
+			return 30;
+		}else {
+			return 15;
+		}
+	}
+
 	public String calculTimeLeftBorder(){
 		int time = (int) (this.leftBorder / waveFormService.getRatioAudio());
+		double milliTime = Math.round((this.leftBorder / waveFormService.getRatioAudio()) * 100.0) / 100.0;
+
 		int hoursLeftBorderTime = time / 3600;
 		int minutesLeftBorderTime = (time % 3600) / 60;
 		int secondsLeftBorderTime = time % 60;
-		return hoursLeftBorderTime + "h:" + minutesLeftBorderTime + "min:" + secondsLeftBorderTime + "s";
+		String milliSeconds = String.valueOf(milliTime);
+		String onlyMilliSeconds = milliSeconds.substring(milliSeconds.indexOf(".")).substring(1);
+
+		return hoursLeftBorderTime + "h:" + minutesLeftBorderTime + "min:" + secondsLeftBorderTime + "s:" + onlyMilliSeconds + "ms";
 	}
 
 	public String calculTimeRightBorder(){
 		int time = (int) (this.rightBorder / waveFormService.getRatioAudio());
+		double milliTime = Math.round((this.rightBorder / waveFormService.getRatioAudio()) * 100.0) / 100.0;
+
 		int hoursRightBorderTime = time / 3600;
 		int minutesRightBorderTime = (time % 3600) / 60;
 		int secondsRightBorderTime = time % 60;
-		return hoursRightBorderTime + "h:" + minutesRightBorderTime + "min:" + secondsRightBorderTime + "s";
+		String milliSeconds = String.valueOf(milliTime);
+		String onlyMilliSeconds = milliSeconds.substring(milliSeconds.indexOf(".")).substring(1);
+
+		return hoursRightBorderTime + "h:" + minutesRightBorderTime + "min:" + secondsRightBorderTime + "s:" + onlyMilliSeconds + "ms";
+	}
+
+	public double getCurrentTime(){
+		return (Math.round((this.leftBorder / waveFormService.getRatioAudio()) * 100.0) / 100.0);
 	}
 
 	public void setWaveVisualization(WavePane wavePane) {
@@ -126,6 +169,7 @@ public class WaveFormPane extends ResizableCanvas {
 	public void setLeftBorder(double value){
 		if (value < (this.rightBorder - this.sizeBorder - 1)){
 			this.leftBorder = value;
+			this.timerXPosition = value;
 		}
 	}
 

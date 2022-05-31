@@ -13,29 +13,34 @@ public class CreateJson {
     Main main;
     WavePane wavePane;
 
-    String folderPath;
+    String pathFolder;
 
-    public CreateJson(Main main, String folderPath){
+    public CreateJson(Main main, String pathFolder){
         super();
         this.main = main;
-        this.wavePane = main.getWavePane();
-        this.folderPath = folderPath;
+        this.pathFolder = pathFolder;
     }
 
     public void createJson(String nameRecordAudio, String nameJson){
-        JSONObject jsonDetails = new JSONObject();
-        jsonDetails.put("Nom du fichier audio", "test");
-        jsonDetails.put("Nom du fichier audio enregistrer", nameRecordAudio);
-        jsonDetails.put("Début de l'intervalle ", "0h:10m:30s");
-        jsonDetails.put("Fin de l'intervalle", "0h:12m:30s");
+        this.wavePane = main.getWavePane();
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("TranslateAudioFile", jsonDetails);
+        JSONObject jsonAudioFile = new JSONObject();
+        JSONObject jsonRecordFile = new JSONObject();
+        JSONObject jsonStartTime = new JSONObject();
+        JSONObject jsonEndTime = new JSONObject();
+
+        jsonAudioFile.put("Nom du fichier audio", wavePane.getWaveService().audioFileName);
+        jsonRecordFile.put("Nom du fichier audio enregistrer", nameRecordAudio + ".wav");
+        jsonStartTime.put("Début de l'intervalle", wavePane.calculTimeLeftBorder());
+        jsonEndTime.put("Fin de l'intervalle", wavePane.calculTimeRightBorder());
 
         JSONArray json = new JSONArray();
-        json.add(jsonObject);
+        json.add(jsonAudioFile);
+        json.add(jsonRecordFile);
+        json.add(jsonStartTime);
+        json.add(jsonEndTime);
 
-        try(FileWriter jsonFile = new FileWriter(folderPath + "//JsonFiles//" + nameJson + ".json")){
+        try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameJson + ".json")){
             jsonFile.write(json.toJSONString());
             jsonFile.flush();
         }catch (IOException e){

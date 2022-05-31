@@ -21,6 +21,9 @@ public class ButtonsPane extends BorderPane {
 
     boolean runningAudio = false;
 
+    Button record;
+    Button playStopAudioFile;
+
     HBox hbox;
     FileChooser fileChooser = new FileChooser();
 
@@ -28,8 +31,8 @@ public class ButtonsPane extends BorderPane {
         super();
 
         Button newAudioFile = createNewAudioFileButton(main, primaryStage);
-        Button playStopAudioFile = createPlayStopAudioFileButton(main);
-        Button record = createRecordButton(main, primaryStage);
+        playStopAudioFile = createPlayStopAudioFileButton(main);
+        record = createRecordButton(main, primaryStage);
         Button seeJsonFolder = createSeeJsonFolder();
 
         hbox = new HBox(newAudioFile, playStopAudioFile, record, seeJsonFolder);
@@ -52,12 +55,12 @@ public class ButtonsPane extends BorderPane {
         playStopAudioFile.setOnAction((e) -> {
             if (runningAudio) {
                 runningAudio = false;
-                main.getWavePane().getWaveService().playStopMediaPlayer(false);
+                main.getWavePane().getWaveService().playStopMediaPlayer("pause");
                 main.getWavePane().setStep(false);
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/play.png"));
             } else {
                 runningAudio = true;
-                main.getWavePane().getWaveService().playStopMediaPlayer(true);
+                main.getWavePane().getWaveService().playStopMediaPlayer("play");
                 main.getWavePane().setStep(true);
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/pause.png"));
             }
@@ -75,6 +78,7 @@ public class ButtonsPane extends BorderPane {
         record.setOnAction((e) -> {
             main.goToRecord(primaryStage);
         });
+        record.setDisable(true);
         return record;
     }
 
@@ -91,6 +95,7 @@ public class ButtonsPane extends BorderPane {
                 main.setNewWavePane(primaryStage);
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
+                record.setDisable(false);
             }
         });
         return  newAudioFile;
@@ -118,5 +123,11 @@ public class ButtonsPane extends BorderPane {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav")
         );
+    }
+
+    public void stopMusic(){
+        if (runningAudio){
+            playStopAudioFile.fire();
+        }
     }
 }

@@ -20,6 +20,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.encode.AudioAttributes;
@@ -46,6 +47,7 @@ public class WaveFormService extends Service<Boolean> {
 	private double dimensionWidth = 0;
 	private double durationAudioFile = 0;
 	private double ratioAudio = 0;
+	public String audioFileName;
 
 	public enum WaveFormJob {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM;
@@ -76,6 +78,7 @@ public class WaveFormService extends Service<Boolean> {
 	}
 
 	public void setupMediaPlayer(String path){
+		audioFileName = new File(path).getName();
 		audioFile = new Media(new File(path).toURI().toString());
 		mediaPlayer = new MediaPlayer(audioFile);
 
@@ -89,14 +92,30 @@ public class WaveFormService extends Service<Boolean> {
 		});
 	}
 
-	public void playStopMediaPlayer(boolean status){
+	public void playStopMediaPlayer(String status){
 		if (audioFile != null){
-			if (status){
-				mediaPlayer.play();
-			}else{
-				mediaPlayer.pause();
+			switch (status){
+
+				case "play":
+					mediaPlayer.play();
+					break;
+
+				case "pause":
+					mediaPlayer.pause();
+					break;
+
+				case "stop":
+					mediaPlayer.stop();
+					break;
+
+				default:
+					break;
 			}
 		}
+	}
+
+	public void startTimeMediaPlayer(double value){
+		mediaPlayer.setStartTime(new Duration(value * 1000));
 	}
 
 	public double getRatioAudio(){

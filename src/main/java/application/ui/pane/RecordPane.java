@@ -11,6 +11,8 @@ import utils.buttons.Buttons;
 import utils.buttons.ImageButton;
 import utils.files.CreateJson;
 import utils.files.RecordVoice;
+
+import java.io.File;
 import java.util.Objects;
 
 public class RecordPane extends BorderPane {
@@ -33,16 +35,20 @@ public class RecordPane extends BorderPane {
     RecordVoice recordVoice;
     CreateJson createJson;
 
-    public RecordPane(Main main, Stage primaryStage, String folderPath){
+    String pathFolder;
+
+    public RecordPane(Main main, Stage primaryStage, String pathFolder){
         super();
 
-        recordVoice = new RecordVoice(folderPath);
-        createJson = new CreateJson(main, folderPath);
+        recordVoice = new RecordVoice(pathFolder);
+        createJson = new CreateJson(main, pathFolder);
+        this.pathFolder = pathFolder;
 
-        playStopAudioFile = createPlayStopAudioFileButton(main);
+        playStopAudioFile = createPlayStopAudioFileButton();
         record = createRecordButton();
         Button validate = createValidateRecordButton(main, primaryStage);
         Button returnBack = createReturnBackButton(main, primaryStage);
+        Button reset = createResetAudioButton();
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -87,7 +93,8 @@ public class RecordPane extends BorderPane {
             gridPane.add(returnBack, 0, 4);
             gridPane.add(record, 1, 4);
             gridPane.add(playStopAudioFile, 2, 4);
-            gridPane.add(validate, 3, 4);
+            gridPane.add(reset, 3, 4);
+            gridPane.add(validate, 4, 4);
         }
 
         hbox = new HBox(gridPane);
@@ -101,7 +108,7 @@ public class RecordPane extends BorderPane {
         this.setStyle("-fx-background-color: #535e65");
     }
 
-    public Button createPlayStopAudioFileButton(Main main) {
+    public Button createPlayStopAudioFileButton() {
         Button playStopAudioFile = new Buttons();
         playStopAudioFile.setGraphic(ImageButton.createButtonImageView("images/play.png"));
         playStopAudioFile.getStyleClass().add("blue");
@@ -111,15 +118,31 @@ public class RecordPane extends BorderPane {
         playStopAudioFile.setOnAction((e) -> {
             if (runningAudio) {
                 runningAudio = false;
-                recordVoice.playStopMediaPlayer(false);
+                recordVoice.playStopMediaPlayer("pause");
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/play.png"));
             } else {
                 runningAudio = true;
-                recordVoice.playStopMediaPlayer(true);
+                recordVoice.playStopMediaPlayer("play");
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/pause.png"));
             }
         });
         return playStopAudioFile;
+    }
+
+    public Button createResetAudioButton(){
+        Button resetAudio = new Buttons();
+        resetAudio.setGraphic(ImageButton.createButtonImageView("images/reset.png"));
+        resetAudio.getStyleClass().add("blue");
+        resetAudio.setContentDisplay(ContentDisplay.TOP);
+        resetAudio.setPrefHeight(50);
+        resetAudio.setPrefWidth(300);
+        resetAudio.setOnAction((e) -> {
+            recordVoice.playStopMediaPlayer("stop");
+            if (runningAudio){
+                playStopAudioFile.fire();
+            }
+        });
+        return resetAudio;
     }
 
     public Button createRecordButton(){
@@ -155,6 +178,7 @@ public class RecordPane extends BorderPane {
         returnBack.setPrefHeight(50);
         returnBack.setPrefWidth(300);
         returnBack.setOnAction((e) -> {
+            this.resetValue();
             this.resetButton();
             main.goToHome(primaryStage);
         });
@@ -176,13 +200,31 @@ public class RecordPane extends BorderPane {
             }else if (Objects.equals(jsonFileNameText.getText(), "")){
                 this.errorJsonMessage("Un nom est nécessaire pour le fichier json !");
             }else {
-                recordVoice.renameTempAudioFile(audioFileNameText.getText());
-                createJson.createJson(audioFileNameText.getText(), jsonFileNameText.getText());
-                this.resetValue();
-                main.goToHome(primaryStage);
+                if (!this.checkNameAlreadyUse(audioFileNameText.getText(), jsonFileNameText.getText())){
+                    recordVoice.renameTempAudioFile(audioFileNameText.getText());
+                    createJson.createJson(audioFileNameText.getText(), jsonFileNameText.getText());
+                    this.resetValue();
+                    this.resetButton();
+                    main.goToHome(primaryStage);
+                }
             }
         });
         return validateRecord;
+    }
+
+    public Boolean checkNameAlreadyUse(String recordFileName, String jsonFileName){
+        File recordFile = new File(pathFolder + "//RecordFiles//" + recordFileName + ".wav");
+        File jsonFile = new File(pathFolder + "//JsonFiles//" + jsonFileName + ".json");
+
+        if (recordFile.exists()){
+            this.errorAudioMessage("Ce nom est déjà utilisé !");
+            return true;
+        }else if (jsonFile.exists()){
+            this.errorJsonMessage("Ce nom est déjà utilisé !");
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public void errorStatusAudioMessage(String error){

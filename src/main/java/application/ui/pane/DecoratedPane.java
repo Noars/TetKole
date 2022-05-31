@@ -67,7 +67,7 @@ public class DecoratedPane extends BorderPane {
         settings.setOnAction((e) -> {
             if (this.inSettings){
                 this.inSettings = false;
-                main.goToHome(primaryStage);
+                main.goBack(primaryStage);
                 ((ImageView) settings.getGraphic()).setImage(new Image("images/option.png"));
             }else {
                 this.inSettings = true;

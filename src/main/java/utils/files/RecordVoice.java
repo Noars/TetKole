@@ -4,9 +4,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import javax.sound.sampled.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class RecordVoice {
 
@@ -80,10 +83,13 @@ public class RecordVoice {
         }
     }
 
-    public void renameTempAudioFile(String newName){
-        File audioTempFile = new File(pathFolder + "//RecordFiles//TempAudio.wav");
-        if (audioTempFile.renameTo(new File(pathFolder + "//RecordFiles//" + newName + ".wav"))){
-            System.out.println("Temp file renamed !");
+    public void renameTempAudioFile(String newName) {
+        Path audioTempFilePath = Paths.get(pathFolder + "//RecordFiles//TempAudio.wav");
+        Path audioFilePath = Paths.get(pathFolder + "//RecordFiles//" + newName + ".wav");
+        try{
+            Files.copy(audioTempFilePath, audioFilePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -92,12 +98,24 @@ public class RecordVoice {
         mediaPlayer = new MediaPlayer(audioFile);
     }
 
-    public void playStopMediaPlayer(boolean status){
+    public void playStopMediaPlayer(String status){
         if (audioFile != null){
-            if (status){
-                mediaPlayer.play();
-            }else{
-                mediaPlayer.pause();
+            switch (status){
+
+                case "play":
+                    mediaPlayer.play();
+                    break;
+
+                case "pause":
+                    mediaPlayer.pause();
+                    break;
+
+                case "stop":
+                    mediaPlayer.stop();
+                    break;
+
+                default:
+                    break;
             }
         }
     }

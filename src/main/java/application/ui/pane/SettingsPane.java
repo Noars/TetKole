@@ -20,26 +20,7 @@ public class SettingsPane extends BorderPane {
         gridPane.setHgap(5);
         gridPane.setVgap(5);
         {
-            Label test1 = new Label("Test 1 : ");
-            TextField test1Text = new TextField("");
-            gridPane.add(test1, 0, 0);
-            gridPane.add(test1Text, 1, 0);
-            test1.getStyleClass().add("text");
-            test1Text.getStyleClass().add("text");
 
-            Label test2 = new Label("Test 2 : ");
-            TextField test2Text = new TextField("");
-            gridPane.add(test2, 0, 1);
-            gridPane.add(test2Text, 1, 1);
-            test2.getStyleClass().add("text");
-            test2Text.getStyleClass().add("text");
-
-            Label test3 = new Label("Test 3 : ");
-            TextField test3Text = new TextField("");
-            gridPane.add(test3, 0, 2);
-            gridPane.add(test3Text, 1, 2);
-            test3.getStyleClass().add("text");
-            test3Text.getStyleClass().add("text");
         }
 
         hbox = new HBox(gridPane);

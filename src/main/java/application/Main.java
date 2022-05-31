@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -23,6 +24,7 @@ public class Main extends Application {
     SaveFolder saveFolder = new SaveFolder();
 
     int widthScreen, heightScreen;
+    String lastPane = "home";
 
     public static void main(String[] args) {
         launch(args);
@@ -45,8 +47,8 @@ public class Main extends Application {
 
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
         settingsPane = new SettingsPane(this, primaryStage);
-        wavePane = new WavePane(this.widthScreen, this.heightScreen);
         buttonsPane = new ButtonsPane(this, primaryStage);
+        wavePane = new WavePane(this.buttonsPane, this.widthScreen, this.heightScreen);
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -68,18 +70,36 @@ public class Main extends Application {
     }
 
     public void goToHome(Stage primaryStage){
+        this.lastPane = "home";
         primaryStage.getScene().setRoot(decoratedPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
     }
 
     public void goToRecord(Stage primaryStage){
+        this.lastPane = "record";
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(recordPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
+    public void goBack(Stage primaryStage){
+        switch (this.lastPane){
+
+            case "home":
+                this.goToHome(primaryStage);
+                break;
+
+            case "record":
+                this.goToRecord(primaryStage);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     public void setNewWavePane(Stage primaryStage){
-        wavePane = new WavePane(this.widthScreen, this.heightScreen);
+        wavePane = new WavePane(this.buttonsPane, this.widthScreen, this.heightScreen);
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
     }
 
