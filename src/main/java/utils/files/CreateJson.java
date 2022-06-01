@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class CreateJson {
 
@@ -40,7 +41,7 @@ public class CreateJson {
         json.add(jsonStartTime);
         json.add(jsonEndTime);
 
-        try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameJson + ".json")){
+        try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameJson + ".json", StandardCharsets.UTF_8)){
             jsonFile.write(json.toJSONString());
             jsonFile.flush();
         }catch (IOException e){
