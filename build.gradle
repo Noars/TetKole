@@ -1,15 +1,19 @@
 plugins {
     id 'java'
     id 'application'
+    id 'distribution'
     id 'org.openjfx.javafxplugin' version '0.0.10'
     id 'org.beryx.jlink' version '2.24.1'
     id 'com.github.spotbugs' version '5.0.7'
+    id "de.undercouch.download" version '4.0.4'
+    id 'net.researchgate.release' version '2.6.0'
+    id 'com.github.hierynomus.license-report' version '0.16.1'
 }
 
 group 'application'
-version '1.0-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -17,8 +21,8 @@ ext {
     junitVersion = '5.8.1'
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = '17.0.3'
+targetCompatibility = '17.0.3'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -28,8 +32,19 @@ application {
     mainClass = 'application.Main'
 }
 
+ext.javafxVersion = "17.0.2"
+// Make it available everywhere via the project ext:
+ext {
+    Download = de.undercouch.gradle.tasks.download.Download
+    download = download
+}
+
+apply from: "${rootDir}/gradle/package.gradle"
+apply from: "${rootDir}/gradle/jre.gradle"
+apply from: "${rootDir}/gradle/installer.gradle"
+
 javafx {
-    version = '13.0.2'
+    version = javafxVersion
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.media']
 }
 
@@ -76,3 +91,69 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
+jar {
+    enabled=true
+    manifest {
+        attributes(
+                "Implementation-Title": "Cream",
+                "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
+                "Main-Class": 'application.Main',
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
+                "JavaFX-Version": javafxVersion,
+                "Built-By": System.properties['user.name']
+        )
+    }
+}
+
+distributions {
+    windows {
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/cream-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows") {
+                into 'lib/jre'
+            }
+        }
+    }
+    linux {
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+        }
+    }
+}
+
+tasks.jar.dependsOn('createLicence')
+
+task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license') {
+    from("${rootDir}/gradle/templates/licence.txt")
+    expand([
+            "date"   : new Date().format('yyyy-MM-dd')
+    ])
+    into("${processResources.destinationDir}/data/common")
+}
+
+task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin')
+
+windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
+linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
+
+tasks.withType(Tar){
+    compression = Compression.GZIP
+    archiveExtension.set('tar.gz')
+}
+
+distZip {
+    duplicatesStrategy = 'exclude'
+}
+
+release {
+    failOnPublishNeeded = false
+    failOnCommitNeeded = false
+}
+
+afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
