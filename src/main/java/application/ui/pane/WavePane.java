@@ -2,6 +2,7 @@ package application.ui.pane;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.stage.Stage;
 import utils.wave.WaveFormPane;
 import utils.wave.WaveFormService;
 
@@ -16,18 +17,18 @@ public class WavePane extends WaveFormPane {
 	private boolean isLeftBorder = false;
 	private boolean isRightBorder = false;
 
-	public WavePane(ButtonsPane buttonsPane, int width, int height) {
-		super(width, height);
+	public WavePane(ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
+		super(buttonsPane, primaryStage, width, height);
 		super.setWaveVisualization(this);
-		waveService = new WaveFormService(this);
+		waveService = new WaveFormService(this, primaryStage);
 		animationService = new PaintService();
 		super.sendWaveService(this.waveService);
 
 		widthProperty().addListener((observable , oldValue , newValue) -> {
+			super.resetBorders();
 			this.width = Math.round(newValue.floatValue());
 			recalculateWaveData = true;
 			clear();
-
 		});
 
 		heightProperty().addListener((observable , oldValue , newValue) -> {
@@ -37,7 +38,7 @@ public class WavePane extends WaveFormPane {
 		});
 
 		setOnMouseMoved(event -> {
-			if ((event.getX() >= (super.getLeftBorder() - super.getSizeBorder())) && (event.getX() <= super.getLeftBorder())){
+			if ((event.getX() >= (super.getLeftBorder())) && (event.getX() <= (super.getLeftBorder() + super.getSizeBorder()))){
 				this.isLeftBorder = true;
 			}else if ((event.getX() >= super.getRightBorder()) && (event.getX() <= (super.getRightBorder() + super.getSizeBorder()))) {
 				this.isRightBorder = true;

@@ -20,6 +20,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.MultimediaObject;
@@ -36,6 +37,7 @@ public class WaveFormService extends Service<Boolean> {
 	private int[] wavAmplitudes;
 	private String fileAbsolutePath;
 	private final WavePane wavePane;
+	private Stage primaryStage;
 	private final Random random = new Random();
 	private File temp1;
 	private File temp2;
@@ -53,8 +55,9 @@ public class WaveFormService extends Service<Boolean> {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM;
 	}
 
-	public WaveFormService(WavePane wavePane) {
+	public WaveFormService(WavePane wavePane, Stage primaryStage) {
 		this.wavePane = wavePane;
+		this.primaryStage = primaryStage;
 
 		setOnSucceeded(s -> done());
 		setOnFailed(f -> failure());
@@ -85,9 +88,7 @@ public class WaveFormService extends Service<Boolean> {
 		mediaPlayer.setOnReady(new Runnable() {
 			@Override
 			public void run() {
-				dimensionWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 				durationAudioFile = audioFile.getDuration().toSeconds();
-				ratioAudio = dimensionWidth / durationAudioFile;
 			}
 		});
 	}
@@ -119,7 +120,7 @@ public class WaveFormService extends Service<Boolean> {
 	}
 
 	public double getRatioAudio(){
-		return ratioAudio;
+		return this.primaryStage.getWidth() / durationAudioFile;
 	}
 
 	public void done() {

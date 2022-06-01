@@ -44,11 +44,10 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TranslateAudioFiles");
 
-
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
         settingsPane = new SettingsPane(this, primaryStage);
         buttonsPane = new ButtonsPane(this, primaryStage);
-        wavePane = new WavePane(this.buttonsPane, this.widthScreen, this.heightScreen);
+        wavePane = new WavePane(this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -99,7 +98,7 @@ public class Main extends Application {
     }
 
     public void setNewWavePane(Stage primaryStage){
-        wavePane = new WavePane(this.buttonsPane, this.widthScreen, this.heightScreen);
+        wavePane = new WavePane(this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
     }
 
