@@ -76,6 +76,7 @@ public class ButtonsPane extends BorderPane {
         record.setPrefHeight(50);
         record.setPrefWidth(300);
         record.setOnAction((e) -> {
+            main.getRecordPane().generateNameFile(main);
             main.goToRecord(primaryStage);
         });
         record.setDisable(true);

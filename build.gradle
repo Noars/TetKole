@@ -110,7 +110,6 @@ distributions {
     windows {
         contents {
             with distributions.main.contents
-            from("build/reports")
             from("build/bin/cream-windows.bat") {
                 into 'bin'
             }

@@ -42,7 +42,6 @@ public class RecordPane extends BorderPane {
         recordVoice = new RecordVoice(pathFolder);
         createJson = new CreateJson(main, pathFolder);
         this.pathFolder = pathFolder;
-        this.generatedNameFile = this.generateNameFile(main);
 
         playStopAudioFile = createPlayStopAudioFileButton();
         record = createRecordButton();
@@ -240,7 +239,7 @@ public class RecordPane extends BorderPane {
         this.errorStatusAudioLabel.setText("");
         this.errorAudioFileNameLabel.setText("");
 
-        this.audioFileNameText.setText("");
+        this.audioFileNameText.setText(generatedNameFile);
     }
 
     public void resetButton(){
@@ -252,15 +251,16 @@ public class RecordPane extends BorderPane {
         }
     }
 
-    public String generateNameFile(Main main){
+    public void generateNameFile(Main main){
         boolean findNewName = false;
-        String nameFile = main.getWavePane().getWaveService().audioFileName;
         int number = 1;
         String newNameFile = "";
         File newNameFileGenerated;
+        String nameFile = main.getWavePane().getWaveService().audioFileName;
+        String[] nameFileWithoutExtension = nameFile.split("\\.");
 
         while (!findNewName){
-            newNameFile = nameFile + "_Translate" + number;
+            newNameFile = nameFileWithoutExtension[0] + "_Translate" + number;
             newNameFileGenerated = new File(pathFolder + "//RecordFiles//" + newNameFile + ".wav");
             if (newNameFileGenerated.exists()){
                 number += 1;
@@ -269,6 +269,7 @@ public class RecordPane extends BorderPane {
             }
         }
 
-        return newNameFile;
+        this.generatedNameFile = newNameFile;
+        this.audioFileNameText.setText(generatedNameFile);
     }
 }

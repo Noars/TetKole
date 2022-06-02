@@ -43,10 +43,10 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TranslateAudioFiles");
 
-        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
         settingsPane = new SettingsPane(this, primaryStage);
         buttonsPane = new ButtonsPane(this, primaryStage);
         wavePane = new WavePane(this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
+        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -103,6 +103,14 @@ public class Main extends Application {
 
     public WavePane getWavePane(){
         return this.wavePane;
+    }
+
+    public RecordPane getRecordPane(){
+        return this.recordPane;
+    }
+
+    public ButtonsPane getButtonsPane(){
+        return this.buttonsPane;
     }
 
 }
