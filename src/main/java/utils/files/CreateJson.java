@@ -22,7 +22,7 @@ public class CreateJson {
         this.pathFolder = pathFolder;
     }
 
-    public void createJson(String nameRecordAudio, String nameJson){
+    public void createJson(String nameRecordAudio){
         this.wavePane = main.getWavePane();
 
         JSONObject jsonAudioFile = new JSONObject();
@@ -41,7 +41,7 @@ public class CreateJson {
         json.add(jsonStartTime);
         json.add(jsonEndTime);
 
-        try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameJson + ".json", StandardCharsets.UTF_8)){
+        try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameRecordAudio + ".json", StandardCharsets.UTF_8)){
             jsonFile.write(json.toJSONString());
             jsonFile.flush();
         }catch (IOException e){

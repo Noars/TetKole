@@ -26,9 +26,7 @@ public class RecordPane extends BorderPane {
 
     Label errorStatusAudioLabel;
     Label errorAudioFileNameLabel;
-    Label errorJsonFileNameLabel;
     TextField audioFileNameText;
-    TextField jsonFileNameText;
     ImageView statusImageView;
 
     HBox hbox;
@@ -36,6 +34,7 @@ public class RecordPane extends BorderPane {
     CreateJson createJson;
 
     String pathFolder;
+    String generatedNameFile;
 
     public RecordPane(Main main, Stage primaryStage, String pathFolder){
         super();
@@ -43,6 +42,7 @@ public class RecordPane extends BorderPane {
         recordVoice = new RecordVoice(pathFolder);
         createJson = new CreateJson(main, pathFolder);
         this.pathFolder = pathFolder;
+        this.generatedNameFile = this.generateNameFile(main);
 
         playStopAudioFile = createPlayStopAudioFileButton();
         record = createRecordButton();
@@ -68,7 +68,7 @@ public class RecordPane extends BorderPane {
             errorStatusAudioLabel.getStyleClass().add("errorLabel");
 
             Label audioFileNameLabel = new Label("Nom du fichier audio enregistrer : ");
-            audioFileNameText = new TextField("");
+            audioFileNameText = new TextField(this.generatedNameFile);
             errorAudioFileNameLabel = new Label();
             gridPane.add(audioFileNameLabel, 1, 1);
             gridPane.add(audioFileNameText, 2, 1);
@@ -77,24 +77,14 @@ public class RecordPane extends BorderPane {
             audioFileNameText.getStyleClass().add("textField");
             errorAudioFileNameLabel.getStyleClass().add("errorLabel");
 
-            Label jsonFileNameLabel = new Label("Nom du fichier json : ");
-            jsonFileNameText = new TextField("");
-            errorJsonFileNameLabel = new Label();
-            gridPane.add(jsonFileNameLabel, 1, 2);
-            gridPane.add(jsonFileNameText, 2, 2);
-            gridPane.add(errorJsonFileNameLabel, 3, 2);
-            jsonFileNameLabel.getStyleClass().add("textLabel");
-            jsonFileNameText.getStyleClass().add("textField");
-            errorJsonFileNameLabel.getStyleClass().add("errorLabel");
-
             Label emptyLabel = new Label("");
-            gridPane.add(emptyLabel, 0, 3);
+            gridPane.add(emptyLabel, 0, 2);
 
-            gridPane.add(returnBack, 0, 4);
-            gridPane.add(record, 1, 4);
-            gridPane.add(playStopAudioFile, 2, 4);
-            gridPane.add(reset, 3, 4);
-            gridPane.add(validate, 4, 4);
+            gridPane.add(returnBack, 0, 3);
+            gridPane.add(record, 1, 3);
+            gridPane.add(playStopAudioFile, 2, 3);
+            gridPane.add(reset, 3, 3);
+            gridPane.add(validate, 4, 3);
         }
 
         hbox = new HBox(gridPane);
@@ -197,12 +187,10 @@ public class RecordPane extends BorderPane {
                 this.errorStatusAudioMessage("Un enregistrement est nécessaire !");
             }else if (Objects.equals(audioFileNameText.getText(), "")){
                 this.errorAudioMessage("Un nom est nécessaire pour le fichier audio !");
-            }else if (Objects.equals(jsonFileNameText.getText(), "")){
-                this.errorJsonMessage("Un nom est nécessaire pour le fichier json !");
             }else {
-                if (!this.checkNameAlreadyUse(audioFileNameText.getText(), jsonFileNameText.getText())){
+                if (!this.checkNameAlreadyUse(audioFileNameText.getText())){
                     recordVoice.renameTempAudioFile(audioFileNameText.getText());
-                    createJson.createJson(audioFileNameText.getText(), jsonFileNameText.getText());
+                    createJson.createJson(audioFileNameText.getText());
                     this.resetValue();
                     this.resetButton();
                     main.goToHome(primaryStage);
@@ -212,15 +200,11 @@ public class RecordPane extends BorderPane {
         return validateRecord;
     }
 
-    public Boolean checkNameAlreadyUse(String recordFileName, String jsonFileName){
+    public Boolean checkNameAlreadyUse(String recordFileName){
         File recordFile = new File(pathFolder + "//RecordFiles//" + recordFileName + ".wav");
-        File jsonFile = new File(pathFolder + "//JsonFiles//" + jsonFileName + ".json");
 
         if (recordFile.exists()){
             this.errorAudioMessage("Ce nom est déjà utilisé !");
-            return true;
-        }else if (jsonFile.exists()){
-            this.errorJsonMessage("Ce nom est déjà utilisé !");
             return true;
         }else {
             return false;
@@ -234,12 +218,6 @@ public class RecordPane extends BorderPane {
     public void errorAudioMessage(String error){
         this.errorStatusAudioLabel.setText("");
         this.errorAudioFileNameLabel.setText(error);
-    }
-
-    public void errorJsonMessage(String error){
-        this.errorStatusAudioLabel.setText("");
-        this.errorAudioFileNameLabel.setText("");
-        this.errorJsonFileNameLabel.setText(error);
     }
 
     public void setStatusImageView(boolean status){
@@ -261,10 +239,8 @@ public class RecordPane extends BorderPane {
 
         this.errorStatusAudioLabel.setText("");
         this.errorAudioFileNameLabel.setText("");
-        this.errorJsonFileNameLabel.setText("");
 
         this.audioFileNameText.setText("");
-        this.jsonFileNameText.setText("");
     }
 
     public void resetButton(){
@@ -274,5 +250,25 @@ public class RecordPane extends BorderPane {
         if (runningRecord){
             record.fire();
         }
+    }
+
+    public String generateNameFile(Main main){
+        boolean findNewName = false;
+        String nameFile = main.getWavePane().getWaveService().audioFileName;
+        int number = 1;
+        String newNameFile = "";
+        File newNameFileGenerated;
+
+        while (!findNewName){
+            newNameFile = nameFile + "_Translate" + number;
+            newNameFileGenerated = new File(pathFolder + "//RecordFiles//" + newNameFile + ".wav");
+            if (newNameFileGenerated.exists()){
+                number += 1;
+            }else {
+                findNewName = true;
+            }
+        }
+
+        return newNameFile;
     }
 }
