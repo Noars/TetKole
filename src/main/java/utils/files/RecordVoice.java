@@ -106,10 +106,6 @@ public class RecordVoice {
                     mediaPlayer.play();
                     break;
 
-                case "pause":
-                    mediaPlayer.pause();
-                    break;
-
                 case "stop":
                     mediaPlayer.stop();
                     break;

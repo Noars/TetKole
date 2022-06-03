@@ -23,6 +23,7 @@ public class ButtonsPane extends BorderPane {
 
     Button record;
     Button playStopAudioFile;
+    Button zoom;
 
     HBox hbox;
     FileChooser fileChooser = new FileChooser();
@@ -34,8 +35,9 @@ public class ButtonsPane extends BorderPane {
         playStopAudioFile = createPlayStopAudioFileButton(main);
         record = createRecordButton(main, primaryStage);
         Button seeJsonFolder = createSeeJsonFolder();
+        zoom = createZoomButton(main, primaryStage);
 
-        hbox = new HBox(newAudioFile, playStopAudioFile, record, seeJsonFolder);
+        hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, seeJsonFolder);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(hbox, Pos.CENTER);
@@ -83,6 +85,20 @@ public class ButtonsPane extends BorderPane {
         return record;
     }
 
+    public Button createZoomButton(Main main, Stage primaryStage){
+        Button zoom = new Button();
+        zoom.setGraphic(ImageButton.createButtonImageView("images/zoom+.png"));
+        zoom.getStyleClass().add("blue");
+        zoom.setContentDisplay(ContentDisplay.TOP);
+        zoom.setPrefHeight(50);
+        zoom.setPrefWidth(300);
+        zoom.setOnAction((e) -> {
+            main.goToZoom(primaryStage);
+        });
+        zoom.setDisable(true);
+        return zoom;
+    }
+
     public Button createNewAudioFileButton(Main main, Stage primaryStage){
         Button newAudioFile = new Buttons();
         newAudioFile.setGraphic(ImageButton.createButtonImageView("images/add.png"));
@@ -97,6 +113,7 @@ public class ButtonsPane extends BorderPane {
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
                 record.setDisable(false);
+                zoom.setDisable(false);
             }
         });
         return  newAudioFile;

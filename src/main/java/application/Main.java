@@ -20,6 +20,8 @@ public class Main extends Application {
     EmptyPane emptyPane;
     WavePane wavePane;
     RecordPane recordPane;
+    ZoomPane zoomPane;
+    ButtonsZoomPane buttonsZoomPane;
     SaveFolder saveFolder = new SaveFolder();
 
     int widthScreen, heightScreen;
@@ -47,6 +49,8 @@ public class Main extends Application {
         buttonsPane = new ButtonsPane(this, primaryStage);
         wavePane = new WavePane(this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
+        zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
+        buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -80,6 +84,12 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
+    public void goToZoom(Stage primaryStage){
+        this.lastPane = "zoom";
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(zoomPane.getWavePane());
+        ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
+    }
+
     public void goBack(Stage primaryStage){
         switch (this.lastPane){
 
@@ -89,6 +99,10 @@ public class Main extends Application {
 
             case "record":
                 this.goToRecord(primaryStage);
+                break;
+
+            case "zoom":
+                this.goToZoom(primaryStage);
                 break;
 
             default:

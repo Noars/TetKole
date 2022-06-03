@@ -17,7 +17,8 @@ import java.util.Objects;
 
 public class RecordPane extends BorderPane {
 
-    boolean runningAudio = false;
+    boolean runningAudioFile = false;
+    boolean runningAudioRecorded = false;
     boolean runningRecord = false;
     boolean recordDone = false;
 
@@ -47,7 +48,7 @@ public class RecordPane extends BorderPane {
         record = createRecordButton();
         Button validate = createValidateRecordButton(main, primaryStage);
         Button returnBack = createReturnBackButton(main, primaryStage);
-        Button reset = createResetAudioButton();
+        Button listenAudioFile = createListenAudioFile(main);
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -80,9 +81,9 @@ public class RecordPane extends BorderPane {
             gridPane.add(emptyLabel, 0, 2);
 
             gridPane.add(returnBack, 0, 3);
-            gridPane.add(record, 1, 3);
-            gridPane.add(playStopAudioFile, 2, 3);
-            gridPane.add(reset, 3, 3);
+            gridPane.add(listenAudioFile, 1, 3);
+            gridPane.add(record, 2, 3);
+            gridPane.add(playStopAudioFile, 3, 3);
             gridPane.add(validate, 4, 3);
         }
 
@@ -105,33 +106,17 @@ public class RecordPane extends BorderPane {
         playStopAudioFile.setPrefHeight(50);
         playStopAudioFile.setPrefWidth(300);
         playStopAudioFile.setOnAction((e) -> {
-            if (runningAudio) {
-                runningAudio = false;
-                recordVoice.playStopMediaPlayer("pause");
+            if (runningAudioRecorded) {
+                runningAudioRecorded = false;
+                recordVoice.playStopMediaPlayer("stop");
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/play.png"));
             } else {
-                runningAudio = true;
+                runningAudioRecorded = true;
                 recordVoice.playStopMediaPlayer("play");
-                ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/pause.png"));
+                ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/stop.png"));
             }
         });
         return playStopAudioFile;
-    }
-
-    public Button createResetAudioButton(){
-        Button resetAudio = new Buttons();
-        resetAudio.setGraphic(ImageButton.createButtonImageView("images/reset.png"));
-        resetAudio.getStyleClass().add("blue");
-        resetAudio.setContentDisplay(ContentDisplay.TOP);
-        resetAudio.setPrefHeight(50);
-        resetAudio.setPrefWidth(300);
-        resetAudio.setOnAction((e) -> {
-            recordVoice.playStopMediaPlayer("stop");
-            if (runningAudio){
-                playStopAudioFile.fire();
-            }
-        });
-        return resetAudio;
     }
 
     public Button createRecordButton(){
@@ -172,6 +157,27 @@ public class RecordPane extends BorderPane {
             main.goToHome(primaryStage);
         });
         return  returnBack;
+    }
+
+    public Button createListenAudioFile(Main main){
+        Button listenAudioFile = new Buttons();
+        listenAudioFile.setGraphic(ImageButton.createButtonImageView("images/playAudioFile.png"));
+        listenAudioFile.getStyleClass().add("blue");
+        listenAudioFile.setContentDisplay(ContentDisplay.TOP);
+        listenAudioFile.setPrefHeight(50);
+        listenAudioFile.setPrefWidth(300);
+        listenAudioFile.setOnAction((e) -> {
+            if (runningAudioFile) {
+                runningAudioFile = false;
+                main.getButtonsPane().playStopAudioFile.fire();
+                ((ImageView) listenAudioFile.getGraphic()).setImage(new Image("images/playAudioFile.png"));
+            } else {
+                runningAudioFile = true;
+                main.getButtonsPane().playStopAudioFile.fire();
+                ((ImageView) listenAudioFile.getGraphic()).setImage(new Image("images/stopAudioFile.png"));
+            }
+        });
+        return  listenAudioFile;
     }
 
     public Button createValidateRecordButton(Main main, Stage primaryStage){
@@ -243,7 +249,7 @@ public class RecordPane extends BorderPane {
     }
 
     public void resetButton(){
-        if (runningAudio){
+        if (runningAudioRecorded){
             playStopAudioFile.fire();
         }
         if (runningRecord){
