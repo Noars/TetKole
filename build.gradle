@@ -131,7 +131,7 @@ task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license'
     into("${processResources.destinationDir}/data/common")
 }
 
-windowsDistZip.dependsOn(downloadAndExtractWindowsJRE,scriptsForRelease,downloadLicenses)
+windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
