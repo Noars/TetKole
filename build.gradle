@@ -33,7 +33,7 @@ application {
 }
 
 ext.javafxVersion = "17.0.2"
-// Make it available everywhere via the project ext:
+
 ext {
     Download = de.undercouch.gradle.tasks.download.Download
     download = download
@@ -110,18 +110,13 @@ distributions {
     windows {
         contents {
             with distributions.main.contents
+            from("build/reports")
             from("build/bin/cream-windows.bat") {
                 into 'bin'
             }
             from("build/jre/windows") {
                 into 'lib/jre'
             }
-        }
-    }
-    linux {
-        contents {
-            with distributions.main.contents
-            from("build/reports")
         }
     }
 }
@@ -136,10 +131,7 @@ task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license'
     into("${processResources.destinationDir}/data/common")
 }
 
-task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin')
-
-windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
-linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
+windowsDistZip.dependsOn(downloadAndExtractWindowsJRE,scriptsForRelease,downloadLicenses)
 
 tasks.withType(Tar){
     compression = Compression.GZIP

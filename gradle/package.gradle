@@ -1,6 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-task('packageAllDists').dependsOn('linuxDistTar', 'windowsDistZip')
+task('packageAllDists').dependsOn('windowsDistZip')
 
 task packageApp(dependsOn: ['packageAllDists',
                             'downloadLicenses',
