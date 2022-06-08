@@ -24,6 +24,7 @@ public class RecordPane extends BorderPane {
 
     Button playStopAudioFile;
     Button record;
+    Button listenAudioFile;
 
     Label errorStatusAudioLabel;
     Label errorAudioFileNameLabel;
@@ -48,7 +49,7 @@ public class RecordPane extends BorderPane {
         record = createRecordButton();
         Button validate = createValidateRecordButton(main, primaryStage);
         Button returnBack = createReturnBackButton(main, primaryStage);
-        Button listenAudioFile = createListenAudioFile(main);
+        listenAudioFile = createListenAudioFile(main);
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -254,6 +255,9 @@ public class RecordPane extends BorderPane {
         }
         if (runningRecord){
             record.fire();
+        }
+        if (runningAudioFile){
+            listenAudioFile.fire();
         }
     }
 

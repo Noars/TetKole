@@ -80,12 +80,12 @@ public class WavePane extends WaveFormPane {
         }
 	}
 
-	public PaintService getAnimationService() {
-		return animationService;
-	}
-
 	public WaveFormService getWaveService() {
 		return waveService;
+	}
+
+	public PaintService getAnimationService() {
+		return animationService;
 	}
 
 	public void startPainterService() {

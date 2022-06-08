@@ -93,6 +93,7 @@ public class ButtonsPane extends BorderPane {
         zoom.setPrefHeight(50);
         zoom.setPrefWidth(300);
         zoom.setOnAction((e) -> {
+            main.getZoomPane().setWaveZoomData();
             main.goToZoom(primaryStage);
         });
         zoom.setDisable(true);

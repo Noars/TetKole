@@ -47,10 +47,6 @@ public class WaveFormPane extends ResizableCanvas {
 		setForeground(Color.ORANGE);
 	}
 
-	public void setWaveData(float[] waveData) {
-		this.waveData = waveData;
-	}
-
 	public void setForeground(Color color) {
 		this.foregroundColor = color;
 		transparentForeground = Color.rgb((int) ( foregroundColor.getRed() * 255 ), (int) ( foregroundColor.getGreen() * 255 ), (int) ( foregroundColor.getBlue() * 255 ), 0.3);
@@ -112,6 +108,22 @@ public class WaveFormPane extends ResizableCanvas {
 		gc.fillRect(0, 0, this.leftBorder, height);
 		gc.fillRect((this.rightBorder + this.sizeBorder), 0, width, height);
 
+	}
+
+	public void paintZoomWaveForm(float[] zoomValue) {
+
+		gc.setFill(backgroundColor);
+		gc.fillRect(0, 0, width, height);
+
+		gc.setStroke(foregroundColor);
+		if (zoomValue != null){
+			for (int i = 0; i < zoomValue.length; i++) {
+				int value = (int) ( zoomValue[i] * height );
+				int y1 = ( height - 2 * value ) / 2;
+				int y2 = y1 + 2 * value;
+				gc.strokeLine(i, y1, i, y2);
+			}
+		}
 	}
 
 	public double posLeftStrokeText(){
@@ -207,4 +219,11 @@ public class WaveFormPane extends ResizableCanvas {
 		this.waveFormService = waveFormService;
 	}
 
+	public float[] getWaveData() {
+		return waveData;
+	}
+
+	public void setWaveData(float[] waveData) {
+		this.waveData = waveData;
+	}
 }
