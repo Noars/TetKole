@@ -86,7 +86,7 @@ public class Main extends Application {
 
     public void goToZoom(Stage primaryStage){
         this.lastPane = "zoom";
-        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(zoomPane.getWaveZoomPane());
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(zoomPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
     }
 

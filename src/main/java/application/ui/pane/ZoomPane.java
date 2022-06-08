@@ -1,12 +1,17 @@
 package application.ui.pane;
 
 import application.Main;
-import javafx.scene.layout.BorderPane;
+import javafx.animation.AnimationTimer;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
+import utils.zoomWave.ZoomWaveFormPane;
 
-public class ZoomPane extends BorderPane {
+public class ZoomPane extends ZoomWaveFormPane {
 
-    WavePane waveZoomPane;
+    private final PaintZoomService animationService;
+    private boolean isLeftBorder = false;
+    private boolean isRightBorder = false;
+
     float[] waveZoomData;
     float[] waveData;
 
@@ -21,14 +26,54 @@ public class ZoomPane extends BorderPane {
     int index;
 
     Main main;
+    Stage primaryStage;
 
     public ZoomPane(Main main, Stage primaryStage, int width, int height){
-        super();
-
+        super(primaryStage, width, height);
+        super.setWaveVisualization(this);
+        animationService = new PaintZoomService();
         this.main = main;
-        this.waveZoomPane = new WavePane(main.getButtonsPane(), primaryStage, width, height);
+        this.primaryStage = primaryStage;
 
-        this.setStyle("-fx-background-color: #535e65");
+        widthProperty().addListener((observable , oldValue , newValue) -> {
+            this.setWaveZoomData();
+            clear();
+        });
+
+        heightProperty().addListener((observable , oldValue , newValue) -> {
+            this.height = Math.round(newValue.floatValue());
+            clear();
+        });
+
+        setOnMouseMoved(event -> {
+            if ((event.getX() >= (super.getLeftBorder())) && (event.getX() <= (super.getLeftBorder() + super.getSizeBorder()))){
+                this.isLeftBorder = true;
+            }else if ((event.getX() >= super.getRightBorder()) && (event.getX() <= (super.getRightBorder() + super.getSizeBorder()))) {
+                this.isRightBorder = true;
+            }else {
+                this.isLeftBorder = false;
+                this.isRightBorder = false;
+            }
+        });
+        setOnMouseDragged(event -> {
+            if (this.isLeftBorder){
+                super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));
+            }else if (this.isRightBorder) {
+                super.setRightBorder(event.getX() - (super.getSizeBorder() / 2.0));
+            }
+        });
+        setOnMouseDragReleased(event -> {
+            this.isLeftBorder = false;
+            this.isRightBorder = false;
+        });
+        setOnMouseReleased(event -> {
+            this.isLeftBorder = false;
+            this.isRightBorder = false;
+        });
+        setOnMouseExited(event -> {
+            this.isLeftBorder = false;
+            this.isRightBorder = false;
+        });
     }
 
     public void setWaveZoomData(){
@@ -36,7 +81,7 @@ public class ZoomPane extends BorderPane {
         this.waveData = main.getWavePane().getWaveData();
         this.leftBorder = (int) main.getWavePane().getLeftBorder();
         this.rightBorder = (int) main.getWavePane().getRightBorder();
-        this.width = (int) main.getWavePane().getWidth();
+        this.width = (int) primaryStage.getWidth();
         this.interval = rightBorder - leftBorder;
         this.ratio = width / interval;
         this.rest = width % interval;
@@ -48,7 +93,8 @@ public class ZoomPane extends BorderPane {
         this.valueTab();
         this.endValue();
 
-        this.waveZoomPane.paintZoomWaveForm(this.waveZoomData);
+        this.stopPainterService();
+        this.startPainterService();
     }
 
     public void getStartAndStopValue(){
@@ -85,7 +131,39 @@ public class ZoomPane extends BorderPane {
         }
     }
 
-    public WavePane getWaveZoomPane(){
-        return this.waveZoomPane;
+    public void startPainterService() {
+        animationService.start();
+    }
+
+    public void stopPainterService() {
+        animationService.stop();
+        clear();
+    }
+
+    public class PaintZoomService extends AnimationTimer {
+
+        private volatile SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+
+        @Override
+        public void start() {
+            if (width <= 0 || height <= 0)
+                width = height = 1;
+
+            super.start();
+            running.set(true);
+        }
+
+        @Override
+        public void handle(long nanos) {
+
+            paintZoomWaveForm(waveZoomData);
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            running.set(false);
+        }
+
     }
 }
