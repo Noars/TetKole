@@ -21,6 +21,8 @@ public class ZoomPane extends ZoomWaveFormPane {
     int interval;
     int ratio;
     int rest;
+    int leftRest;
+    int rightRest;
     int startValue;
     int endValue;
     int index;
@@ -58,8 +60,10 @@ public class ZoomPane extends ZoomWaveFormPane {
         setOnMouseDragged(event -> {
             if (this.isLeftBorder){
                 super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));
+                this.getNewLeftX((int)event.getX());
             }else if (this.isRightBorder) {
                 super.setRightBorder(event.getX() - (super.getSizeBorder() / 2.0));
+                this.getNewRightX((int)event.getX());
             }
         });
         setOnMouseDragReleased(event -> {
@@ -85,6 +89,8 @@ public class ZoomPane extends ZoomWaveFormPane {
         this.interval = rightBorder - leftBorder;
         this.ratio = width / interval;
         this.rest = width % interval;
+        this.leftRest = this.rest / 2;
+        this.rightRest = (this.rest / 2) + (this.rest % 2);
         this.waveZoomData = new float[this.width];
         this.index = 0;
 
@@ -97,15 +103,23 @@ public class ZoomPane extends ZoomWaveFormPane {
         this.startPainterService();
     }
 
+    public void getNewLeftX(double posLeftX){
+        double newLeftPosX = this.leftBorder + (posLeftX / this.ratio) + this.leftRest;
+        main.getWavePane().setLeftBorder(newLeftPosX);
+        main.getWavePane().getWaveService().playStopMediaPlayer("stop");
+        main.getWavePane().getWaveService().startTimeMediaPlayer(main.getWavePane().getCurrentTime());
+    }
+
+    public void getNewRightX(double posRightX){
+        double newRightPosX = (this.leftBorder + (posRightX / this.ratio)) + 1 - this.rightRest;
+        main.getWavePane().setRightBorder(newRightPosX);
+        main.getWavePane().getWaveService().playStopMediaPlayer("stop");
+        main.getWavePane().getWaveService().startTimeMediaPlayer(main.getWavePane().getCurrentTime());
+    }
+
     public void getStartAndStopValue(){
-        if ((this.rest % 2) != 0){
-            int surplus = this.rest % 2;
-            this.startValue = this.rest / 2;
-            this.endValue = (this.rest / 2) + surplus;
-        }else {
-            this.startValue = this.rest / 2;
-            this.endValue = this.rest / 2;
-        }
+            this.startValue = this.leftRest;
+            this.endValue = this.rightRest;
     }
 
     public void startValue(){

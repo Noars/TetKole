@@ -78,6 +78,7 @@ public class ButtonsPane extends BorderPane {
         record.setPrefHeight(50);
         record.setPrefWidth(300);
         record.setOnAction((e) -> {
+            this.stopMusic();
             main.getRecordPane().generateNameFile(main);
             main.goToRecord(primaryStage);
         });
@@ -93,6 +94,7 @@ public class ButtonsPane extends BorderPane {
         zoom.setPrefHeight(50);
         zoom.setPrefWidth(300);
         zoom.setOnAction((e) -> {
+            this.stopMusic();
             main.getZoomPane().setWaveZoomData();
             main.goToZoom(primaryStage);
         });
