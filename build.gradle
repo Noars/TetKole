@@ -96,7 +96,7 @@ jar {
     enabled=true
     manifest {
         attributes(
-                "Implementation-Title": "Cream",
+                "Implementation-Title": "TètKole",
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
                 "Main-Class": 'application.Main',
                 "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
@@ -111,7 +111,7 @@ distributions {
         contents {
             with distributions.main.contents
             from("build/reports")
-            from("build/bin/cream-windows.bat") {
+            from("build/bin/tetkole-windows.bat") {
                 into 'bin'
             }
             from("build/jre/windows") {

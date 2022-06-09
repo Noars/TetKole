@@ -132,7 +132,7 @@ public class ButtonsPane extends BorderPane {
         seeJsonFolder.setPrefWidth(300);
         seeJsonFolder.setOnAction((e) -> {
             try {
-                String pathFolder = "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\translateAudioFiles\\JsonFiles";
+                String pathFolder = "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\TètKole\\JsonFiles";
                 Runtime.getRuntime().exec("explorer.exe /select," + pathFolder);
             } catch (IOException ex) {
                 ex.printStackTrace();

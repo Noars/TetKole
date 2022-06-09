@@ -27,9 +27,9 @@ public class SaveFolder {
 
     public void createPaths(){
         String userName = System.getProperty("user.name");
-        this.folderPath = "C://Users//" + userName + "//Documents//translateAudioFiles";
-        this.jsonPath = "C://Users//" + userName + "//Documents//translateAudioFiles//JsonFiles";
-        this.recordPath = "C://Users//" + userName + "//Documents//translateAudioFiles//RecordFiles";
+        this.folderPath = "C://Users//" + userName + "//Documents//TètKole";
+        this.jsonPath = "C://Users//" + userName + "//Documents//TètKole//JsonFiles";
+        this.recordPath = "C://Users//" + userName + "//Documents//TètKole//RecordFiles";
     }
 
     public String getFolderPath(){

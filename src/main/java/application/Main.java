@@ -43,7 +43,7 @@ public class Main extends Application {
         primaryStage.setWidth(this.widthScreen * 0.8);
         primaryStage.setHeight(this.heightScreen * 0.8);
         primaryStage.setFullScreen(true);
-        primaryStage.setTitle("TranslateAudioFiles");
+        primaryStage.setTitle("TètKole");
 
         settingsPane = new SettingsPane(this, primaryStage);
         buttonsPane = new ButtonsPane(this, primaryStage);
