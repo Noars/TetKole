@@ -115,6 +115,10 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
     }
 
+    public void setNewZoomWavePane(Stage primaryStage){
+        zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
+    }
+
     public WavePane getWavePane(){
         return this.wavePane;
     }
