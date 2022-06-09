@@ -52,6 +52,10 @@ public class WaveFormPane extends ResizableCanvas {
 		transparentForeground = Color.rgb((int) ( foregroundColor.getRed() * 255 ), (int) ( foregroundColor.getGreen() * 255 ), (int) ( foregroundColor.getBlue() * 255 ), 0.3);
 	}
 
+	public void setupMediaPlayer(){
+		waveFormService.startTimeMediaPlayer(this.getCurrentTime());
+	}
+
 	public double getTimerXPosition() {
 		return timerXPosition;
 	}

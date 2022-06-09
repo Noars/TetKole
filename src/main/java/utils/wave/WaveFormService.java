@@ -89,6 +89,7 @@ public class WaveFormService extends Service<Boolean> {
 			@Override
 			public void run() {
 				durationAudioFile = audioFile.getDuration().toSeconds();
+				wavePane.setupMediaPlayer();
 			}
 		});
 	}
