@@ -41,11 +41,20 @@ public class CreateJson {
         json.add(jsonStartTime);
         json.add(jsonEndTime);
 
-        try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameRecordAudio + ".json", StandardCharsets.UTF_8)){
-            jsonFile.write(json.toJSONString());
-            jsonFile.flush();
-        }catch (IOException e){
-            e.printStackTrace();
+        if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
+            try(FileWriter jsonFile = new FileWriter(pathFolder + "/JsonFiles/" + nameRecordAudio + ".json", StandardCharsets.UTF_8)){
+                jsonFile.write(json.toJSONString());
+                jsonFile.flush();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }else {
+            try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameRecordAudio + ".json", StandardCharsets.UTF_8)){
+                jsonFile.write(json.toJSONString());
+                jsonFile.flush();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 }

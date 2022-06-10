@@ -6,12 +6,15 @@ import java.nio.file.Path;
 
 public class SaveFolder {
 
+    String os = "";
+
     String folderPath = "";
     String jsonPath = "";
     String recordPath = "";
 
-    public SaveFolder(){
+    public SaveFolder(String os){
         super();
+        this.os = os;
     }
 
     public void createSaveFolderWindows() {
@@ -27,9 +30,15 @@ public class SaveFolder {
 
     public void createPaths(){
         String userName = System.getProperty("user.name");
-        this.folderPath = "C://Users//" + userName + "//Documents//TètKole";
-        this.jsonPath = "C://Users//" + userName + "//Documents//TètKole//JsonFiles";
-        this.recordPath = "C://Users//" + userName + "//Documents//TètKole//RecordFiles";
+        if (this.os.contains("nux") || this.os.contains("mac")){
+            this.folderPath = "/home/" + userName + "/TètKole";
+            this.jsonPath = "/home/" + userName + "/TètKole/JsonFiles";
+            this.recordPath = "/home/" + userName + "/TètKole/RecordFiles";
+        }else {
+            this.folderPath = "C://Users//" + userName + "//Documents//TètKole";
+            this.jsonPath = "C://Users//" + userName + "//Documents//TètKole//JsonFiles";
+            this.recordPath = "C://Users//" + userName + "//Documents//TètKole//RecordFiles";
+        }
     }
 
     public String getFolderPath(){

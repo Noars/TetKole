@@ -22,10 +22,11 @@ public class Main extends Application {
     RecordPane recordPane;
     ZoomPane zoomPane;
     ButtonsZoomPane buttonsZoomPane;
-    SaveFolder saveFolder = new SaveFolder();
+    SaveFolder saveFolder;
 
     int widthScreen, heightScreen;
     String lastPane = "home";
+    String os = "";
 
     public static void main(String[] args) {
         launch(args);
@@ -34,6 +35,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        this.os = System.getProperty("os.name").toLowerCase();
+
+        saveFolder = new SaveFolder(this.os);
         saveFolder.createSaveFolderWindows();
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -133,5 +137,9 @@ public class Main extends Application {
 
     public ZoomPane getZoomPane(){
         return this.zoomPane;
+    }
+
+    public String getOs(){
+        return this.os;
     }
 }

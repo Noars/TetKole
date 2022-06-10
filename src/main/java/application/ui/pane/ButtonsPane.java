@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import utils.buttons.ImageButton;
 import utils.wave.WaveFormService;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class ButtonsPane extends BorderPane {
         Button newAudioFile = createNewAudioFileButton(main, primaryStage);
         playStopAudioFile = createPlayStopAudioFileButton(main);
         record = createRecordButton(main, primaryStage);
-        Button seeJsonFolder = createSeeJsonFolder();
+        Button seeJsonFolder = createSeeJsonFolder(main);
         zoom = createZoomButton(main, primaryStage);
 
         hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, seeJsonFolder);
@@ -123,7 +124,7 @@ public class ButtonsPane extends BorderPane {
         return  newAudioFile;
     }
 
-    public Button createSeeJsonFolder(){
+    public Button createSeeJsonFolder(Main main){
         Button seeJsonFolder = new Buttons();
         seeJsonFolder.setGraphic(ImageButton.createButtonImageView("images/folder.png"));
         seeJsonFolder.getStyleClass().add("blue");
@@ -132,8 +133,13 @@ public class ButtonsPane extends BorderPane {
         seeJsonFolder.setPrefWidth(300);
         seeJsonFolder.setOnAction((e) -> {
             try {
-                String pathFolder = "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\TètKole\\JsonFiles";
-                Runtime.getRuntime().exec("explorer.exe /select," + pathFolder);
+                if (main.getOs().contains("nux") || main.getOs().contains("mac")){
+                    String pathFolder = "/home/" + System.getProperty("user.name") + "/TètKole/JsonFiles";
+                    Desktop.getDesktop().open(new File(pathFolder));
+                }else {
+                    String pathFolder = "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\TètKole\\JsonFiles";
+                    Runtime.getRuntime().exec("explorer.exe /select," + pathFolder);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

@@ -119,6 +119,19 @@ distributions {
             }
         }
     }
+
+    linux {
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/tetkole-linux.sh") {
+                into 'bin'
+            }
+            from("build/jre/linux-x64") {
+                into 'lib/jre'
+            }
+        }
+    }
 }
 
 tasks.jar.dependsOn('createLicence')
@@ -131,7 +144,10 @@ task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license'
     into("${processResources.destinationDir}/data/common")
 }
 
+task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin')
+
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
+linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
