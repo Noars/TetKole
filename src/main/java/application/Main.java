@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ws.schild.jave.process.ffmpeg.FFMPEGProcess;
 
 import java.awt.*;
 

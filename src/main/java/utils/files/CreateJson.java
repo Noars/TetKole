@@ -49,7 +49,7 @@ public class CreateJson {
                 e.printStackTrace();
             }
         }else {
-            try(FileWriter jsonFile = new FileWriter(pathFolder + "//JsonFiles//" + nameRecordAudio + ".json", StandardCharsets.UTF_8)){
+            try(FileWriter jsonFile = new FileWriter(pathFolder + "\\JsonFiles\\" + nameRecordAudio + ".json", StandardCharsets.UTF_8)){
                 jsonFile.write(json.toJSONString());
                 jsonFile.flush();
             }catch (IOException e){

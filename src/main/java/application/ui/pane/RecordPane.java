@@ -41,7 +41,7 @@ public class RecordPane extends BorderPane {
     public RecordPane(Main main, Stage primaryStage, String pathFolder){
         super();
 
-        recordVoice = new RecordVoice(pathFolder);
+        recordVoice = new RecordVoice(main, pathFolder);
         createJson = new CreateJson(main, pathFolder);
         this.pathFolder = pathFolder;
 

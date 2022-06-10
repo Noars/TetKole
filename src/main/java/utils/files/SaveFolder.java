@@ -35,9 +35,9 @@ public class SaveFolder {
             this.jsonPath = "/home/" + userName + "/TètKole/JsonFiles";
             this.recordPath = "/home/" + userName + "/TètKole/RecordFiles";
         }else {
-            this.folderPath = "C://Users//" + userName + "//Documents//TètKole";
-            this.jsonPath = "C://Users//" + userName + "//Documents//TètKole//JsonFiles";
-            this.recordPath = "C://Users//" + userName + "//Documents//TètKole//RecordFiles";
+            this.folderPath = "C:\\Users\\" + userName + "\\Documents\\TètKole";
+            this.jsonPath = "C:\\Users\\" + userName + "\\Documents\\TètKole\\JsonFiles";
+            this.recordPath = "C:\\Users\\" + userName + "\\Documents\\TètKole\\RecordFiles";
         }
     }
 

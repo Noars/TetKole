@@ -134,10 +134,10 @@ public class ButtonsPane extends BorderPane {
         seeJsonFolder.setOnAction((e) -> {
             try {
                 if (main.getOs().contains("nux") || main.getOs().contains("mac")){
-                    String pathFolder = "/home/" + System.getProperty("user.name") + "/TètKole/JsonFiles";
-                    Desktop.getDesktop().open(new File(pathFolder));
+                    String pathFolder = "/home/" + System.getProperty("user.name") + "/TètKole/";
+                    Desktop.getDesktop().browseFileDirectory(new File(pathFolder));
                 }else {
-                    String pathFolder = "C:\\Users\\" + System.getProperty("user.name") + "\\Documents\\TètKole\\JsonFiles";
+                    String pathFolder = System.getProperty("user.home") + "\\Documents\\TètKole\\JsonFiles\\";
                     Runtime.getRuntime().exec("explorer.exe /select," + pathFolder);
                 }
             } catch (IOException ex) {

@@ -1,5 +1,6 @@
 package utils.files;
 
+import application.Main;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -20,9 +21,11 @@ public class RecordVoice {
     Thread audioRecordThread;
     Media audioFile;
     MediaPlayer mediaPlayer;
+    Main main;
 
-    public RecordVoice(String pathFolder){
+    public RecordVoice(Main main, String pathFolder){
         super();
+        this.main = main;
         this.pathFolder = pathFolder;
     }
 
@@ -43,7 +46,7 @@ public class RecordVoice {
 
                 audioRecordThread = new Thread(() -> {
                     AudioInputStream recordStream = new AudioInputStream(targetLine);
-                    wavOutputFile = new File(pathFolder + "//RecordFiles//TempAudio.wav");
+                    this.getWavOutputFile();
                     try {
                         AudioSystem.write(recordStream, fileType, wavOutputFile);
                     } catch (IOException e) {
@@ -57,6 +60,14 @@ public class RecordVoice {
             }
         } catch (LineUnavailableException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void getWavOutputFile(){
+        if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
+            wavOutputFile = new File(pathFolder + "/RecordFiles/TempAudio.wav");
+        }else{
+            wavOutputFile = new File(pathFolder + "\\RecordFiles\\TempAudio.wav");
         }
     }
 
@@ -77,15 +88,27 @@ public class RecordVoice {
     }
 
     public void deleteTempAudioFile(){
-        File audioTempFile = new File(pathFolder + "//RecordFiles//TempAudio.wav");
+        File audioTempFile;
+        if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
+            audioTempFile = new File(pathFolder + "/RecordFiles/TempAudio.wav");
+        }else {
+            audioTempFile = new File(pathFolder + "\\RecordFiles\\TempAudio.wav");
+        }
         if (audioTempFile.delete()){
             System.out.println("Temp file deleted !");
         }
     }
 
     public void renameTempAudioFile(String newName) {
-        Path audioTempFilePath = Paths.get(pathFolder + "//RecordFiles//TempAudio.wav");
-        Path audioFilePath = Paths.get(pathFolder + "//RecordFiles//" + newName + ".wav");
+        Path audioTempFilePath;
+        Path audioFilePath;
+        if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
+            audioTempFilePath = Paths.get(pathFolder + "/RecordFiles/TempAudio.wav");
+            audioFilePath = Paths.get(pathFolder + "/RecordFiles/" + newName + ".wav");
+        }else {
+            audioTempFilePath = Paths.get(pathFolder + "\\RecordFiles\\TempAudio.wav");
+            audioFilePath = Paths.get(pathFolder + "\\RecordFiles\\" + newName + ".wav");
+        }
         try{
             Files.copy(audioTempFilePath, audioFilePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -94,7 +117,11 @@ public class RecordVoice {
     }
 
     public void setupMediaPlayer(){
-        audioFile = new Media(new File(pathFolder + "//RecordFiles//TempAudio.wav").toURI().toString());
+        if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
+            audioFile = new Media(new File(pathFolder + "/RecordFiles/TempAudio.wav").toURI().toString());
+        }else {
+            audioFile = new Media(new File(pathFolder + "\\RecordFiles\\TempAudio.wav").toURI().toString());
+        }
         mediaPlayer = new MediaPlayer(audioFile);
     }
 
