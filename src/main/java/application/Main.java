@@ -45,8 +45,8 @@ public class Main extends Application {
         this.widthScreen = (int) dimension.getWidth();
         this.heightScreen = (int) dimension.getHeight();
 
-        primaryStage.setWidth(this.widthScreen * 0.8);
-        primaryStage.setHeight(this.heightScreen * 0.8);
+        primaryStage.setWidth(this.widthScreen);
+        primaryStage.setHeight(this.heightScreen);
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TètKole");
 
@@ -69,6 +69,10 @@ public class Main extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
 
         primaryStage.show();
+    }
+
+    public void setupStage(){
+
     }
 
     public void goToOption(Stage primaryStage){
