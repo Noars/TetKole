@@ -9,17 +9,17 @@ toc_sticky: true
 
 ## Windows
 
-Attention !
+Attention !<br>
 Le .exe téléchargeable ne fonctionne que sous les windows 64 bits.
 
 ### Télécharger le .exe
-Pour télécharger le .exe de l'application TètKole , rien de plus simple, il suffit de cliquer sur le bouton "Installer pour windows" qui se trouve à la page d'accueil.
-Lorsque vous cliquer sur le bouton, on va vous demander ou vous voulez enregistrer le .exe.
+Pour télécharger le .exe de l'application TètKole , rien de plus simple, il suffit de cliquer sur le bouton "Installer pour windows" qui se trouve à la page d'accueil.<br>
+Lorsque vous cliquer sur le bouton, on va vous demander ou vous voulez enregistrer le .exe.<br>
 Celui-ci s'appelle "TetKole-windows-x64-installer.exe".
 
 ### Installer l'application
-Après avoir télécharger le .exe, rendez-vous a l'emplacement ou il se trouve dans votre pc.
-Double cliquer dessus et suiver les instructions demander.
+Après avoir télécharger le .exe, rendez-vous a l'emplacement ou il se trouve dans votre pc.<br>
+Double cliquer dessus et suiver les instructions demander.<br>
 A tout moment, vous pouvez arrêter l'installation si vous n'êtes pas d'accord avec les explications affichées.
 
 ### Lancer l'application
@@ -31,27 +31,27 @@ A tout moment, vous pouvez arrêter l'installation si vous n'êtes pas d'accord 
 
 ### Désinstaller l'application
 
-Pour désinstaller l'application TètKole, rendez-vous dans le dossier "TètKole" qui se trouve dans "Program Files (x86)".
-A l'intérieur de ce dossier ce trouve "unins000.exe", double cliquer dessus pour entamer la désinstallation.
+Pour désinstaller l'application TètKole, rendez-vous dans le dossier "TètKole" qui se trouve dans "Program Files (x86)".<br>
+A l'intérieur de ce dossier ce trouve "unins000.exe", double cliquer dessus pour entamer la désinstallation.<br>
 Après cela fait, il ne reste plus que le dossier TètKole créer dans vos documents.
 
 ## Linux
 
 ### Télécharger le tar.gz
 
-Pour télécharger le tar.gz de l'application TètKole , rien de plus simple, il suffit de cliquer sur le bouton "Installer pour linux" qui se trouve à la page d'accueil.
-Lorsque vous cliquer sur le bouton, on va vous demander ou vous voulez enregistrer le tar.gz.
+Pour télécharger le tar.gz de l'application TètKole , rien de plus simple, il suffit de cliquer sur le bouton "Installer pour linux" qui se trouve à la page d'accueil.<br>
+Lorsque vous cliquer sur le bouton, on va vous demander ou vous voulez enregistrer le tar.gz.<br>
 Celui-ci s'appelle "TetKole-linux.tar.gz".
 
 ### Installer l'application
-Après avoir télécharger le tar.gz, rendez-vous a l'emplacement ou il se trouve dans votre pc.
+Après avoir télécharger le tar.gz, rendez-vous a l'emplacement ou il se trouve dans votre pc.<br>
 Dézipper le tar.gz.
 
 ### Lancer l'application
-Pour lancer l'application, allez dans le dossier TètKole-linux puis bin.
+Pour lancer l'application, allez dans le dossier TètKole-linux puis bin.<br>
 Ouvrer un terminal a cette emplacement et faite "sh tetkole-linux.sh"
 
 ### Désinstaller l'application
 
-Supprimer le dossier TètKole
+Supprimer le dossier TètKole-linux.<br>
 Après cela fait, il ne reste plus que le dossier TètKole créer dans Dossier Personnel.
