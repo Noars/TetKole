@@ -2,7 +2,7 @@
 layout: splash
 permalink: /
 header:
-    overlay_image: /assets/images/Logo_Cream.png
+    overlay_image: /assets/images/Anr_Cream.jpg
     actions:
         - label: "<i class='fab fa-windows'></i> Install for Windows"
           url: https://github.com/Noars/TetKole/releases/latest/download/TetKole-windows-x64-installer.exe
@@ -12,4 +12,4 @@ excerpt: >
   TètKole is an application for making voice recordings on audio files <br />
 ---
 
-{% include figure image_path="assets/images/Anr_Cream.jpg" %}
+{% include figure image_path="assets/images/Logo_Cream.png" %}

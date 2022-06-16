@@ -51,7 +51,8 @@ plugins:
   - jekyll-redirect-from
 
 include:
-  - _pages
+  - en
+  - fr
 
 # Exclude from processing.
 # The following items will not be processed, by default.
