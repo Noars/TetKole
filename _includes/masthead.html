@@ -12,12 +12,10 @@
     var current = document.URL;
     if (current.includes("fr")) {
       switch (title) {
-        case "Share":
-          return "Partage";
         case "User Guide":
           return "Mode d'emploi";
-        case "Partners":
-          return "Partenaires";
+        case "Installation":
+          return "Installation"
         default:
           return title;
       }

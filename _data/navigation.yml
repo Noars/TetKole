@@ -1,9 +1,5 @@
 main:
   - title: "User Guide"
     url: /userGuide/
-  - title: "Contact"
-    url: /contact/
-  - title: "References"
-    url: /references/
-  - title: "Partners"
-    url: /partners/
+  - title: "Installation"
+    url: /installation/
