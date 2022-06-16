@@ -3,7 +3,6 @@ package utils.wave;
 import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;

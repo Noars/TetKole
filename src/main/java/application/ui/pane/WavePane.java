@@ -1,5 +1,6 @@
 package application.ui.pane;
 
+import application.Main;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
@@ -7,6 +8,9 @@ import utils.wave.WaveFormPane;
 import utils.wave.WaveFormService;
 
 public class WavePane extends WaveFormPane {
+
+	Main main;
+	Stage primaryStage;
 
 	private final PaintService animationService;
 	private final WaveFormService waveService;
@@ -17,9 +21,11 @@ public class WavePane extends WaveFormPane {
 	private boolean isLeftBorder = false;
 	private boolean isRightBorder = false;
 
-	public WavePane(ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
+	public WavePane(Main main, ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
 		super(buttonsPane, primaryStage, width, height);
 		super.setWaveVisualization(this);
+		this.main = main;
+		this.primaryStage = primaryStage;
 		waveService = new WaveFormService(this, primaryStage);
 		animationService = new PaintService();
 		super.sendWaveService(this.waveService);
@@ -90,6 +96,7 @@ public class WavePane extends WaveFormPane {
 
 	public void startPainterService() {
 		animationService.start();
+		main.setNewWavePane(primaryStage);
 	}
 
 	public void stopPainterService() {

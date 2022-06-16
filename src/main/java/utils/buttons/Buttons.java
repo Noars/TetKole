@@ -11,9 +11,4 @@ public class Buttons extends Button {
 
     }
 
-    public Buttons(String name) {
-        super(name);
-        getStyleClass().add("Buttons");
-        this.applyCss();
-    }
 }

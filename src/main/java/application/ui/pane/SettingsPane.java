@@ -1,17 +1,15 @@
 package application.ui.pane;
 
-import application.Main;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public class SettingsPane extends BorderPane {
 
     HBox hbox;
 
-    public SettingsPane(Main main, Stage primaryStage){
+    public SettingsPane(){
         super();
 
         GridPane gridPane = new GridPane();

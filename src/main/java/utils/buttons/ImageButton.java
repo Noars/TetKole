@@ -12,11 +12,4 @@ public class ImageButton {
         return image;
     }
 
-    public static ImageView createAddButtonImageView(String url) {
-        ImageView image = new ImageView(new Image(url));
-        image.setPreserveRatio(true);
-        image.setFitWidth(250);
-        image.setFitWidth(250);
-        return image;
-    }
 }

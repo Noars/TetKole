@@ -114,7 +114,7 @@ public class ButtonsPane extends BorderPane {
         newAudioFile.setOnAction((e) -> {
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null){
-                main.setNewWavePane(primaryStage);
+                main.setLoadingPane(main, primaryStage);
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
                 record.setDisable(false);

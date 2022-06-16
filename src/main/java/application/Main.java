@@ -9,7 +9,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import ws.schild.jave.process.ffmpeg.FFMPEGProcess;
 
 import java.awt.*;
 
@@ -24,6 +23,7 @@ public class Main extends Application {
     ZoomPane zoomPane;
     ButtonsZoomPane buttonsZoomPane;
     SaveFolder saveFolder;
+    LoadingPane loadingPane;
 
     int widthScreen, heightScreen;
     String lastPane = "home";
@@ -50,12 +50,13 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TètKole");
 
-        settingsPane = new SettingsPane(this, primaryStage);
+        settingsPane = new SettingsPane();
         buttonsPane = new ButtonsPane(this, primaryStage);
-        wavePane = new WavePane(this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
+        wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
+        loadingPane = new LoadingPane();
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -69,10 +70,6 @@ public class Main extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
 
         primaryStage.show();
-    }
-
-    public void setupStage(){
-
     }
 
     public void goToOption(Stage primaryStage){
@@ -120,12 +117,16 @@ public class Main extends Application {
     }
 
     public void setNewWavePane(Stage primaryStage){
-        wavePane = new WavePane(this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
     }
 
     public void setNewZoomWavePane(Stage primaryStage){
         zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
+    }
+
+    public void setLoadingPane(Main main, Stage primaryStage){
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(loadingPane);
+        wavePane = new WavePane(main, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
     }
 
     public WavePane getWavePane(){

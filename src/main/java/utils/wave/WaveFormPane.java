@@ -5,8 +5,6 @@ import application.ui.pane.WavePane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
 public class WaveFormPane extends ResizableCanvas {
 
 	private final float[] defaultWave;
@@ -112,22 +110,6 @@ public class WaveFormPane extends ResizableCanvas {
 		gc.fillRect(0, 0, this.leftBorder, height);
 		gc.fillRect((this.rightBorder + this.sizeBorder), 0, width, height);
 
-	}
-
-	public void paintZoomWaveForm(float[] zoomValue) {
-
-		gc.setFill(backgroundColor);
-		gc.fillRect(0, 0, width, height);
-
-		gc.setStroke(foregroundColor);
-		if (zoomValue != null){
-			for (int i = 0; i < zoomValue.length; i++) {
-				int value = (int) ( zoomValue[i] * height );
-				int y1 = ( height - 2 * value ) / 2;
-				int y2 = y1 + 2 * value;
-				gc.strokeLine(i, y1, i, y2);
-			}
-		}
 	}
 
 	public double posLeftStrokeText(){
