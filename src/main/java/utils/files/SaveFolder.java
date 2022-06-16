@@ -15,9 +15,10 @@ public class SaveFolder {
     public SaveFolder(String os){
         super();
         this.os = os;
+        this.createSaveFolder();
     }
 
-    public void createSaveFolderWindows() {
+    public void createSaveFolder() {
         this.createPaths();
         try {
             Files.createDirectories(Path.of(this.folderPath));

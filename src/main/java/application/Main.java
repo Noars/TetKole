@@ -38,9 +38,6 @@ public class Main extends Application {
 
         this.os = System.getProperty("os.name").toLowerCase();
 
-        saveFolder = new SaveFolder(this.os);
-        saveFolder.createSaveFolderWindows();
-
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         this.widthScreen = (int) dimension.getWidth();
         this.heightScreen = (int) dimension.getHeight();
@@ -50,6 +47,7 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setTitle("TètKole");
 
+        saveFolder = new SaveFolder(this.os);
         settingsPane = new SettingsPane();
         buttonsPane = new ButtonsPane(this, primaryStage);
         wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
