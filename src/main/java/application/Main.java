@@ -24,6 +24,7 @@ public class Main extends Application {
     ButtonsZoomPane buttonsZoomPane;
     SaveFolder saveFolder;
     LoadingPane loadingPane;
+    ListenPane listenPane;
 
     int widthScreen, heightScreen;
     String lastPane = "home";
@@ -55,6 +56,7 @@ public class Main extends Application {
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
         loadingPane = new LoadingPane();
+        listenPane = new ListenPane(this, primaryStage);
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -94,6 +96,12 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
     }
 
+    public void goToListen(Stage primaryStage){
+        this.lastPane = "listen";
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(listenPane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
+    }
+
     public void goBack(Stage primaryStage){
         switch (this.lastPane){
 
@@ -107,6 +115,10 @@ public class Main extends Application {
 
             case "zoom":
                 this.goToZoom(primaryStage);
+                break;
+
+            case "listen":
+                this.goToListen(primaryStage);
                 break;
 
             default:

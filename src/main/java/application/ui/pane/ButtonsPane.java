@@ -37,8 +37,9 @@ public class ButtonsPane extends BorderPane {
         record = createRecordButton(main, primaryStage);
         Button seeJsonFolder = createSeeJsonFolder(main);
         zoom = createZoomButton(main, primaryStage);
+        Button listenAudioAndRecord = createListenAudioAndRecordButton(main, primaryStage);
 
-        hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, seeJsonFolder);
+        hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, listenAudioAndRecord, seeJsonFolder);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(hbox, Pos.CENTER);
@@ -122,6 +123,19 @@ public class ButtonsPane extends BorderPane {
             }
         });
         return  newAudioFile;
+    }
+
+    public Button createListenAudioAndRecordButton(Main main, Stage primaryStage){
+        Button listenAudioAndRecord = new Buttons();
+        listenAudioAndRecord.setGraphic(ImageButton.createButtonImageView("images/music.png"));
+        listenAudioAndRecord.getStyleClass().add("blue");
+        listenAudioAndRecord.setContentDisplay(ContentDisplay.TOP);
+        listenAudioAndRecord.setPrefHeight(50);
+        listenAudioAndRecord.setPrefWidth(300);
+        listenAudioAndRecord.setOnAction((e) -> {
+            main.goToListen(primaryStage);
+        });
+        return  listenAudioAndRecord;
     }
 
     public Button createSeeJsonFolder(Main main){
