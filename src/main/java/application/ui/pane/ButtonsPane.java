@@ -133,6 +133,7 @@ public class ButtonsPane extends BorderPane {
         listenAudioAndRecord.setPrefHeight(50);
         listenAudioAndRecord.setPrefWidth(300);
         listenAudioAndRecord.setOnAction((e) -> {
+            main.getListenPane().setupListenPane();
             main.goToListen(primaryStage);
         });
         return  listenAudioAndRecord;

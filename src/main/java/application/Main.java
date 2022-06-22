@@ -155,6 +155,14 @@ public class Main extends Application {
         return this.zoomPane;
     }
 
+    public SaveFolder getSaveFolder(){
+        return this.saveFolder;
+    }
+
+    public ListenPane getListenPane(){
+        return this.listenPane;
+    }
+
     public String getOs(){
         return this.os;
     }
