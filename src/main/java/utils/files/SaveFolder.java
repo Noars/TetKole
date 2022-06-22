@@ -49,4 +49,8 @@ public class SaveFolder {
     public String getJsonPath(){
         return this.jsonPath;
     }
+
+    public String getRecordPath(){
+        return this.recordPath;
+    }
 }

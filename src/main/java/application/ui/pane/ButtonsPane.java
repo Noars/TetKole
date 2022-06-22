@@ -118,6 +118,7 @@ public class ButtonsPane extends BorderPane {
                 main.setLoadingPane(main, primaryStage);
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
+                main.getListenPane().setPath(String.valueOf(file));
                 record.setDisable(false);
                 zoom.setDisable(false);
             }
