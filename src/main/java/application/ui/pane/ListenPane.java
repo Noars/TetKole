@@ -4,6 +4,7 @@ import application.Main;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,6 +27,7 @@ public class ListenPane extends BorderPane {
 
     Main main;
     HBox hbox;
+    GridPane gridPane;
 
     String jsonPath;
     String recordPath;
@@ -35,6 +37,7 @@ public class ListenPane extends BorderPane {
     JSONArray[] listFilesCorrespondingToAudioFile;
     MediaPlayer[] listMediaPlayerRecordFiles;
     MediaPlayer[] listMediaPlayerAudioFile;
+    Label[] listLabels;
 
     int nbCorrespondingFile = 0;
 
@@ -44,11 +47,11 @@ public class ListenPane extends BorderPane {
         this.main = main;
 
         Button returnBack = createReturnBackButton(main, primaryStage);
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         {
-            gridPane.add(returnBack, 0, 0);
+            gridPane.add(returnBack, 1, 10);
         }
 
         hbox = new HBox(gridPane);
@@ -69,6 +72,7 @@ public class ListenPane extends BorderPane {
         this.getAllJsonFile();
         this.getJsonFileCorrespondingToAudioFile(main);
         this.createMediaPlayerRecordFiles(main);
+        this.createLabel();
     }
 
     public Button createReturnBackButton(Main main, Stage primaryStage){
@@ -152,6 +156,19 @@ public class ListenPane extends BorderPane {
         mediaPlayer.setStopTime(new Duration(endTime));
 
         this.listMediaPlayerAudioFile[index] = mediaPlayer;
+    }
+
+    public void createLabel(){
+        for (int i = 0; i < this.nbCorrespondingFile; i++){
+            Label audioLabel = new Label("Fichier audio");
+            audioLabel.getStyleClass().add("textLabel");
+
+            Label recordLabel = new Label("Enregistrement audio");
+            recordLabel.getStyleClass().add("textLabel");
+
+            this.gridPane.add(audioLabel,0,i);
+            this.gridPane.add(recordLabel,1,i);
+        }
     }
 
     public String getJsonPathForActualOS(Main main, int i){

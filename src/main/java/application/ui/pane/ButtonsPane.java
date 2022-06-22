@@ -25,6 +25,7 @@ public class ButtonsPane extends BorderPane {
     Button record;
     Button playStopAudioFile;
     Button zoom;
+    Button listenAudioAndRecord;
 
     HBox hbox;
     FileChooser fileChooser = new FileChooser();
@@ -37,7 +38,7 @@ public class ButtonsPane extends BorderPane {
         record = createRecordButton(main, primaryStage);
         Button seeJsonFolder = createSeeJsonFolder(main);
         zoom = createZoomButton(main, primaryStage);
-        Button listenAudioAndRecord = createListenAudioAndRecordButton(main, primaryStage);
+        listenAudioAndRecord = createListenAudioAndRecordButton(main, primaryStage);
 
         hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, listenAudioAndRecord, seeJsonFolder);
         hbox.setSpacing(5);
@@ -69,6 +70,7 @@ public class ButtonsPane extends BorderPane {
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/pause.png"));
             }
         });
+        playStopAudioFile.setDisable(true);
         return playStopAudioFile;
     }
 
@@ -119,11 +121,17 @@ public class ButtonsPane extends BorderPane {
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
                 main.getListenPane().setPath(String.valueOf(file));
-                record.setDisable(false);
-                zoom.setDisable(false);
+                this.enableButton();
             }
         });
         return  newAudioFile;
+    }
+
+    public void enableButton(){
+        record.setDisable(false);
+        zoom.setDisable(false);
+        listenAudioAndRecord.setDisable(false);
+        playStopAudioFile.setDisable(false);
     }
 
     public Button createListenAudioAndRecordButton(Main main, Stage primaryStage){
@@ -137,6 +145,7 @@ public class ButtonsPane extends BorderPane {
             main.getListenPane().setupListenPane();
             main.goToListen(primaryStage);
         });
+        listenAudioAndRecord.setDisable(true);
         return  listenAudioAndRecord;
     }
 
