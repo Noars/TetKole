@@ -55,7 +55,7 @@ public class Main extends Application {
         zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath(), settingsPane.getLanguage());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
-        loadingPane = new LoadingPane();
+        loadingPane = new LoadingPane(this.widthScreen);
         listenPane = new ListenPane(this, primaryStage, settingsPane.getLanguage());
         emptyPane = new EmptyPane();
 
