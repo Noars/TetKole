@@ -49,14 +49,14 @@ public class Main extends Application {
         primaryStage.setTitle("TètKole");
 
         saveFolder = new SaveFolder(this.os);
-        settingsPane = new SettingsPane();
+        settingsPane = new SettingsPane(this);
         buttonsPane = new ButtonsPane(this, primaryStage);
         wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
-        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
+        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath(), settingsPane.getLanguage());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
         loadingPane = new LoadingPane();
-        listenPane = new ListenPane(this, primaryStage);
+        listenPane = new ListenPane(this, primaryStage, settingsPane.getLanguage());
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);

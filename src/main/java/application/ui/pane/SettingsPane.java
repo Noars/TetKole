@@ -1,5 +1,6 @@
 package application.ui.pane;
 
+import application.Main;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -13,6 +14,7 @@ import java.util.ResourceBundle;
 
 public class SettingsPane extends BorderPane {
 
+    Main main;
     HBox hbox;
 
     Locale fr_local;
@@ -22,9 +24,10 @@ public class SettingsPane extends BorderPane {
 
     Label chooseLanguageLabel;
 
-    public SettingsPane(){
+    public SettingsPane(Main main){
         super();
 
+        this.main = main;
         this.initLanguage();
 
         MenuButton languageMenuButton = chooseLanguageMenuButton();
@@ -93,7 +96,13 @@ public class SettingsPane extends BorderPane {
         return menuButton;
     }
 
+    public ResourceBundle getLanguage(){
+        return this.languages;
+    }
+
     public void notifyLanguageChanged(){
         this.changeLabel();
+        main.getRecordPane().changeLabel(this.languages);
+        main.getListenPane().changeLabel(this.languages);
     }
 }

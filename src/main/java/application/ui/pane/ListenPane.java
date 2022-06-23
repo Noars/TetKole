@@ -24,11 +24,13 @@ import utils.buttons.ImageButton;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class ListenPane extends BorderPane {
 
     Main main;
     Stage primaryStage;
+    ResourceBundle language;
 
     HBox hbox;
     GridPane gridPane;
@@ -36,6 +38,9 @@ public class ListenPane extends BorderPane {
     String jsonPath;
     String recordPath;
     String pathAudioFile;
+
+    Label audioLabel;
+    Label timeLabel;
 
     String[] listFiles;
     JSONArray[] listFilesCorrespondingToAudioFile;
@@ -49,11 +54,12 @@ public class ListenPane extends BorderPane {
 
     int nbCorrespondingFile = 0;
 
-    public ListenPane(Main main, Stage primaryStage){
+    public ListenPane(Main main, Stage primaryStage, ResourceBundle language){
         super();
 
         this.main = main;
         this.primaryStage = primaryStage;
+        this.language = language;
 
         gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -187,25 +193,28 @@ public class ListenPane extends BorderPane {
 
     public void createLabel(){
         int index = 0;
+
+        audioLabel = new Label(language.getString("AudioFile"));
+        audioLabel.getStyleClass().add("textLabel");
+        this.gridPane.add(audioLabel,0,index);
+
+        timeLabel = new Label(language.getString("Time"));
+        timeLabel.getStyleClass().add("textLabel");
+        this.gridPane.add(timeLabel, 4, index);
+
         for (int i = 0; i < this.nbCorrespondingFile; i++){
-            Label audioLabel = new Label("Fichier audio actuel");
-            audioLabel.getStyleClass().add("textLabel");
 
             Label recordLabel = new Label(listNameFilesCorrespondingToAudioFile[i]);
             recordLabel.getStyleClass().add("textLabel");
-
-            Label timeLabel = new Label("Temps");
-            timeLabel.getStyleClass().add("textLabel");
 
             Label emptyLabel = new Label("");
             Label emptyLabel2 = new Label("");
             Label emptyLabel3 = new Label("");
 
-            this.gridPane.add(audioLabel,0,index);
+
             this.gridPane.add(emptyLabel, 1, index);
             this.gridPane.add(recordLabel,2,index);
             this.gridPane.add(emptyLabel2, 3, index);
-            this.gridPane.add(timeLabel, 4, index);
 
             this.createMediaPlayerAudioButton(i, index);
             this.createMediaPlayerRecordButton(i, index);
@@ -284,5 +293,11 @@ public class ListenPane extends BorderPane {
 
     public void setPath(String path){
         this.pathAudioFile = path;
+    }
+
+    public void changeLabel(ResourceBundle languages){
+        this.language = languages;
+        this.audioLabel.setText(languages.getString("AudioFile"));
+        this.timeLabel.setText(languages.getString("Time"));
     }
 }
