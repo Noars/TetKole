@@ -5,6 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,6 +28,8 @@ import java.io.IOException;
 public class ListenPane extends BorderPane {
 
     Main main;
+    Stage primaryStage;
+
     HBox hbox;
     GridPane gridPane;
 
@@ -37,7 +41,6 @@ public class ListenPane extends BorderPane {
     JSONArray[] listFilesCorrespondingToAudioFile;
     MediaPlayer[] listMediaPlayerRecordFiles;
     MediaPlayer[] listMediaPlayerAudioFile;
-    Label[] listLabels;
 
     int nbCorrespondingFile = 0;
 
@@ -45,15 +48,11 @@ public class ListenPane extends BorderPane {
         super();
 
         this.main = main;
+        this.primaryStage = primaryStage;
 
-        Button returnBack = createReturnBackButton(main, primaryStage);
         gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
-        {
-            gridPane.add(returnBack, 1, 10);
-        }
-
         hbox = new HBox(gridPane);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
@@ -73,9 +72,10 @@ public class ListenPane extends BorderPane {
         this.getJsonFileCorrespondingToAudioFile(main);
         this.createMediaPlayerRecordFiles(main);
         this.createLabel();
+        this.createReturnBackButton();
     }
 
-    public Button createReturnBackButton(Main main, Stage primaryStage){
+    public void createReturnBackButton(){
         Button returnBack = new Buttons();
         returnBack.setGraphic(ImageButton.createButtonImageView("images/back.png"));
         returnBack.getStyleClass().add("blue");
@@ -85,7 +85,7 @@ public class ListenPane extends BorderPane {
         returnBack.setOnAction((e) -> {
             main.goToHome(primaryStage);
         });
-        return  returnBack;
+        this.gridPane.add(returnBack,1,(this.nbCorrespondingFile * 2) + 1);
     }
 
     public void getAllJsonFile(){
@@ -159,16 +159,54 @@ public class ListenPane extends BorderPane {
     }
 
     public void createLabel(){
+        int index = 0;
         for (int i = 0; i < this.nbCorrespondingFile; i++){
             Label audioLabel = new Label("Fichier audio");
             audioLabel.getStyleClass().add("textLabel");
 
+            Label emptyLabel = new Label("");
+
             Label recordLabel = new Label("Enregistrement audio");
             recordLabel.getStyleClass().add("textLabel");
 
-            this.gridPane.add(audioLabel,0,i);
-            this.gridPane.add(recordLabel,1,i);
+            this.gridPane.add(audioLabel,0,index);
+            gridPane.add(emptyLabel, 1, index);
+            this.gridPane.add(recordLabel,2,index);
+
+            this.createMediaPlayerAudioButton(index);
+            this.createMediaPlayerRecordButton(index);
+            index += 2;
         }
+    }
+
+    public void createMediaPlayerAudioButton(int index){
+        Button playStopMediaPlayerAudio = new Buttons();
+        playStopMediaPlayerAudio.setGraphic(ImageButton.createButtonImageView("images/play.png"));
+        playStopMediaPlayerAudio.getStyleClass().add("blue");
+        playStopMediaPlayerAudio.setContentDisplay(ContentDisplay.TOP);
+        playStopMediaPlayerAudio.setPrefHeight(50);
+        playStopMediaPlayerAudio.setPrefWidth(300);
+        playStopMediaPlayerAudio.setOnAction((e) -> {
+            listMediaPlayerAudioFile[index].stop();
+            listMediaPlayerAudioFile[index].play();
+        });
+
+        this.gridPane.add(playStopMediaPlayerAudio, 0,index+1);
+    }
+
+    public void createMediaPlayerRecordButton(int index){
+        Button playStopMediaPlayerRecord = new Buttons();
+        playStopMediaPlayerRecord.setGraphic(ImageButton.createButtonImageView("images/play.png"));
+        playStopMediaPlayerRecord.getStyleClass().add("blue");
+        playStopMediaPlayerRecord.setContentDisplay(ContentDisplay.TOP);
+        playStopMediaPlayerRecord.setPrefHeight(50);
+        playStopMediaPlayerRecord.setPrefWidth(300);
+        playStopMediaPlayerRecord.setOnAction((e) -> {
+            listMediaPlayerRecordFiles[index].stop();
+            listMediaPlayerRecordFiles[index].play();
+        });
+
+        this.gridPane.add(playStopMediaPlayerRecord, 2,index+1);
     }
 
     public String getJsonPathForActualOS(Main main, int i){
