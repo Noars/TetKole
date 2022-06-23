@@ -39,8 +39,13 @@ public class ListenPane extends BorderPane {
 
     String[] listFiles;
     JSONArray[] listFilesCorrespondingToAudioFile;
+    String[] listNameFilesCorrespondingToAudioFile;
+    String[] listStartTimeAudioAndRecordFiles;
+    String[] listEndTimeAudioAndRecordFiles;
     MediaPlayer[] listMediaPlayerRecordFiles;
     MediaPlayer[] listMediaPlayerAudioFile;
+    Boolean[] listStatusMediaPlayerRecordFiles;
+    Boolean[] listStatusMediaPlayerAudioFile;
 
     int nbCorrespondingFile = 0;
 
@@ -85,13 +90,14 @@ public class ListenPane extends BorderPane {
         returnBack.setOnAction((e) -> {
             main.goToHome(primaryStage);
         });
-        this.gridPane.add(returnBack,1,(this.nbCorrespondingFile * 2) + 1);
+        this.gridPane.add(returnBack,1,(this.nbCorrespondingFile * 3) + 1);
     }
 
     public void getAllJsonFile(){
         File folder = new File(jsonPath);
         listFiles = folder.list();
         listFilesCorrespondingToAudioFile = new JSONArray[listFiles.length];
+        listNameFilesCorrespondingToAudioFile = new String[listFiles.length];
     }
 
     public void getJsonFileCorrespondingToAudioFile(Main main){
@@ -102,6 +108,7 @@ public class ListenPane extends BorderPane {
                 JSONObject id = (JSONObject) jsonArray.get(0);
                 if (id.get("Nom du fichier audio").equals(main.getWavePane().getWaveService().audioFileName)){
                     listFilesCorrespondingToAudioFile[i] = jsonArray;
+                    listNameFilesCorrespondingToAudioFile[i] = listFiles[i];
                     this.nbCorrespondingFile += 1;
                 }
             } catch (IOException | ParseException e) {
@@ -109,7 +116,33 @@ public class ListenPane extends BorderPane {
             }
         }
         this.listMediaPlayerAudioFile = new MediaPlayer[this.nbCorrespondingFile];
+        this.listStatusMediaPlayerAudioFile = new Boolean[this.nbCorrespondingFile];
         this.listMediaPlayerRecordFiles = new MediaPlayer[this.nbCorrespondingFile];
+        this.listStatusMediaPlayerRecordFiles = new Boolean[this.nbCorrespondingFile];
+        this.listStartTimeAudioAndRecordFiles = new String[this.nbCorrespondingFile];
+        this.listEndTimeAudioAndRecordFiles = new String[this.nbCorrespondingFile];
+
+        this.filterNameList();
+        this.initBooleanTab();
+    }
+
+    public void filterNameList(){
+        String[] temp = new String[nbCorrespondingFile];
+        int index = 0;
+        for (String value: this.listNameFilesCorrespondingToAudioFile){
+            if (value != null){
+                temp[index] = value;
+                index++;
+            }
+        }
+        this.listNameFilesCorrespondingToAudioFile = temp;
+    }
+
+    public void initBooleanTab(){
+        for (int i = 0; i < this.nbCorrespondingFile; i++){
+            this.listStatusMediaPlayerAudioFile[i] = false;
+            this.listStatusMediaPlayerRecordFiles[i] = false;
+        }
     }
 
     public void createMediaPlayerRecordFiles(Main main){
@@ -119,19 +152,22 @@ public class ListenPane extends BorderPane {
                 JSONObject nameRecordFile = (JSONObject) item.get(1);
                 Media recordFile = new Media(new File(getRecordPathForActualOS(main, (String) nameRecordFile.get("Nom du fichier audio enregistrer"))).toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(recordFile);
-                this.listMediaPlayerRecordFiles[index] = this.setupRecordMediaPlayer(mediaPlayer, item, index);
+                this.listMediaPlayerRecordFiles[index] = mediaPlayer;
+                this.setupAudioFileMediaPlayer(item, index);
                 index++;
             }
         }
     }
 
-    public MediaPlayer setupRecordMediaPlayer(MediaPlayer mediaPlayer, JSONArray item, int index){
+    public void setupAudioFileMediaPlayer(JSONArray item, int index){
         JSONObject startTimeObj = (JSONObject) item.get(2);
         JSONObject endTimeObj = (JSONObject) item.get(3);
 
         String startTime = (String) startTimeObj.get("Debut de l'intervalle");
+        this.listStartTimeAudioAndRecordFiles[index] = startTime;
         startTime = startTime.replaceAll("[a-zA-z]", "");
         String endTime = (String) endTimeObj.get("Fin de l'intervalle");
+        this.listEndTimeAudioAndRecordFiles[index] = endTime;
         endTime = endTime.replaceAll("[a-zA-z]", "");
 
         String[] startTimeSplit = startTime.split(":");
@@ -140,20 +176,11 @@ public class ListenPane extends BorderPane {
         int startTimeValue = (Integer.parseInt(startTimeSplit[0]) * 3600000) + (Integer.parseInt(startTimeSplit[1]) * 60000) + (Integer.parseInt(startTimeSplit[2]) * 1000) + Integer.parseInt(startTimeSplit[3]);
         int endTimeValue = (Integer.parseInt(endTimeSplit[0]) * 3600000) + (Integer.parseInt(endTimeSplit[1]) * 60000) + (Integer.parseInt(endTimeSplit[2]) * 1000) + Integer.parseInt(endTimeSplit[3]);
 
-        mediaPlayer.setStartTime(new Duration(startTimeValue));
-        mediaPlayer.setStopTime(new Duration(endTimeValue));
-
-        this.setupAudioFileMediaPlayer(startTimeValue, endTimeValue, index);
-
-        return mediaPlayer;
-    }
-
-    public void setupAudioFileMediaPlayer(int startTime, int endTime, int index){
         Media audioFile = new Media(new File(this.pathAudioFile).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(audioFile);
 
-        mediaPlayer.setStartTime(new Duration(startTime));
-        mediaPlayer.setStopTime(new Duration(endTime));
+        mediaPlayer.setStartTime(new Duration(startTimeValue));
+        mediaPlayer.setStopTime(new Duration(endTimeValue));
 
         this.listMediaPlayerAudioFile[index] = mediaPlayer;
     }
@@ -161,25 +188,36 @@ public class ListenPane extends BorderPane {
     public void createLabel(){
         int index = 0;
         for (int i = 0; i < this.nbCorrespondingFile; i++){
-            Label audioLabel = new Label("Fichier audio");
+            Label audioLabel = new Label("Fichier audio actuel");
             audioLabel.getStyleClass().add("textLabel");
 
-            Label emptyLabel = new Label("");
-
-            Label recordLabel = new Label("Enregistrement audio");
+            Label recordLabel = new Label(listNameFilesCorrespondingToAudioFile[i]);
             recordLabel.getStyleClass().add("textLabel");
 
-            this.gridPane.add(audioLabel,0,index);
-            gridPane.add(emptyLabel, 1, index);
-            this.gridPane.add(recordLabel,2,index);
+            Label timeLabel = new Label("Temps");
+            timeLabel.getStyleClass().add("textLabel");
 
-            this.createMediaPlayerAudioButton(index);
-            this.createMediaPlayerRecordButton(index);
-            index += 2;
+            Label emptyLabel = new Label("");
+            Label emptyLabel2 = new Label("");
+            Label emptyLabel3 = new Label("");
+
+            this.gridPane.add(audioLabel,0,index);
+            this.gridPane.add(emptyLabel, 1, index);
+            this.gridPane.add(recordLabel,2,index);
+            this.gridPane.add(emptyLabel2, 3, index);
+            this.gridPane.add(timeLabel, 4, index);
+
+            this.createMediaPlayerAudioButton(i, index);
+            this.createMediaPlayerRecordButton(i, index);
+            this.displayTimeValue(i, index);
+
+            this.gridPane.add(emptyLabel3, 0, index+2);
+
+            index += 3;
         }
     }
 
-    public void createMediaPlayerAudioButton(int index){
+    public void createMediaPlayerAudioButton(int indexTab, int indexGridPane){
         Button playStopMediaPlayerAudio = new Buttons();
         playStopMediaPlayerAudio.setGraphic(ImageButton.createButtonImageView("images/play.png"));
         playStopMediaPlayerAudio.getStyleClass().add("blue");
@@ -187,14 +225,20 @@ public class ListenPane extends BorderPane {
         playStopMediaPlayerAudio.setPrefHeight(50);
         playStopMediaPlayerAudio.setPrefWidth(300);
         playStopMediaPlayerAudio.setOnAction((e) -> {
-            listMediaPlayerAudioFile[index].stop();
-            listMediaPlayerAudioFile[index].play();
+            if (this.listStatusMediaPlayerAudioFile[indexTab]){
+                this.listStatusMediaPlayerAudioFile[indexTab] = false;
+                listMediaPlayerAudioFile[indexTab].stop();
+                ((ImageView) playStopMediaPlayerAudio.getGraphic()).setImage(new Image("images/play.png"));
+            }else {
+                this.listStatusMediaPlayerAudioFile[indexTab] = true;
+                listMediaPlayerAudioFile[indexTab].play();
+                ((ImageView) playStopMediaPlayerAudio.getGraphic()).setImage(new Image("images/stop.png"));
+            }
         });
-
-        this.gridPane.add(playStopMediaPlayerAudio, 0,index+1);
+        this.gridPane.add(playStopMediaPlayerAudio, 0,indexGridPane+1);
     }
 
-    public void createMediaPlayerRecordButton(int index){
+    public void createMediaPlayerRecordButton(int indexTab, int indexGridPane){
         Button playStopMediaPlayerRecord = new Buttons();
         playStopMediaPlayerRecord.setGraphic(ImageButton.createButtonImageView("images/play.png"));
         playStopMediaPlayerRecord.getStyleClass().add("blue");
@@ -202,11 +246,24 @@ public class ListenPane extends BorderPane {
         playStopMediaPlayerRecord.setPrefHeight(50);
         playStopMediaPlayerRecord.setPrefWidth(300);
         playStopMediaPlayerRecord.setOnAction((e) -> {
-            listMediaPlayerRecordFiles[index].stop();
-            listMediaPlayerRecordFiles[index].play();
+            if (this.listStatusMediaPlayerRecordFiles[indexTab]){
+                this.listStatusMediaPlayerRecordFiles[indexTab] = false;
+                listMediaPlayerRecordFiles[indexTab].stop();
+                ((ImageView) playStopMediaPlayerRecord.getGraphic()).setImage(new Image("images/play.png"));
+            }else {
+                this.listStatusMediaPlayerRecordFiles[indexTab] = true;
+                listMediaPlayerRecordFiles[indexTab].play();
+                ((ImageView) playStopMediaPlayerRecord.getGraphic()).setImage(new Image("images/stop.png"));
+            }
         });
+        this.gridPane.add(playStopMediaPlayerRecord, 2,indexGridPane+1);
+    }
 
-        this.gridPane.add(playStopMediaPlayerRecord, 2,index+1);
+    public void displayTimeValue(int indexTab, int indexGridPane){
+        Label timeValueLabel = new Label(this.listStartTimeAudioAndRecordFiles[indexTab] + " - " + this.listEndTimeAudioAndRecordFiles[indexTab]);
+        timeValueLabel.getStyleClass().add("textLabel");
+        timeValueLabel.setAlignment(Pos.CENTER);
+        this.gridPane.add(timeValueLabel, 4, indexGridPane+1);
     }
 
     public String getJsonPathForActualOS(Main main, int i){
