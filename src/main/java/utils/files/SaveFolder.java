@@ -45,4 +45,12 @@ public class SaveFolder {
     public String getFolderPath(){
         return this.folderPath;
     }
+
+    public String getJsonPath(){
+        return this.jsonPath;
+    }
+
+    public String getRecordPath(){
+        return this.recordPath;
+    }
 }

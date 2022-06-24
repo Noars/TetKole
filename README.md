@@ -1,13 +1,13 @@
 # TètKole
 
-## Français
+## Français (English version below)
 
 ### Outils utilisés
 
 * JavaFx 17.0.2 (Azul community)
 * Gradle 7.4.2
 * Spotbugs 5.0.7
-* Innosetup
+* Innosetup 6.2.0
 
 ### Branche master (défaut)
 
@@ -27,9 +27,9 @@ Le lien du site web est -> https://noars.github.io/TetKole/
 
 Actuellement ce dépôt contient 3 workflows :
 
-* 1 pour l'intégration continue -> ci.yml
-* 1 pour automatiser les releases -> release.yml
-* 1 pour mettre a jour la page web si il y a eu des modification
+* 1 pour l'intégration continue -> .github/ci.yml
+* 1 pour automatiser les releases -> .github/release.yml
+* 1 pour mettre a jour la page web si il y a eu des modification (gérer par git lui même)
 
 ### Fonctionnement de la release de TètKole
 
@@ -38,6 +38,22 @@ Le numéro de la release est toujours la dernière version + 1. <br>
 C'est à dire, si la dernière version est "TètKole 1.0.7", alors la prochaine release sera "TètKole 1.0.8".<br>
 Pour changer les chiffres supérieurs il faut le faire a la main en éditant la dernière release.
 
+### Générer une release de TètKole en local
+
+Une fois le projet récupéré, il vous suffit de lancer la tâche gradle "generateWindowsInstaller" dans distribution.<br>
+Cela va créer une release Windows et Linux dans le dossier build/distribution .
+
+### Fonctionnement des recherches de bugs via Spotbugs
+
+Pour rechercher des bugs via Spotbugs, ila faut lancer la tâche gradle "spotbugsMain" dans verification.<br>
+Si jamais il trouve des erreurs, aller sur ce site -> https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html <br>
+Puis trouver à quoi correspond l'erreur remonter par Spotbugs.
+
+### Les images utilisées
+
+Toutes les images utilisées dans cette application sont libre de droit.<br>
+90% sont des images que j'ai fait à la main sur paint 3D (pour avoir le fond transparent).
+
 ## English
 
 ### Used tools
@@ -45,7 +61,7 @@ Pour changer les chiffres supérieurs il faut le faire a la main en éditant la 
 * JavaFx 17.0.2 (Azul community)
 * Gradle 7.4.2
 * Spotbugs 5.0.7
-* Innosetup
+* Innosetup 6.2.0
 
 ### Master branch (default)
 
@@ -67,9 +83,9 @@ The website link is -> https://noars.github.io/TetKole/
 
 Currently this repository contains 3 workflows:
 
-* 1 for continuous integration -> ci.yml
-* 1 to automate releases -> release.yml
-* 1 to update the web page if there have been changes
+* 1 for continuous integration -> .github/ci.yml
+* 1 to automate releases -> .github/release.yml
+* 1 to update the web page if there have been changes (managed by git itself)
 
 ### Operation of the TètKole release
 
@@ -77,3 +93,19 @@ When you push in the master branch, a release is automatically generated thanks 
 The release number is always the latest version + 1. <br>
 That is, if the latest version is "TètKole 1.0.7", then the next release will be "TètKole 1.0.8".<br>
 To change the upper numbers it must be done by hand by editing the latest release.
+
+### Generate a TètKole release locally
+
+Once the project is recovered, you just need to launch the "generateWindowsInstaller" gradle task in distribution.<br>
+This will create a Windows and Linux release in the build/distribution folder.
+
+### How Spotbugs bug searches work
+
+To search for bugs via Spotbugs, you have to run the gradle task "spotbugsMain" in verification.<br>
+If it ever finds errors, go to this site -> https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html <br>
+Then find what the error reported by Spotbugs corresponds to.
+
+### Images used
+
+All images used in this app are copyright free.<br>
+90% are images that I made by hand on 3D paint (to have the transparent background).

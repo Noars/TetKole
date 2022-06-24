@@ -22,9 +22,11 @@ public class ButtonsPane extends BorderPane {
 
     boolean runningAudio = false;
 
+    Button newAudioFile;
     Button record;
     Button playStopAudioFile;
     Button zoom;
+    Button listenAudioAndRecord;
 
     HBox hbox;
     FileChooser fileChooser = new FileChooser();
@@ -32,13 +34,14 @@ public class ButtonsPane extends BorderPane {
     public ButtonsPane(Main main, Stage primaryStage){
         super();
 
-        Button newAudioFile = createNewAudioFileButton(main, primaryStage);
+        newAudioFile = createNewAudioFileButton(main, primaryStage);
         playStopAudioFile = createPlayStopAudioFileButton(main);
         record = createRecordButton(main, primaryStage);
         Button seeJsonFolder = createSeeJsonFolder(main);
         zoom = createZoomButton(main, primaryStage);
+        listenAudioAndRecord = createListenAudioAndRecordButton(main, primaryStage);
 
-        hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, seeJsonFolder);
+        hbox = new HBox(newAudioFile, zoom, playStopAudioFile, record, listenAudioAndRecord, seeJsonFolder);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(hbox, Pos.CENTER);
@@ -68,6 +71,7 @@ public class ButtonsPane extends BorderPane {
                 ((ImageView) playStopAudioFile.getGraphic()).setImage(new Image("images/pause.png"));
             }
         });
+        playStopAudioFile.setDisable(true);
         return playStopAudioFile;
     }
 
@@ -114,14 +118,37 @@ public class ButtonsPane extends BorderPane {
         newAudioFile.setOnAction((e) -> {
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null){
+                newAudioFile.setDisable(true);
                 main.setLoadingPane(main, primaryStage);
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
-                record.setDisable(false);
-                zoom.setDisable(false);
+                main.getListenPane().setPath(String.valueOf(file));
             }
         });
         return  newAudioFile;
+    }
+
+    public void enableButton(){
+        newAudioFile.setDisable(false);
+        record.setDisable(false);
+        zoom.setDisable(false);
+        listenAudioAndRecord.setDisable(false);
+        playStopAudioFile.setDisable(false);
+    }
+
+    public Button createListenAudioAndRecordButton(Main main, Stage primaryStage){
+        Button listenAudioAndRecord = new Buttons();
+        listenAudioAndRecord.setGraphic(ImageButton.createButtonImageView("images/music.png"));
+        listenAudioAndRecord.getStyleClass().add("blue");
+        listenAudioAndRecord.setContentDisplay(ContentDisplay.TOP);
+        listenAudioAndRecord.setPrefHeight(50);
+        listenAudioAndRecord.setPrefWidth(300);
+        listenAudioAndRecord.setOnAction((e) -> {
+            main.getListenPane().setupListenPane();
+            main.goToListen(primaryStage);
+        });
+        listenAudioAndRecord.setDisable(true);
+        return  listenAudioAndRecord;
     }
 
     public Button createSeeJsonFolder(Main main){

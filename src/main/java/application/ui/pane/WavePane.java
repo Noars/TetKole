@@ -26,7 +26,7 @@ public class WavePane extends WaveFormPane {
 		super.setWaveVisualization(this);
 		this.main = main;
 		this.primaryStage = primaryStage;
-		waveService = new WaveFormService(this, primaryStage);
+		waveService = new WaveFormService(this, main, primaryStage);
 		animationService = new PaintService();
 		super.sendWaveService(this.waveService);
 
@@ -97,6 +97,8 @@ public class WavePane extends WaveFormPane {
 	public void startPainterService() {
 		animationService.start();
 		main.setNewWavePane(primaryStage);
+		main.getButtonsPane().enableButton();
+		main.getLoadingPane().resetLoading();
 	}
 
 	public void stopPainterService() {

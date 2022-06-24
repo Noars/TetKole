@@ -14,6 +14,7 @@ import utils.files.RecordVoice;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class RecordPane extends BorderPane {
 
@@ -26,6 +27,8 @@ public class RecordPane extends BorderPane {
     Button record;
     Button listenAudioFile;
 
+    Label statusAudioFile;
+    Label audioFileNameLabel;
     Label errorStatusAudioLabel;
     Label errorAudioFileNameLabel;
     TextField audioFileNameText;
@@ -38,8 +41,12 @@ public class RecordPane extends BorderPane {
     String pathFolder;
     String generatedNameFile;
 
-    public RecordPane(Main main, Stage primaryStage, String pathFolder){
+    ResourceBundle language;
+
+    public RecordPane(Main main, Stage primaryStage, String pathFolder, ResourceBundle language){
         super();
+
+        this.language = language;
 
         recordVoice = new RecordVoice(main, pathFolder);
         createJson = new CreateJson(main, pathFolder);
@@ -55,7 +62,7 @@ public class RecordPane extends BorderPane {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         {
-            Label statusAudioFile = new Label("Enregistrement audio fait ?");
+            statusAudioFile = new Label(language.getString("RecordAudio"));
             Image statusImage = new Image("images/error.png");
             statusImageView = new ImageView();
             statusImageView.setFitWidth(30);
@@ -68,7 +75,7 @@ public class RecordPane extends BorderPane {
             statusAudioFile.getStyleClass().add("textLabel");
             errorStatusAudioLabel.getStyleClass().add("errorLabel");
 
-            Label audioFileNameLabel = new Label("Nom du fichier audio enregistrer : ");
+            audioFileNameLabel = new Label(language.getString("NameAudioFile"));
             audioFileNameText = new TextField(this.generatedNameFile);
             errorAudioFileNameLabel = new Label();
             gridPane.add(audioFileNameLabel, 1, 1);
@@ -190,9 +197,9 @@ public class RecordPane extends BorderPane {
         validateRecord.setPrefWidth(300);
         validateRecord.setOnAction((e) -> {
             if (!recordDone){
-                this.errorStatusAudioMessage("Un enregistrement est nécessaire !");
+                this.errorStatusAudioMessage();
             }else if (Objects.equals(audioFileNameText.getText(), "")){
-                this.errorAudioMessage("Un nom est nécessaire pour le fichier audio !");
+                this.errorAudioMessage();
             }else {
                 if (!this.checkNameAlreadyUse(audioFileNameText.getText())){
                     recordVoice.renameTempAudioFile(audioFileNameText.getText());
@@ -210,20 +217,20 @@ public class RecordPane extends BorderPane {
         File recordFile = new File(pathFolder + "//RecordFiles//" + recordFileName + ".wav");
 
         if (recordFile.exists()){
-            this.errorAudioMessage("Ce nom est déjà utilisé !");
+            this.errorAudioFileNameLabel.setText(language.getString("NameAlreadyUse"));
             return true;
         }else {
             return false;
         }
     }
 
-    public void errorStatusAudioMessage(String error){
-        this.errorStatusAudioLabel.setText(error);
+    public void errorStatusAudioMessage(){
+        this.errorStatusAudioLabel.setText(language.getString("ErrorRecordAudio"));
     }
 
-    public void errorAudioMessage(String error){
+    public void errorAudioMessage(){
         this.errorStatusAudioLabel.setText("");
-        this.errorAudioFileNameLabel.setText(error);
+        this.errorAudioFileNameLabel.setText(language.getString("ErrorNameAudioFile"));
     }
 
     public void setStatusImageView(boolean status){
@@ -247,6 +254,11 @@ public class RecordPane extends BorderPane {
         this.errorAudioFileNameLabel.setText("");
 
         this.audioFileNameText.setText(generatedNameFile);
+    }
+
+    public void resetErrorLabel(){
+        this.errorStatusAudioLabel.setText("");
+        this.errorAudioFileNameLabel.setText("");
     }
 
     public void resetButton(){
@@ -281,5 +293,12 @@ public class RecordPane extends BorderPane {
 
         this.generatedNameFile = newNameFile;
         this.audioFileNameText.setText(generatedNameFile);
+    }
+
+    public void changeLabel(ResourceBundle languages){
+        this.language = languages;
+        this.resetErrorLabel();
+        this.statusAudioFile.setText(languages.getString("RecordAudio"));
+        this.audioFileNameLabel.setText(languages.getString("NameAudioFile"));
     }
 }
