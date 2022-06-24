@@ -1,6 +1,6 @@
 # TètKole
 
-## Français
+## Français (English version below)
 
 ### Outils utilisés
 
@@ -38,9 +38,21 @@ Le numéro de la release est toujours la dernière version + 1. <br>
 C'est à dire, si la dernière version est "TètKole 1.0.7", alors la prochaine release sera "TètKole 1.0.8".<br>
 Pour changer les chiffres supérieurs il faut le faire a la main en éditant la dernière release.
 
+### Générer une release de TètKole en local
+
+Une fois le projet récupéré, il vous suffit de lancer la tâche gradle "generateWindowsInstaller" dans distribution.<br>
+Cela va créer une release Windows et Linux dans le dossier build/distribution .
+
 ### Fonctionnement des recherches de bugs via Spotbugs
 
+Pour rechercher des bugs via Spotbugs, ila faut lancer la tâche gradle "spotbugsMain" dans verification.<br>
+Si jamais il trouve des erreurs, aller sur ce site -> https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html <br>
+Puis trouver à quoi correspond l'erreur remonter par Spotbugs.
 
+### Les images utilisées
+
+Toutes les images utilisées dans cette application sont libre de droit.<br>
+90% sont des images que j'ai fait à la main sur paint 3D (pour avoir le fond transparent).
 
 ## English
 
@@ -81,3 +93,19 @@ When you push in the master branch, a release is automatically generated thanks 
 The release number is always the latest version + 1. <br>
 That is, if the latest version is "TètKole 1.0.7", then the next release will be "TètKole 1.0.8".<br>
 To change the upper numbers it must be done by hand by editing the latest release.
+
+### Generate a TètKole release locally
+
+Once the project is recovered, you just need to launch the "generateWindowsInstaller" gradle task in distribution.<br>
+This will create a Windows and Linux release in the build/distribution folder.
+
+### How Spotbugs bug searches work
+
+To search for bugs via Spotbugs, you have to run the gradle task "spotbugsMain" in verification.<br>
+If it ever finds errors, go to this site -> https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html <br>
+Then find what the error reported by Spotbugs corresponds to.
+
+### Images used
+
+All images used in this app are copyright free.<br>
+90% are images that I made by hand on 3D paint (to have the transparent background).
