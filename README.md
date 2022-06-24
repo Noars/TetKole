@@ -54,6 +54,17 @@ Puis trouver à quoi correspond l'erreur remonter par Spotbugs.
 Toutes les images utilisées dans cette application sont libre de droit.<br>
 90% sont des images que j'ai fait à la main sur paint 3D (pour avoir le fond transparent).
 
+### Multilinguisme
+
+L'application contient 2 langues actuellement :
+- Français
+- Anglais
+
+Dans src/main/resources , il y a un dossier multilinguism.<br>
+Si on veut rajouter un langue, il faut créer un nouveau properties.<br>
+Par exemple, si on veut rajouter l'italien on crée un fichier "language_it_IT.properties" et dedans on met les traductions.<br>
+Puis dans le fichier SettingsPane.java (qui se trouve dans src/main/java/application/ui/pane), faire les modifications nécessaire à son ajout.
+
 ## English
 
 ### Used tools
@@ -109,3 +120,14 @@ Then find what the error reported by Spotbugs corresponds to.
 
 All images used in this app are copyright free.<br>
 90% are images that I made by hand on 3D paint (to have the transparent background).
+
+### Multilingualism
+
+The application currently contains 2 languages:
+- French
+- English
+
+In src/main/resources there is a multilingualism folder.<br>
+If you want to add a language, you have to create a new properties.<br>
+For example, if we want to add Italian, we create a "language_it_IT.properties" file and in it we put the translations.<br>
+Then in the SettingsPane.java file (located in src/main/java/application/ui/pane), make the necessary changes to add it.
