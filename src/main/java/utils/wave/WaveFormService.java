@@ -14,6 +14,7 @@ import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
+import application.Main;
 import application.ui.pane.WavePane;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -30,6 +31,8 @@ import ws.schild.jave.progress.EncoderProgressListener;
 
 public class WaveFormService extends Service<Boolean> {
 
+	Main main;
+
 	private static final double WAVEFORM_HEIGHT_COEFFICIENT = 1.3;
 	private static final CopyOption[] options = new CopyOption[]{ COPY_ATTRIBUTES , REPLACE_EXISTING };
 	private float[] resultingWaveform;
@@ -45,16 +48,16 @@ public class WaveFormService extends Service<Boolean> {
 	private WaveFormJob waveFormJob;
 	private Media audioFile;
 	private MediaPlayer mediaPlayer;
-	private double dimensionWidth = 0;
 	private double durationAudioFile = 0;
-	private double ratioAudio = 0;
 	public String audioFileName;
 
 	public enum WaveFormJob {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM;
 	}
 
-	public WaveFormService(WavePane wavePane, Stage primaryStage) {
+	public WaveFormService(WavePane wavePane, Main main, Stage primaryStage) {
+
+		this.main = main;
 		this.wavePane = wavePane;
 		this.primaryStage = primaryStage;
 
@@ -190,6 +193,9 @@ public class WaveFormService extends Service<Boolean> {
 
 			private void transcodeToWav(File sourceFile, File destinationFile) {
 				try {
+
+					main.getLoadingPane().updateLoading(0.2);
+
 					AudioAttributes audio = new AudioAttributes();
 					audio.setCodec("pcm_s16le");
 					audio.setChannels(2);
@@ -201,6 +207,9 @@ public class WaveFormService extends Service<Boolean> {
 
 					encoder = encoder != null ? encoder : new Encoder();
 					encoder.encode(new MultimediaObject(sourceFile), destinationFile, attributes, listener);
+
+					main.getLoadingPane().updateLoading(0.4);
+
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -208,6 +217,9 @@ public class WaveFormService extends Service<Boolean> {
 
 			private int[] getWavAmplitudes(File file) {
 				try (AudioInputStream input = AudioSystem.getAudioInputStream(file)) {
+
+					main.getLoadingPane().updateLoading(0.6);
+
 					AudioFormat baseFormat = input.getFormat();
 
 					Encoding encoding = Encoding.PCM_UNSIGNED;
@@ -218,6 +230,9 @@ public class WaveFormService extends Service<Boolean> {
 					int available = input.available();
 
 					try (AudioInputStream pcmDecodedInput = AudioSystem.getAudioInputStream(decodedFormat, input)) {
+
+						main.getLoadingPane().updateLoading(0.8);
+
 						final int BUFFER_SIZE = 4096;
 
 						byte[] buffer = new byte[BUFFER_SIZE];
@@ -251,7 +266,7 @@ public class WaveFormService extends Service<Boolean> {
 								}
 							}
 						}
-
+						main.getLoadingPane().updateLoading(1.0);
 						return finalAmplitudes;
 					} catch (Exception ex) {
 						ex.printStackTrace();

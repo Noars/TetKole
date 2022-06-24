@@ -24,6 +24,7 @@ public class Main extends Application {
     ButtonsZoomPane buttonsZoomPane;
     SaveFolder saveFolder;
     LoadingPane loadingPane;
+    ListenPane listenPane;
 
     int widthScreen, heightScreen;
     String lastPane = "home";
@@ -48,13 +49,14 @@ public class Main extends Application {
         primaryStage.setTitle("TètKole");
 
         saveFolder = new SaveFolder(this.os);
-        settingsPane = new SettingsPane();
+        settingsPane = new SettingsPane(this);
         buttonsPane = new ButtonsPane(this, primaryStage);
         wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
-        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath());
+        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath(), settingsPane.getLanguage());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
-        loadingPane = new LoadingPane();
+        loadingPane = new LoadingPane(this.widthScreen);
+        listenPane = new ListenPane(this, primaryStage, settingsPane.getLanguage());
         emptyPane = new EmptyPane();
 
         decoratedPane = new DecoratedPane(this, primaryStage);
@@ -94,6 +96,12 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
     }
 
+    public void goToListen(Stage primaryStage){
+        this.lastPane = "listen";
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(listenPane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
+    }
+
     public void goBack(Stage primaryStage){
         switch (this.lastPane){
 
@@ -107,6 +115,10 @@ public class Main extends Application {
 
             case "zoom":
                 this.goToZoom(primaryStage);
+                break;
+
+            case "listen":
+                this.goToListen(primaryStage);
                 break;
 
             default:
@@ -141,6 +153,18 @@ public class Main extends Application {
 
     public ZoomPane getZoomPane(){
         return this.zoomPane;
+    }
+
+    public SaveFolder getSaveFolder(){
+        return this.saveFolder;
+    }
+
+    public ListenPane getListenPane(){
+        return this.listenPane;
+    }
+
+    public LoadingPane getLoadingPane(){
+        return this.loadingPane;
     }
 
     public String getOs(){
