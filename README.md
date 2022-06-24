@@ -2,8 +2,8 @@
 
 ## Français
 
-Aller ici pour acceder au site web de TètKole -> https://noars.github.io/TetKole/
+Aller ici pour acceder au site web de TètKole -> https://eschang.github.io/TetKole/
 
 ## English
 
-Go here to find the website of TètKole -> https://noars.github.io/TetKole/
+Go here to find the website of TètKole -> https://eschang.github.io/TetKole/
