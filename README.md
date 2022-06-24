@@ -9,6 +9,12 @@
 * Spotbugs 5.0.7
 * Innosetup 6.2.0
 
+### Comment lancer l'application avec un IDE en local
+
+Pour ma part, j'utilise IntelliJ comme IDE.<br>
+Pour lancer l'application, une fois que tout est en place et que gradle a fini de build, j'utilise le run de gradle.<br>
+Pour ce faire, allez dans les tâches de gradle puis application et lancer la tâche "run".
+
 ### Branche master (défaut)
 
 Cette branche contient la dernière version fonctionnel de TètKole.
@@ -73,6 +79,12 @@ Puis dans le fichier SettingsPane.java (qui se trouve dans src/main/java/applica
 * Gradle 7.4.2
 * Spotbugs 5.0.7
 * Innosetup 6.2.0
+
+### How to launch the application with a local IDE
+
+For my part, I use IntelliJ as IDE.<br>
+To launch the application, once everything is in place and gradle has finished building, I use the gradle run.<br>
+To do this, go to the gradle tasks then application and launch the "run" task.
 
 ### Master branch (default)
 
