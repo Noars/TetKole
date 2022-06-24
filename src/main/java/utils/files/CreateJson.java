@@ -32,7 +32,7 @@ public class CreateJson {
 
         jsonAudioFile.put("Nom du fichier audio", wavePane.getWaveService().audioFileName);
         jsonRecordFile.put("Nom du fichier audio enregistrer", nameRecordAudio + ".wav");
-        jsonStartTime.put("Debut de l'intervalle", wavePane.calculTimeLeftBorder());
+        jsonStartTime.put("D\u00e9but de l'intervalle", wavePane.calculTimeLeftBorder());
         jsonEndTime.put("Fin de l'intervalle", wavePane.calculTimeRightBorder());
 
         JSONArray json = new JSONArray();

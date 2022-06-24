@@ -169,10 +169,13 @@ public class ListenPane extends BorderPane {
         JSONObject startTimeObj = (JSONObject) item.get(2);
         JSONObject endTimeObj = (JSONObject) item.get(3);
 
-        String startTime = (String) startTimeObj.get("Debut de l'intervalle");
+        String keyStartTime = (String) startTimeObj.keySet().toArray()[0];
+        String keyEndTime = (String) endTimeObj.keySet().toArray()[0];
+
+        String startTime = (String) startTimeObj.get(keyStartTime);
         this.listStartTimeAudioAndRecordFiles[index] = startTime;
         startTime = startTime.replaceAll("[a-zA-z]", "");
-        String endTime = (String) endTimeObj.get("Fin de l'intervalle");
+        String endTime = (String) endTimeObj.get(keyEndTime);
         this.listEndTimeAudioAndRecordFiles[index] = endTime;
         endTime = endTime.replaceAll("[a-zA-z]", "");
 
