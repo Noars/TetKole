@@ -22,6 +22,7 @@ public class ButtonsPane extends BorderPane {
 
     boolean runningAudio = false;
 
+    Button newAudioFile;
     Button record;
     Button playStopAudioFile;
     Button zoom;
@@ -33,7 +34,7 @@ public class ButtonsPane extends BorderPane {
     public ButtonsPane(Main main, Stage primaryStage){
         super();
 
-        Button newAudioFile = createNewAudioFileButton(main, primaryStage);
+        newAudioFile = createNewAudioFileButton(main, primaryStage);
         playStopAudioFile = createPlayStopAudioFileButton(main);
         record = createRecordButton(main, primaryStage);
         Button seeJsonFolder = createSeeJsonFolder(main);
@@ -117,17 +118,18 @@ public class ButtonsPane extends BorderPane {
         newAudioFile.setOnAction((e) -> {
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null){
+                newAudioFile.setDisable(true);
                 main.setLoadingPane(main, primaryStage);
                 main.getWavePane().getWaveService().startService(String.valueOf(file), WaveFormService.WaveFormJob.AMPLITUDES_AND_WAVEFORM);
                 main.getWavePane().getWaveService().setupMediaPlayer(String.valueOf(file));
                 main.getListenPane().setPath(String.valueOf(file));
-                this.enableButton();
             }
         });
         return  newAudioFile;
     }
 
     public void enableButton(){
+        newAudioFile.setDisable(false);
         record.setDisable(false);
         zoom.setDisable(false);
         listenAudioAndRecord.setDisable(false);

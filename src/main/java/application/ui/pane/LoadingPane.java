@@ -10,13 +10,13 @@ public class LoadingPane extends BorderPane {
 
     HBox hbox;
     ProgressBar loading;
-    double progress = 0.0;
 
     public LoadingPane(int widthScreen){
         super();
 
-        loading = new ProgressBar(0.0);
+        loading = new ProgressBar();
         loading.setPrefSize((widthScreen / 2.0), 50);
+        loading.setProgress(0.0);
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -36,7 +36,10 @@ public class LoadingPane extends BorderPane {
     }
 
     public void updateLoading(double value){
-        this.progress += value;
-        this.loading.setProgress(this.progress);
+        this.loading.setProgress(value);
+    }
+
+    public void resetLoading(){
+        this.loading.setProgress(0.0);
     }
 }

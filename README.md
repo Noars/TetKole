@@ -7,7 +7,7 @@
 * JavaFx 17.0.2 (Azul community)
 * Gradle 7.4.2
 * Spotbugs 5.0.7
-* Innosetup
+* Innosetup 6.2.0
 
 ### Branche master (défaut)
 
@@ -27,9 +27,9 @@ Le lien du site web est -> https://noars.github.io/TetKole/
 
 Actuellement ce dépôt contient 3 workflows :
 
-* 1 pour l'intégration continue -> ci.yml
-* 1 pour automatiser les releases -> release.yml
-* 1 pour mettre a jour la page web si il y a eu des modification
+* 1 pour l'intégration continue -> .github/ci.yml
+* 1 pour automatiser les releases -> .github/release.yml
+* 1 pour mettre a jour la page web si il y a eu des modification (gérer par git lui même)
 
 ### Fonctionnement de la release de TètKole
 
@@ -38,6 +38,10 @@ Le numéro de la release est toujours la dernière version + 1. <br>
 C'est à dire, si la dernière version est "TètKole 1.0.7", alors la prochaine release sera "TètKole 1.0.8".<br>
 Pour changer les chiffres supérieurs il faut le faire a la main en éditant la dernière release.
 
+### Fonctionnement des recherches de bugs via Spotbugs
+
+
+
 ## English
 
 ### Used tools
@@ -45,7 +49,7 @@ Pour changer les chiffres supérieurs il faut le faire a la main en éditant la 
 * JavaFx 17.0.2 (Azul community)
 * Gradle 7.4.2
 * Spotbugs 5.0.7
-* Innosetup
+* Innosetup 6.2.0
 
 ### Master branch (default)
 
@@ -67,9 +71,9 @@ The website link is -> https://noars.github.io/TetKole/
 
 Currently this repository contains 3 workflows:
 
-* 1 for continuous integration -> ci.yml
-* 1 to automate releases -> release.yml
-* 1 to update the web page if there have been changes
+* 1 for continuous integration -> .github/ci.yml
+* 1 to automate releases -> .github/release.yml
+* 1 to update the web page if there have been changes (managed by git itself)
 
 ### Operation of the TètKole release
 

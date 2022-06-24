@@ -163,6 +163,10 @@ public class Main extends Application {
         return this.listenPane;
     }
 
+    public LoadingPane getLoadingPane(){
+        return this.loadingPane;
+    }
+
     public String getOs(){
         return this.os;
     }
