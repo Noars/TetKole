@@ -42,6 +42,9 @@ public class ListenPane extends BorderPane {
     Label audioLabel;
     Label timeLabel;
 
+    Button nextLeftPage;
+    Button nextRightPage;
+
     String[] listFiles;
     JSONArray[] listFilesCorrespondingToAudioFile;
     String[] listNameFilesCorrespondingToAudioFile;
@@ -53,6 +56,9 @@ public class ListenPane extends BorderPane {
     Boolean[] listStatusMediaPlayerAudioFile;
 
     int nbCorrespondingFile = 0;
+    int nbPages;
+    int actualPage = 1;
+    int rowButtons = 12;
 
     public ListenPane(Main main, Stage primaryStage, ResourceBundle language){
         super();
@@ -77,26 +83,70 @@ public class ListenPane extends BorderPane {
 
     public void setupListenPane(){
         this.nbCorrespondingFile = 0;
+        this.actualPage = 1;
         this.jsonPath = main.getSaveFolder().getJsonPath();
         this.recordPath = main.getSaveFolder().getRecordPath();
         this.getAllJsonFile();
         this.getJsonFileCorrespondingToAudioFile(main);
         this.createMediaPlayerRecordFiles(main);
         this.createLabel();
-        this.createReturnBackButton();
+        this.createHomeButton();
+        this.createNextLeftPageButton();
+        this.createNextRightPageButton();
+        this.setupButtons();
     }
 
-    public void createReturnBackButton(){
-        Button returnBack = new Buttons();
-        returnBack.setGraphic(ImageButton.createButtonImageView("images/back.png"));
-        returnBack.getStyleClass().add("blue");
-        returnBack.setContentDisplay(ContentDisplay.TOP);
-        returnBack.setPrefHeight(50);
-        returnBack.setPrefWidth(300);
-        returnBack.setOnAction((e) -> {
-            main.goToHome(primaryStage);
+    public void createHomeButton(){
+        Button home = new Buttons();
+        home.setGraphic(ImageButton.createButtonImageView("images/home.png"));
+        home.getStyleClass().add("blue");
+        home.setContentDisplay(ContentDisplay.TOP);
+        home.setPrefHeight(50);
+        home.setPrefWidth(300);
+        home.setOnAction((e) -> {
+                main.goToHome(primaryStage);
         });
-        this.gridPane.add(returnBack,1,(this.nbCorrespondingFile * 3) + 1);
+        this.gridPane.add(home,2,this.rowButtons);
+    }
+
+    public void createNextRightPageButton(){
+        nextRightPage = new Buttons();
+        nextRightPage.setGraphic(ImageButton.createButtonImageView("images/nextRight.png"));
+        nextRightPage.getStyleClass().add("blue");
+        nextRightPage.setContentDisplay(ContentDisplay.TOP);
+        nextRightPage.setPrefHeight(50);
+        nextRightPage.setPrefWidth(300);
+        nextRightPage.setOnAction((e) -> {
+            this.actualPage += 1;
+            this.changePage();
+        });
+        nextRightPage.setDisable(true);
+        this.gridPane.add(nextRightPage,4,this.rowButtons);
+    }
+
+    public void createNextLeftPageButton(){
+        nextLeftPage = new Buttons();
+        nextLeftPage.setGraphic(ImageButton.createButtonImageView("images/nextLeft.png"));
+        nextLeftPage.getStyleClass().add("blue");
+        nextLeftPage.setContentDisplay(ContentDisplay.TOP);
+        nextLeftPage.setPrefHeight(50);
+        nextLeftPage.setPrefWidth(300);
+        nextLeftPage.setOnAction((e) -> {
+            this.actualPage -= 1;
+            this.changePage();
+        });
+        nextLeftPage.setDisable(true);
+        this.gridPane.add(nextLeftPage,0,this.rowButtons);
+    }
+
+    public void setupButtons(){
+        if ((this.nbPages > 1) && (this.actualPage < this.nbPages)){
+            this.nextRightPage.setDisable(false);
+        }
+
+        if (this.actualPage > 1){
+            this.nextLeftPage.setDisable(false);
+        }
     }
 
     public void getAllJsonFile(){
@@ -130,6 +180,7 @@ public class ListenPane extends BorderPane {
 
         this.filterNameList();
         this.initBooleanTab();
+        this.numberOfPages();
     }
 
     public void filterNameList(){
@@ -148,6 +199,13 @@ public class ListenPane extends BorderPane {
         for (int i = 0; i < this.nbCorrespondingFile; i++){
             this.listStatusMediaPlayerAudioFile[i] = false;
             this.listStatusMediaPlayerRecordFiles[i] = false;
+        }
+    }
+
+    public void numberOfPages(){
+        this.nbPages = this.nbCorrespondingFile / 4;
+        if ((this.nbCorrespondingFile % 4) != 0){
+            this.nbPages += 1;
         }
     }
 
@@ -196,6 +254,8 @@ public class ListenPane extends BorderPane {
 
     public void createLabel(){
         int index = 0;
+        int start = 4 * (this.actualPage - 1);
+        int limit = this.calculateLimit();
 
         audioLabel = new Label(language.getString("AudioFile"));
         audioLabel.getStyleClass().add("textLabel");
@@ -205,7 +265,7 @@ public class ListenPane extends BorderPane {
         timeLabel.getStyleClass().add("textLabel");
         this.gridPane.add(timeLabel, 4, index);
 
-        for (int i = 0; i < this.nbCorrespondingFile; i++){
+        for (int i = start; i < limit; i++){
 
             Label recordLabel = new Label(listNameFilesCorrespondingToAudioFile[i]);
             recordLabel.getStyleClass().add("textLabel");
@@ -226,6 +286,16 @@ public class ListenPane extends BorderPane {
             this.gridPane.add(emptyLabel3, 0, index+2);
 
             index += 3;
+        }
+    }
+
+    public int calculateLimit(){
+        if (this.actualPage == this.nbPages){
+            this.rowButtons = (this.nbCorrespondingFile % 4) * 3;
+            return ((this.nbCorrespondingFile % 4) + ((this.actualPage - 1) * 4 ));
+        }else {
+            this.rowButtons = 12;
+            return this.actualPage * 4;
         }
     }
 
@@ -276,6 +346,19 @@ public class ListenPane extends BorderPane {
         timeValueLabel.getStyleClass().add("textLabel");
         timeValueLabel.setAlignment(Pos.CENTER);
         this.gridPane.add(timeValueLabel, 4, indexGridPane+1);
+    }
+
+    public void clearGridPane(){
+        this.gridPane.getChildren().clear();
+    }
+
+    public void changePage(){
+        this.clearGridPane();
+        this.createLabel();
+        this.createHomeButton();
+        this.createNextLeftPageButton();
+        this.createNextRightPageButton();
+        this.setupButtons();
     }
 
     public String getJsonPathForActualOS(Main main, int i){
