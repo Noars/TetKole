@@ -27,7 +27,7 @@ Une fois la branch Develop satisfaisante, on la merge dans la branche master.
 ### Branche website
 
 Cette branche contient toute la partie site web de TètKole sur git.<br>
-Le lien du site web est -> https://noars.github.io/TetKole/
+Le lien du site web est -> https://eschang.github.io/TetKole/
 
 ### Workflow
 
@@ -100,7 +100,7 @@ Once the Develop branch is satisfactory, we merge it into the master branch.
 ### Website branch
 
 This branch contains all the website part of TètKole on git.<br>
-The website link is -> https://noars.github.io/TetKole/
+The website link is -> https://eschang.github.io/TetKole/
 
 ### Workflow
 
