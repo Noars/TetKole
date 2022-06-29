@@ -1,9 +1,9 @@
 # TètKole
-Ce répertoire a été créé par https://github.com/Noars qui est l'auteur du code et de la documentation.
 
 ## Français (English version below)
 
-Ce dépôt Github est sous licence GNU (voir fichier LICENSE).<br>
+Ce dépôt Github a été créé par https://github.com/Noars qui est l'auteur du code et de la documentation.<br>
+Il est sous licence GNU (voir fichier LICENSE).<br>
 Merci de regarder ce fichier avant toute utilisation de ce dépôt !.
 
 ### Outils utilisés
@@ -77,8 +77,9 @@ Puis dans le fichier SettingsPane.java (qui se trouve dans src/main/java/applica
 
 ## English
 
-This Github repository is under GNU license (see LICENSE file).<br>
-Please look at this file before using this repository !
+This Github repository was created by https://github.com/Noars who is the author of the code and documentation.<br>
+It is under GNU license (see LICENSE file).<br>
+Please look at this file before using this repository!.
 
 ### Used tools
 
