@@ -122,4 +122,12 @@ public class CutAudio {
     public String getPathAudioCut(){
         return this.destinationFileName;
     }
+
+    public void deleteTempFiles(){
+        File file1 = new File(this.destinationFileName);
+        File file2 = new File(this.destinationTranscodedFileName);
+
+        file1.delete();
+        file2.delete();
+    }
 }

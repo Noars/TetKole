@@ -24,6 +24,8 @@ public class DecoratedPane extends BorderPane {
         exitImage.setFitWidth(50);
         exit.setGraphic(exitImage);
         exit.setOnAction((e) -> {
+            main.getCutAudio().deleteTempFiles();
+            main.getRecordPane().deleteTempFiles();
             System.exit(0);
         });
 

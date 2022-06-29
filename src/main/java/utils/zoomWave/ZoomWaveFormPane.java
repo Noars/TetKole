@@ -1,5 +1,6 @@
 package utils.zoomWave;
 
+import application.Main;
 import application.ui.pane.ButtonsPane;
 import application.ui.pane.ZoomPane;
 import javafx.scene.paint.Color;
@@ -15,6 +16,7 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 	protected int width;
 	protected int height;
 	private double timerXPosition;
+	private Main main;
 	private ZoomPane wavePane;
 	private ZoomWaveFormService zoomWaveFormService;
 	private ButtonsPane buttonsPane;
@@ -137,7 +139,7 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 	}
 
 	public String calculTimeLeftBorder(){
-		int time = (int) (this.leftBorder / zoomWaveFormService.getRatioAudio());
+		int time = (int) (this.leftBorder / zoomWaveFormService.getRatioAudio()) + main.getWavePane().getStartTimeChoose();
 		double milliTime = Math.round((this.leftBorder / zoomWaveFormService.getRatioAudio()) * 100.0) / 100.0;
 
 		int hoursLeftBorderTime = time / 3600;
@@ -150,7 +152,7 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 	}
 
 	public String calculTimeRightBorder(){
-		int time = (int) (this.rightBorder / zoomWaveFormService.getRatioAudio());
+		int time = (int) (this.rightBorder / zoomWaveFormService.getRatioAudio()) + main.getWavePane().getStartTimeChoose();
 		double milliTime = Math.round((this.rightBorder / zoomWaveFormService.getRatioAudio()) * 100.0) / 100.0;
 
 		int hoursRightBorderTime = time / 3600;
@@ -201,12 +203,12 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 		return this.sizeBorder;
 	}
 
-	public void sendWaveZoomService(ZoomWaveFormService waveFormService){
-		this.zoomWaveFormService = waveFormService;
+	public void sendMain(Main main){
+		this.main = main;
 	}
 
-	public float[] getWaveZoomData() {
-		return waveZoomData;
+	public void sendWaveZoomService(ZoomWaveFormService waveFormService){
+		this.zoomWaveFormService = waveFormService;
 	}
 
 	public void setWaveZoomData(float[] waveData) {

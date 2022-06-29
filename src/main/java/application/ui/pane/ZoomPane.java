@@ -28,6 +28,7 @@ public class ZoomPane extends ZoomWaveFormPane {
 		this.primaryStage = primaryStage;
 		zoomWaveService = new ZoomWaveFormService(this, main, primaryStage);
 		animationZoomService = new PaintZoomService();
+		super.sendMain(main);
 		super.sendWaveZoomService(this.zoomWaveService);
 
 		widthProperty().addListener((observable , oldValue , newValue) -> {

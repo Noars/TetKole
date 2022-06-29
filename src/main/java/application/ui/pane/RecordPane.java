@@ -301,4 +301,8 @@ public class RecordPane extends BorderPane {
         this.statusAudioFile.setText(languages.getString("RecordAudio"));
         this.audioFileNameLabel.setText(languages.getString("NameAudioFile"));
     }
+
+    public void deleteTempFiles(){
+        this.recordVoice.deleteTempFiles();
+    }
 }

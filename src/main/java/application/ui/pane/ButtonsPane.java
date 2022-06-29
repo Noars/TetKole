@@ -101,7 +101,7 @@ public class ButtonsPane extends BorderPane {
         zoom.setPrefWidth(300);
         zoom.setOnAction((e) -> {
             this.stopMusic();
-            main.getCutAudio().cutAudio(main.getWavePane().getWaveService().pathAudioFile, main.getWavePane().getStartTimeChoose(), main.getWavePane().getEndTimeChoose());
+            main.getCutAudio().cutAudio(main.getWavePane().getWaveService().pathAudioFile, main.getWavePane().getStartTimeChoose(), main.getWavePane().getEndTimeChoose() + 1);
             main.setNewZoomWavePane(primaryStage);
             main.getZoomPane().getWaveZoomService().startService(main.getCutAudio().getPathAudioCut(), ZoomWaveFormService.WaveZoomFormJob.AMPLITUDES_AND_WAVEFORM);
             main.getZoomPane().getWaveZoomService().setupMediaPlayer(main.getCutAudio().getPathAudioCut());
@@ -162,6 +162,7 @@ public class ButtonsPane extends BorderPane {
         seeJsonFolder.setPrefHeight(50);
         seeJsonFolder.setPrefWidth(300);
         seeJsonFolder.setOnAction((e) -> {
+            this.deleteTempFiles(main);
             try {
                 if (main.getOs().contains("nux") || main.getOs().contains("mac")){
                     new Thread(() -> {
@@ -193,5 +194,10 @@ public class ButtonsPane extends BorderPane {
         if (runningAudio){
             playStopAudioFile.fire();
         }
+    }
+
+    public void deleteTempFiles(Main main){
+        main.getCutAudio().deleteTempFiles();
+        main.getRecordPane().deleteTempFiles();
     }
 }

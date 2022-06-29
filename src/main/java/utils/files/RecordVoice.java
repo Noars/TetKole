@@ -23,6 +23,9 @@ public class RecordVoice {
     MediaPlayer mediaPlayer;
     Main main;
 
+    Path audioTempFilePath;
+    Path audioFilePath;
+
     public RecordVoice(Main main, String pathFolder){
         super();
         this.main = main;
@@ -100,8 +103,6 @@ public class RecordVoice {
     }
 
     public void renameTempAudioFile(String newName) {
-        Path audioTempFilePath;
-        Path audioFilePath;
         if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
             audioTempFilePath = Paths.get(pathFolder + "/RecordFiles/TempAudio.wav");
             audioFilePath = Paths.get(pathFolder + "/RecordFiles/" + newName + ".wav");
@@ -111,9 +112,15 @@ public class RecordVoice {
         }
         try{
             Files.copy(audioTempFilePath, audioFilePath, StandardCopyOption.REPLACE_EXISTING);
+            this.deleteTempFiles();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteTempFiles(){
+        File audioTempFile = new File(String.valueOf(audioTempFilePath));
+        audioTempFile.delete();
     }
 
     public void setupMediaPlayer(){
