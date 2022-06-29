@@ -3,6 +3,9 @@ Ce répertoire a été créé par https://github.com/Noars qui est l'auteur du c
 
 ## Français (English version below)
 
+Ce dépôt Github est sous licence GNU (voir fichier LICENSE).<br>
+Merci de regarder ce fichier avant toute utilisation de ce dépôt !.
+
 ### Outils utilisés
 
 * JavaFx 17.0.2 (Azul community)
@@ -28,7 +31,7 @@ Une fois la branch Develop satisfaisante, on la merge dans la branche master.
 ### Branche website
 
 Cette branche contient toute la partie site web de TètKole sur git.<br>
-Le lien du site web est -> https://noars.github.io/TetKole/
+Le lien du site web est -> https://eschang.github.io/TetKole/
 
 ### Workflow
 
@@ -74,6 +77,9 @@ Puis dans le fichier SettingsPane.java (qui se trouve dans src/main/java/applica
 
 ## English
 
+This Github repository is under GNU license (see LICENSE file).<br>
+Please look at this file before using this repository !
+
 ### Used tools
 
 * JavaFx 17.0.2 (Azul community)
@@ -101,7 +107,7 @@ Once the Develop branch is satisfactory, we merge it into the master branch.
 ### Website branch
 
 This branch contains all the website part of TètKole on git.<br>
-The website link is -> https://noars.github.io/TetKole/
+The website link is -> https://eschang.github.io/TetKole/
 
 ### Workflow
 
