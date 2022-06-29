@@ -205,11 +205,15 @@ public class WaveFormPane extends ResizableCanvas {
 		this.waveFormService = waveFormService;
 	}
 
-	public float[] getWaveData() {
-		return waveData;
-	}
-
 	public void setWaveData(float[] waveData) {
 		this.waveData = waveData;
+	}
+
+	public int getStartTimeChoose(){
+		return (int) (this.leftBorder / waveFormService.getRatioAudio());
+	}
+
+	public int getEndTimeChoose(){
+		return (int) (this.rightBorder / waveFormService.getRatioAudio());
 	}
 }

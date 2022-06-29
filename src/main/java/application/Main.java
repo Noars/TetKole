@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import utils.zoomWave.CutAudio;
 
 import java.awt.*;
 
@@ -25,6 +26,7 @@ public class Main extends Application {
     SaveFolder saveFolder;
     LoadingPane loadingPane;
     ListenPane listenPane;
+    CutAudio cutAudio;
 
     int widthScreen, heightScreen;
     String lastPane = "home";
@@ -37,6 +39,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        this.setupShutdown();
         this.os = System.getProperty("os.name").toLowerCase();
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -49,10 +52,11 @@ public class Main extends Application {
         primaryStage.setTitle("TètKole");
 
         saveFolder = new SaveFolder(this.os);
+        cutAudio = new CutAudio(this);
         settingsPane = new SettingsPane(this);
         buttonsPane = new ButtonsPane(this, primaryStage);
         wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
-        zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
+        zoomPane = new ZoomPane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
         recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath(), settingsPane.getLanguage());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
         loadingPane = new LoadingPane(this.widthScreen);
@@ -70,6 +74,16 @@ public class Main extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
 
         primaryStage.show();
+    }
+
+    public void setupShutdown(){
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cutAudio.deleteTempFiles();
+                recordPane.deleteTempFiles();
+            }
+        }, "Shutdown-thread"));
     }
 
     public void goToOption(Stage primaryStage){
@@ -131,7 +145,7 @@ public class Main extends Application {
     }
 
     public void setNewZoomWavePane(Stage primaryStage){
-        zoomPane = new ZoomPane(this, primaryStage, this.widthScreen, this.heightScreen);
+        zoomPane = new ZoomPane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
     }
 
     public void setLoadingPane(Main main, Stage primaryStage){
@@ -143,16 +157,16 @@ public class Main extends Application {
         return this.wavePane;
     }
 
+    public ZoomPane getZoomPane(){
+        return this.zoomPane;
+    }
+
     public RecordPane getRecordPane(){
         return this.recordPane;
     }
 
     public ButtonsPane getButtonsPane(){
         return this.buttonsPane;
-    }
-
-    public ZoomPane getZoomPane(){
-        return this.zoomPane;
     }
 
     public SaveFolder getSaveFolder(){
@@ -165,6 +179,10 @@ public class Main extends Application {
 
     public LoadingPane getLoadingPane(){
         return this.loadingPane;
+    }
+
+    public CutAudio getCutAudio(){
+        return this.cutAudio;
     }
 
     public String getOs(){

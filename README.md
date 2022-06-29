@@ -2,6 +2,9 @@
 
 ## Français (English version below)
 
+Ce dépôt Github est sous licence GNU (voir fichier LICENSE).<br>
+Merci de regarder ce fichier avant toute utilisation de ce dépôt !.
+
 ### Outils utilisés
 
 * JavaFx 17.0.2 (Azul community)
@@ -21,7 +24,7 @@ Cette branche contient la dernière version fonctionnel de TètKole.
 
 ### Branche develop
 
-Cette branche permet de développer de nouvelle fonctionnalités ou corriger des bugs existant sans impacter la version fonctionnel.<br>
+Cette branche permet de développer de nouvelles fonctionnalités ou corriger des bugs existant sans impacter la version fonctionnel.<br>
 Une fois la branch Develop satisfaisante, on la merge dans la branche master.
 
 ### Branche website
@@ -51,14 +54,14 @@ Cela va créer une release Windows et Linux dans le dossier build/distribution .
 
 ### Fonctionnement des recherches de bugs via Spotbugs
 
-Pour rechercher des bugs via Spotbugs, ila faut lancer la tâche gradle "spotbugsMain" dans verification.<br>
+Pour rechercher des bugs via Spotbugs, il faut lancer la tâche gradle "spotbugsMain" dans verification.<br>
 Si jamais il trouve des erreurs, aller sur ce site -> https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html <br>
-Puis trouver à quoi correspond l'erreur remonter par Spotbugs.
+Puis trouver à quoi correspond l'erreur remontée par Spotbugs.
 
 ### Les images utilisées
 
-Toutes les images utilisées dans cette application sont libre de droit.<br>
-90% sont des images que j'ai fait à la main sur paint 3D (pour avoir le fond transparent).
+Toutes les images utilisées dans cette application sont libres de droit.<br>
+90% sont des images que j'ai faites à la main sur paint 3D (pour avoir le fond transparent).
 
 ### Multilinguisme
 
@@ -67,11 +70,14 @@ L'application contient 2 langues actuellement :
 - Anglais
 
 Dans src/main/resources , il y a un dossier multilinguism.<br>
-Si on veut rajouter un langue, il faut créer un nouveau properties.<br>
+Si on veut rajouter une langue, il faut créer un nouveau properties.<br>
 Par exemple, si on veut rajouter l'italien on crée un fichier "language_it_IT.properties" et dedans on met les traductions.<br>
-Puis dans le fichier SettingsPane.java (qui se trouve dans src/main/java/application/ui/pane), faire les modifications nécessaire à son ajout.
+Puis dans le fichier SettingsPane.java (qui se trouve dans src/main/java/application/ui/pane), faire les modifications nécessaires à son ajout.
 
 ## English
+
+This Github repository is under GNU license (see LICENSE file).<br>
+Please look at this file before using this repository !
 
 ### Used tools
 

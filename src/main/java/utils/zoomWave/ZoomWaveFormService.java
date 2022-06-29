@@ -1,21 +1,7 @@
-package utils.wave;
-
-import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.util.Random;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioFormat.Encoding;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
+package utils.zoomWave;
 
 import application.Main;
-import application.ui.pane.WavePane;
+import application.ui.pane.ZoomPane;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.media.Media;
@@ -29,37 +15,49 @@ import ws.schild.jave.encode.EncodingAttributes;
 import ws.schild.jave.info.MultimediaInfo;
 import ws.schild.jave.progress.EncoderProgressListener;
 
-public class WaveFormService extends Service<Boolean> {
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioFormat.Encoding;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.util.Random;
+
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
+public class ZoomWaveFormService extends Service<Boolean> {
 
 	Main main;
 
 	private static final double WAVEFORM_HEIGHT_COEFFICIENT = 1.3;
 	private static final CopyOption[] options = new CopyOption[]{ COPY_ATTRIBUTES , REPLACE_EXISTING };
-	private float[] resultingWaveform;
-	private int[] wavAmplitudes;
+	private float[] resultingWaveZoomform;
+	private int[] wavZoomAmplitudes;
 	private String fileAbsolutePath;
-	private final WavePane wavePane;
+	private final ZoomPane zoomWavePane;
 	private Stage primaryStage;
 	private final Random random = new Random();
 	private File temp1;
 	private File temp2;
 	private Encoder encoder;
 	private ConvertProgressListener listener = new ConvertProgressListener();
-	private WaveFormJob waveFormJob;
+	private WaveZoomFormJob waveZoomFormJob;
 	private Media audioFile;
 	private MediaPlayer mediaPlayer;
 	private double durationAudioFile = 0;
 	public String audioFileName;
-	public String pathAudioFile;
 
-	public enum WaveFormJob {
+	public enum WaveZoomFormJob {
 		AMPLITUDES_AND_WAVEFORM, WAVEFORM;
 	}
 
-	public WaveFormService(WavePane wavePane, Main main, Stage primaryStage) {
+	public ZoomWaveFormService(ZoomPane waveZoomPane, Main main, Stage primaryStage) {
 
 		this.main = main;
-		this.wavePane = wavePane;
+		this.zoomWavePane = waveZoomPane;
 		this.primaryStage = primaryStage;
 
 		setOnSucceeded(s -> done());
@@ -67,24 +65,23 @@ public class WaveFormService extends Service<Boolean> {
 		setOnCancelled(c -> failure());
 	}
 
-	public void startService(String fileAbsolutePath , WaveFormJob waveFormJob) {
-		if (waveFormJob == WaveFormJob.WAVEFORM){
+	public void startService(String fileAbsolutePath , WaveZoomFormJob waveZoomFormJob) {
+		if (waveZoomFormJob == WaveZoomFormJob.WAVEFORM){
 			cancel();
 		}
 
-		wavePane.stopPainterService();
-		this.waveFormJob = waveFormJob;
+		zoomWavePane.stopPainterService();
+		this.waveZoomFormJob = waveZoomFormJob;
 		this.fileAbsolutePath = fileAbsolutePath;
 
-		if (waveFormJob != WaveFormJob.WAVEFORM){
-			this.wavAmplitudes = null;
+		if (waveZoomFormJob != WaveZoomFormJob.WAVEFORM){
+			this.wavZoomAmplitudes = null;
 		}
 
 		restart();
 	}
 
 	public void setupMediaPlayer(String path){
-		pathAudioFile = path;
 		audioFileName = new File(path).getName();
 		audioFile = new Media(new File(path).toURI().toString());
 		mediaPlayer = new MediaPlayer(audioFile);
@@ -93,7 +90,7 @@ public class WaveFormService extends Service<Boolean> {
 			@Override
 			public void run() {
 				durationAudioFile = audioFile.getDuration().toSeconds();
-				wavePane.setupMediaPlayer();
+				zoomWavePane.setupMediaPlayer();
 			}
 		});
 	}
@@ -129,8 +126,8 @@ public class WaveFormService extends Service<Boolean> {
 	}
 
 	public void done() {
-		wavePane.setWaveData(resultingWaveform);
-		wavePane.startPainterService();
+		zoomWavePane.setWaveZoomData(resultingWaveZoomform);
+		zoomWavePane.startPainterService();
 		deleteTemporaryFiles();
 	}
 
@@ -152,11 +149,11 @@ public class WaveFormService extends Service<Boolean> {
 			@Override
 			protected Boolean call() {
 				try {
-					if (waveFormJob == WaveFormJob.AMPLITUDES_AND_WAVEFORM) {
+					if (waveZoomFormJob == WaveZoomFormJob.AMPLITUDES_AND_WAVEFORM) {
 						String fileFormat = "mp3";
-						resultingWaveform = processFromNoWavFile(fileFormat);
-					} else if (waveFormJob == WaveFormJob.WAVEFORM) {
-						resultingWaveform = processAmplitudes(wavAmplitudes);
+						resultingWaveZoomform = processFromNoWavFile(fileFormat);
+					} else if (waveZoomFormJob == WaveZoomFormJob.WAVEFORM) {
+						resultingWaveZoomform = processAmplitudes(wavZoomAmplitudes);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -183,14 +180,14 @@ public class WaveFormService extends Service<Boolean> {
 
 				transcodeToWav(temporalCopiedFile, temporalDecodedFile);
 
-				if (wavAmplitudes == null) {
-					wavAmplitudes = getWavAmplitudes(temporalDecodedFile);
+				if (wavZoomAmplitudes == null) {
+					wavZoomAmplitudes = getWavZoomAmplitudes(temporalDecodedFile);
 				}
 
 				temporalDecodedFile.delete();
 				temporalCopiedFile.delete();
 
-				return processAmplitudes(wavAmplitudes);
+				return processAmplitudes(wavZoomAmplitudes);
 			}
 
 			private void transcodeToWav(File sourceFile, File destinationFile) {
@@ -217,7 +214,7 @@ public class WaveFormService extends Service<Boolean> {
 				}
 			}
 
-			private int[] getWavAmplitudes(File file) {
+			private int[] getWavZoomAmplitudes(File file) {
 				try (AudioInputStream input = AudioSystem.getAudioInputStream(file)) {
 
 					main.getLoadingPane().updateLoading(0.6);
@@ -281,7 +278,7 @@ public class WaveFormService extends Service<Boolean> {
 			}
 
 			private float[] processAmplitudes(int[] sourcePcmData) {
-				int width = wavePane.width;
+				int width = zoomWavePane.width;
 				float[] waveData = new float[width];
 				int samplesPerPixel = sourcePcmData.length / width;
 				float nValue;
@@ -324,7 +321,7 @@ public class WaveFormService extends Service<Boolean> {
 	}
 
 	public float[] getResultingWaveform() {
-		return resultingWaveform;
+		return resultingWaveZoomform;
 	}
 
 }
