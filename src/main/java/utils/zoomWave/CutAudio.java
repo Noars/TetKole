@@ -96,6 +96,8 @@ public class CutAudio {
 
             this.cutAudio(this.destinationTranscodedFileName, startTime, endTime);
 
+            destinationFile.delete();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -115,5 +117,9 @@ public class CutAudio {
 
         public void sourceInfo(MultimediaInfo m) {
         }
+    }
+
+    public String getPathAudioCut(){
+        return this.destinationFileName;
     }
 }

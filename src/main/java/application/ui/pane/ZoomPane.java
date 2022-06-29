@@ -5,179 +5,150 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
 import utils.zoomWave.ZoomWaveFormPane;
+import utils.zoomWave.ZoomWaveFormService;
 
 public class ZoomPane extends ZoomWaveFormPane {
 
-    private final PaintZoomService animationService;
-    private boolean isLeftBorder = false;
-    private boolean isRightBorder = false;
+	Main main;
+	Stage primaryStage;
 
-    float[] waveZoomData;
-    float[] waveData;
+	private final PaintZoomService animationZoomService;
+	private final ZoomWaveFormService zoomWaveService;
 
-    int leftBorder;
-    int rightBorder;
-    int width;
-    int interval;
-    int ratio;
-    int rest;
-    int leftRest;
-    int rightRest;
-    int startValue;
-    int endValue;
-    int index;
+	private boolean recalculateWaveZoomData;
+	private double stepPixel = 0;
 
-    Main main;
-    Stage primaryStage;
+	private boolean isLeftBorder = false;
+	private boolean isRightBorder = false;
 
-    public ZoomPane(Main main, Stage primaryStage, int width, int height){
-        super(primaryStage, width, height);
-        super.setWaveVisualization(this);
-        animationService = new PaintZoomService();
-        this.main = main;
-        this.primaryStage = primaryStage;
+	public ZoomPane(Main main, ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
+		super(buttonsPane, primaryStage, width, height);
+		super.setWaveZoomVisualization(this);
+		this.main = main;
+		this.primaryStage = primaryStage;
+		zoomWaveService = new ZoomWaveFormService(this, main, primaryStage);
+		animationZoomService = new PaintZoomService();
+		super.sendWaveZoomService(this.zoomWaveService);
 
-        widthProperty().addListener((observable , oldValue , newValue) -> {
-            this.setWaveZoomData();
-            clear();
-        });
+		widthProperty().addListener((observable , oldValue , newValue) -> {
+			super.resetBorders();
+			this.width = Math.round(newValue.floatValue());
+			recalculateWaveZoomData = true;
+			clear();
+		});
 
-        heightProperty().addListener((observable , oldValue , newValue) -> {
-            this.height = Math.round(newValue.floatValue());
-            clear();
-        });
+		heightProperty().addListener((observable , oldValue , newValue) -> {
+			this.height = Math.round(newValue.floatValue());
+			recalculateWaveZoomData = true;
+			clear();
+		});
 
-        setOnMouseMoved(event -> {
-            if ((event.getX() >= (super.getLeftBorder())) && (event.getX() <= (super.getLeftBorder() + super.getSizeBorder()))){
-                this.isLeftBorder = true;
-            }else if ((event.getX() >= super.getRightBorder()) && (event.getX() <= (super.getRightBorder() + super.getSizeBorder()))) {
-                this.isRightBorder = true;
-            }else {
-                this.isLeftBorder = false;
-                this.isRightBorder = false;
-            }
-        });
-        setOnMouseDragged(event -> {
-            if (this.isLeftBorder){
-                super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));
-                this.getNewLeftX((int)event.getX());
-            }else if (this.isRightBorder) {
-                super.setRightBorder(event.getX() - (super.getSizeBorder() / 2.0));
-                this.getNewRightX((int)event.getX());
-            }
-        });
-        setOnMouseDragReleased(event -> {
-            this.isLeftBorder = false;
-            this.isRightBorder = false;
-        });
-        setOnMouseReleased(event -> {
-            this.isLeftBorder = false;
-            this.isRightBorder = false;
-        });
-        setOnMouseExited(event -> {
-            this.isLeftBorder = false;
-            this.isRightBorder = false;
-        });
-    }
+		setOnMouseMoved(event -> {
+			if ((event.getX() >= (super.getLeftBorder())) && (event.getX() <= (super.getLeftBorder() + super.getSizeBorder()))){
+				this.isLeftBorder = true;
+			}else if ((event.getX() >= super.getRightBorder()) && (event.getX() <= (super.getRightBorder() + super.getSizeBorder()))) {
+				this.isRightBorder = true;
+			}else {
+				this.isLeftBorder = false;
+				this.isRightBorder = false;
+			}
+		});
+		setOnMouseDragged(event -> {
+			buttonsPane.stopMusic();
+			zoomWaveService.playStopMediaPlayer("stop");
+			if (this.isLeftBorder){
+				super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));
+			}else if (this.isRightBorder) {
+				super.setRightBorder(event.getX() - (super.getSizeBorder() / 2.0));
+			}
+			zoomWaveService.startTimeMediaPlayer(super.getCurrentTime());
+		});
+		setOnMouseDragReleased(event -> {
+			this.isLeftBorder = false;
+			this.isRightBorder = false;
+		});
+		setOnMouseReleased(event -> {
+			this.isLeftBorder = false;
+			this.isRightBorder = false;
+		});
+		setOnMouseExited(event -> {
+			this.isLeftBorder = false;
+			this.isRightBorder = false;
+		});
 
-    public void setWaveZoomData(){
+	}
 
-        this.waveData = main.getWavePane().getWaveData();
-        this.leftBorder = (int) main.getWavePane().getLeftBorder();
-        this.rightBorder = (int) main.getWavePane().getRightBorder();
-        this.width = (int) primaryStage.getWidth();
-        this.interval = rightBorder - leftBorder;
-        this.ratio = width / interval;
-        this.rest = width % interval;
-        this.leftRest = this.rest / 2;
-        this.rightRest = (this.rest / 2) + (this.rest % 2);
-        this.waveZoomData = new float[this.width];
-        this.index = 0;
-
-        this.getStartAndStopValue();
-        this.startValue();
-        this.valueTab();
-        this.endValue();
-
-        this.stopPainterService();
-        this.startPainterService();
-    }
-
-    public void getNewLeftX(double posLeftX){
-        double newLeftPosX = this.leftBorder + (posLeftX / this.ratio) + this.leftRest;
-        main.getWavePane().setLeftBorder(newLeftPosX);
-        main.getWavePane().getWaveService().playStopMediaPlayer("stop");
-        main.getWavePane().getWaveService().startTimeMediaPlayer(main.getWavePane().getCurrentTime());
-    }
-
-    public void getNewRightX(double posRightX){
-        double newRightPosX = (this.leftBorder + (posRightX / this.ratio)) + 1 - this.rightRest;
-        main.getWavePane().setRightBorder(newRightPosX);
-        main.getWavePane().getWaveService().playStopMediaPlayer("stop");
-        main.getWavePane().getWaveService().startTimeMediaPlayer(main.getWavePane().getCurrentTime());
-    }
-
-    public void getStartAndStopValue(){
-            this.startValue = this.leftRest;
-            this.endValue = this.rightRest;
-    }
-
-    public void startValue(){
-        for (int i=0; i<this.startValue; i++){
-            this.waveZoomData[this.index] = 0;
-            this.index++;
+	public void setStep(boolean value){
+		if (value){
+            this.stepPixel = zoomWaveService.getRatioAudio();
+        }else {
+            this.stepPixel = 0.0;
         }
-    }
+	}
 
-    public void valueTab(){
-        for (int i=leftBorder; i<rightBorder; i++){
-            for (int j = 0; j < this.ratio; j++){
-                this.waveZoomData[index] = this.waveData[i];
-                index++;
-            }
-        }
-    }
+	public ZoomWaveFormService getWaveZoomService() {
+		return zoomWaveService;
+	}
 
-    public void endValue(){
-        for (int i=0; i<this.endValue; i++){
-            this.waveZoomData[this.index] = 0;
-            this.index++;
-        }
-    }
+	public PaintZoomService getAnimationService() {
+		return animationZoomService;
+	}
 
-    public void startPainterService() {
-        animationService.start();
-    }
+	public void startPainterService() {
+		animationZoomService.start();
+		main.setNewZoomWavePane(primaryStage);
+		main.getButtonsPane().enableButton();
+		main.getLoadingPane().resetLoading();
+	}
 
-    public void stopPainterService() {
-        animationService.stop();
-        clear();
-    }
+	public void stopPainterService() {
+		animationZoomService.stop();
+		clear();
+	}
 
-    public class PaintZoomService extends AnimationTimer {
+	public class PaintZoomService extends AnimationTimer {
 
-        private volatile SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+		private volatile SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+		private long previousNanos = 0;
 
-        @Override
-        public void start() {
-            if (width <= 0 || height <= 0)
-                width = height = 1;
+		@Override
+		public void start() {
+			if (width <= 0 || height <= 0)
+				width = height = 1;
 
-            super.start();
-            running.set(true);
-        }
+			super.start();
+			running.set(true);
+		}
 
-        @Override
-        public void handle(long nanos) {
+		@Override
+		public void handle(long nanos) {
 
-            paintZoomWaveForm(waveZoomData);
-        }
+			if (nanos >= (previousNanos + 999999999)) {
+				previousNanos = nanos;
+				setTimerXPosition(getTimerXPosition() + stepPixel);
+			}
 
-        @Override
-        public void stop() {
-            super.stop();
-            running.set(false);
-        }
+			if (getWaveZoomService().getResultingWaveform() == null || recalculateWaveZoomData) {
 
-    }
+				getWaveZoomService().startService(getWaveZoomService().getFileAbsolutePath(), ZoomWaveFormService.WaveZoomFormJob.WAVEFORM);
+				recalculateWaveZoomData = false;
+
+				return;
+			}
+
+			paintWaveZoomForm();
+		}
+
+		@Override
+		public void stop() {
+			super.stop();
+			running.set(false);
+		}
+
+		public boolean isRunning() {
+			return running.get();
+		}
+
+	}
+
 }
