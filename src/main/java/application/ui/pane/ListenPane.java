@@ -41,6 +41,7 @@ public class ListenPane extends BorderPane {
 
     Label audioLabel;
     Label timeLabel;
+    Label deleteLabel;
 
     Button nextLeftPage;
     Button nextRightPage;
@@ -265,6 +266,10 @@ public class ListenPane extends BorderPane {
         timeLabel.getStyleClass().add("textLabel");
         this.gridPane.add(timeLabel, 4, index);
 
+        deleteLabel = new Label(language.getString("Delete"));
+        deleteLabel.getStyleClass().add("textLabel");
+        this.gridPane.add(deleteLabel, 5, index);
+
         for (int i = start; i < limit; i++){
 
             Label recordLabel = new Label(listNameFilesCorrespondingToAudioFile[i]);
@@ -282,6 +287,7 @@ public class ListenPane extends BorderPane {
             this.createMediaPlayerAudioButton(i, index);
             this.createMediaPlayerRecordButton(i, index);
             this.displayTimeValue(i, index);
+            this.createDeleteRecordButton(i, index);
 
             this.gridPane.add(emptyLabel3, 0, index+2);
 
@@ -348,6 +354,26 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(timeValueLabel, 4, indexGridPane+1);
     }
 
+    public void createDeleteRecordButton(int indexTab, int indexGridPane){
+        Button deleteRecordButton = new Button();
+        deleteRecordButton.setGraphic(ImageButton.createButtonImageView("images/trash.png"));
+        deleteRecordButton.getStyleClass().add("blue");
+        deleteRecordButton.setContentDisplay(ContentDisplay.TOP);
+        deleteRecordButton.setPrefHeight(50);
+        deleteRecordButton.setPrefWidth(300);
+        deleteRecordButton.setOnAction((e) -> {
+            this.listMediaPlayerRecordFiles[indexTab].stop();
+            this.listMediaPlayerRecordFiles[indexTab].dispose();
+            String[] nameFile = listNameFilesCorrespondingToAudioFile[indexTab].split("\\.");
+            File jsonNameFile = new File(jsonPath + "/" + nameFile[0] + ".json");
+            File recordNameFile = new File(recordPath + "/" + nameFile[0] + ".wav");
+            jsonNameFile.delete();
+            recordNameFile.delete();
+            this.reloadPage();
+        });
+        this.gridPane.add(deleteRecordButton, 5,indexGridPane+1);
+    }
+
     public void clearGridPane(){
         this.gridPane.getChildren().clear();
     }
@@ -359,6 +385,11 @@ public class ListenPane extends BorderPane {
         this.createNextLeftPageButton();
         this.createNextRightPageButton();
         this.setupButtons();
+    }
+
+    public void reloadPage(){
+        this.clearGridPane();
+        this.setupListenPane();
     }
 
     public String getJsonPathForActualOS(Main main, int i){
@@ -385,5 +416,6 @@ public class ListenPane extends BorderPane {
         this.language = languages;
         this.audioLabel.setText(languages.getString("AudioFile"));
         this.timeLabel.setText(languages.getString("Time"));
+        this.deleteLabel.setText(languages.getString("Delete"));
     }
 }
