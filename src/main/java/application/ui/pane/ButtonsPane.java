@@ -86,6 +86,7 @@ public class ButtonsPane extends BorderPane {
         record.setOnAction((e) -> {
             this.stopMusic();
             main.getRecordPane().generateNameFile(main);
+            main.getRecordPane().getCreateJson().setIsZoom(false);
             main.goToRecord(primaryStage);
         });
         record.setDisable(true);

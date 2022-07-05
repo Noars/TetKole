@@ -162,7 +162,11 @@ public class RecordPane extends BorderPane {
         returnBack.setOnAction((e) -> {
             this.resetValue();
             this.resetButton();
-            main.goToHome(primaryStage);
+            if (createJson.getIsZoom()){
+                main.goToZoom(primaryStage);
+            }else {
+                main.goToHome(primaryStage);
+            }
         });
         return  returnBack;
     }
@@ -304,5 +308,9 @@ public class RecordPane extends BorderPane {
 
     public void deleteTempFiles(){
         this.recordVoice.deleteTempFiles();
+    }
+
+    public CreateJson getCreateJson(){
+        return this.createJson;
     }
 }

@@ -16,15 +16,18 @@ public class ButtonsZoomPane extends BorderPane {
 
     HBox hbox;
 
+    Button playStop;
+
     boolean runningAudio = false;
 
     public ButtonsZoomPane(Main main, Stage primaryStage){
         super();
 
         Button zoom = createZoomButton(main, primaryStage);
-        Button playStop = createPlayStopAudioFileButton(main);
+        playStop = createPlayStopAudioFileButton(main);
+        Button record = createRecordButton(main, primaryStage);
 
-        hbox = new HBox(zoom, playStop);
+        hbox = new HBox(zoom, playStop, record);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(hbox, Pos.CENTER);
@@ -67,5 +70,27 @@ public class ButtonsZoomPane extends BorderPane {
             }
         });
         return playStopAudioFile;
+    }
+
+    public Button createRecordButton(Main main, Stage primaryStage){
+        Button record = new Buttons();
+        record.setGraphic(ImageButton.createButtonImageView("images/record.png"));
+        record.getStyleClass().add("blue");
+        record.setContentDisplay(ContentDisplay.TOP);
+        record.setPrefHeight(50);
+        record.setPrefWidth(300);
+        record.setOnAction((e) -> {
+            this.stopMusic();
+            main.getRecordPane().generateNameFile(main);
+            main.getRecordPane().getCreateJson().setIsZoom(false);
+            main.goToRecord(primaryStage);
+        });
+        return record;
+    }
+
+    public void stopMusic(){
+        if (runningAudio){
+            playStop.fire();
+        }
     }
 }
