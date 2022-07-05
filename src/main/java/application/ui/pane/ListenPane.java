@@ -20,6 +20,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.buttons.Buttons;
 import utils.buttons.ImageButton;
+import utils.files.RecordVoice;
 
 import java.io.File;
 import java.io.FileReader;
@@ -30,6 +31,7 @@ public class ListenPane extends BorderPane {
 
     Main main;
     Stage primaryStage;
+    RecordVoice recordVoice;
     ResourceBundle language;
 
     HBox hbox;
@@ -42,6 +44,7 @@ public class ListenPane extends BorderPane {
     Label audioLabel;
     Label timeLabel;
     Label deleteLabel;
+    Label reRecordLabel;
 
     Button nextLeftPage;
     Button nextRightPage;
@@ -55,17 +58,21 @@ public class ListenPane extends BorderPane {
     MediaPlayer[] listMediaPlayerAudioFile;
     Boolean[] listStatusMediaPlayerRecordFiles;
     Boolean[] listStatusMediaPlayerAudioFile;
+    Button[] listRecordingButton;
 
     int nbCorrespondingFile = 0;
     int nbPages;
     int actualPage = 1;
     int rowButtons = 12;
 
+    boolean runningRecord = false;
+
     public ListenPane(Main main, Stage primaryStage, ResourceBundle language){
         super();
 
         this.main = main;
         this.primaryStage = primaryStage;
+        this.recordVoice = new RecordVoice(main, main.getSaveFolder().getFolderPath());
         this.language = language;
 
         gridPane = new GridPane();
@@ -85,6 +92,7 @@ public class ListenPane extends BorderPane {
     public void setupListenPane(){
         this.nbCorrespondingFile = 0;
         this.actualPage = 1;
+        this.runningRecord = false;
         this.jsonPath = main.getSaveFolder().getJsonPath();
         this.recordPath = main.getSaveFolder().getRecordPath();
         this.getAllJsonFile();
@@ -107,7 +115,7 @@ public class ListenPane extends BorderPane {
         home.setOnAction((e) -> {
                 main.goToHome(primaryStage);
         });
-        this.gridPane.add(home,2,this.rowButtons);
+        this.gridPane.add(home,4,this.rowButtons);
     }
 
     public void createNextRightPageButton(){
@@ -122,7 +130,7 @@ public class ListenPane extends BorderPane {
             this.changePage();
         });
         nextRightPage.setDisable(true);
-        this.gridPane.add(nextRightPage,4,this.rowButtons);
+        this.gridPane.add(nextRightPage,5,this.rowButtons);
     }
 
     public void createNextLeftPageButton(){
@@ -137,7 +145,7 @@ public class ListenPane extends BorderPane {
             this.changePage();
         });
         nextLeftPage.setDisable(true);
-        this.gridPane.add(nextLeftPage,0,this.rowButtons);
+        this.gridPane.add(nextLeftPage,2,this.rowButtons);
     }
 
     public void setupButtons(){
@@ -178,6 +186,7 @@ public class ListenPane extends BorderPane {
         this.listStatusMediaPlayerRecordFiles = new Boolean[this.nbCorrespondingFile];
         this.listStartTimeAudioAndRecordFiles = new String[this.nbCorrespondingFile];
         this.listEndTimeAudioAndRecordFiles = new String[this.nbCorrespondingFile];
+        this.listRecordingButton = new Button[this.nbCorrespondingFile];
 
         this.filterNameList();
         this.initBooleanTab();
@@ -270,9 +279,14 @@ public class ListenPane extends BorderPane {
         deleteLabel.getStyleClass().add("textLabel");
         this.gridPane.add(deleteLabel, 5, index);
 
+        reRecordLabel = new Label(language.getString("ReRecord"));
+        reRecordLabel.getStyleClass().add("textLabel");
+        this.gridPane.add(reRecordLabel, 6, index);
+
         for (int i = start; i < limit; i++){
 
-            Label recordLabel = new Label(listNameFilesCorrespondingToAudioFile[i]);
+            String[] recordName = listNameFilesCorrespondingToAudioFile[i].split("\\.");
+            Label recordLabel = new Label(recordName[0]);
             recordLabel.getStyleClass().add("textLabel");
 
             Label emptyLabel = new Label("");
@@ -288,6 +302,7 @@ public class ListenPane extends BorderPane {
             this.createMediaPlayerRecordButton(i, index);
             this.displayTimeValue(i, index);
             this.createDeleteRecordButton(i, index);
+            this.createReRecordButton(i, index);
 
             this.gridPane.add(emptyLabel3, 0, index+2);
 
@@ -374,6 +389,46 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(deleteRecordButton, 5,indexGridPane+1);
     }
 
+    public void createReRecordButton(int indexTab, int indexGridPane){
+        Button reRecordButton = new Button();
+        reRecordButton.setGraphic(ImageButton.createButtonImageView("images/reRecord.png"));
+        reRecordButton.getStyleClass().add("blue");
+        reRecordButton.setContentDisplay(ContentDisplay.TOP);
+        reRecordButton.setPrefHeight(50);
+        reRecordButton.setPrefWidth(300);
+        reRecordButton.setOnAction((e) -> {
+            if (this.runningRecord){
+                this.newRecord(false, indexTab);
+            }else {
+                this.runningRecord = true;
+                this.listMediaPlayerRecordFiles[indexTab].stop();
+                this.listMediaPlayerRecordFiles[indexTab].dispose();
+                String[] nameFile = listNameFilesCorrespondingToAudioFile[indexTab].split("\\.");
+                File recordNameFile = new File(recordPath + "/" + nameFile[0] + ".wav");
+                recordNameFile.delete();
+                ((ImageView) reRecordButton.getGraphic()).setImage(new Image("images/stopReRecord.png"));
+                this.newRecord(true, indexTab);
+            }
+        });
+        this.listRecordingButton[indexTab] = reRecordButton;
+        this.gridPane.add(reRecordButton,6,indexGridPane+1);
+    }
+
+    public void newRecord(boolean start, int indexTab){
+        if (start){
+            for (Button button : this.listRecordingButton){
+                button.setDisable(true);
+            }
+            this.listRecordingButton[indexTab].setDisable(false);
+            this.recordVoice.startRecording();
+        }else {
+            this.recordVoice.stopRecording();
+            String[] nameFile = listNameFilesCorrespondingToAudioFile[indexTab].split("\\.");
+            this.recordVoice.renameTempAudioFile(nameFile[0]);
+            this.reloadPage();
+        }
+    }
+
     public void clearGridPane(){
         this.gridPane.getChildren().clear();
     }
@@ -417,5 +472,6 @@ public class ListenPane extends BorderPane {
         this.audioLabel.setText(languages.getString("AudioFile"));
         this.timeLabel.setText(languages.getString("Time"));
         this.deleteLabel.setText(languages.getString("Delete"));
+        this.reRecordLabel.setText(languages.getString("ReRecord"));
     }
 }
