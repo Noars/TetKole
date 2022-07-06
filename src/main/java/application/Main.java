@@ -39,7 +39,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        this.setupShutdown();
         this.os = System.getProperty("os.name").toLowerCase();
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -74,16 +73,6 @@ public class Main extends Application {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
 
         primaryStage.show();
-    }
-
-    public void setupShutdown(){
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                cutAudio.deleteTempFiles();
-                recordPane.deleteTempFiles();
-            }
-        }, "Shutdown-thread"));
     }
 
     public void goToOption(Stage primaryStage){
