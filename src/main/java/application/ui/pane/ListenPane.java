@@ -45,6 +45,7 @@ public class ListenPane extends BorderPane {
     Label timeLabel;
     Label deleteLabel;
     Label reRecordLabel;
+    Label noFileLabel;
 
     Button nextLeftPage;
     Button nextRightPage;
@@ -263,50 +264,60 @@ public class ListenPane extends BorderPane {
     }
 
     public void createLabel(){
+
         int index = 0;
         int start = 4 * (this.actualPage - 1);
         int limit = this.calculateLimit();
 
         audioLabel = new Label(language.getString("AudioFile"));
         audioLabel.getStyleClass().add("textLabel");
-        this.gridPane.add(audioLabel,0,index);
 
         timeLabel = new Label(language.getString("Time"));
         timeLabel.getStyleClass().add("textLabel");
-        this.gridPane.add(timeLabel, 4, index);
 
         deleteLabel = new Label(language.getString("Delete"));
         deleteLabel.getStyleClass().add("textLabel");
-        this.gridPane.add(deleteLabel, 5, index);
 
         reRecordLabel = new Label(language.getString("ReRecord"));
         reRecordLabel.getStyleClass().add("textLabel");
-        this.gridPane.add(reRecordLabel, 6, index);
 
-        for (int i = start; i < limit; i++){
+        noFileLabel = new Label(language.getString("NoFile"));
+        noFileLabel.getStyleClass().add("textLabel");
 
-            String[] recordName = listNameFilesCorrespondingToAudioFile[i].split("\\.");
-            Label recordLabel = new Label(recordName[0]);
-            recordLabel.getStyleClass().add("textLabel");
+        if (this.nbCorrespondingFile == 0){
+            this.gridPane.add(noFileLabel, 4, index);
+        }else {
 
-            Label emptyLabel = new Label("");
-            Label emptyLabel2 = new Label("");
-            Label emptyLabel3 = new Label("");
+            this.gridPane.add(audioLabel,0,index);
+            this.gridPane.add(timeLabel, 4, index);
+            this.gridPane.add(deleteLabel, 5, index);
+            this.gridPane.add(reRecordLabel, 6, index);
+
+            for (int i = start; i < limit; i++){
+
+                String[] recordName = listNameFilesCorrespondingToAudioFile[i].split("\\.");
+                Label recordLabel = new Label(recordName[0]);
+                recordLabel.getStyleClass().add("textLabel");
+
+                Label emptyLabel = new Label("");
+                Label emptyLabel2 = new Label("");
+                Label emptyLabel3 = new Label("");
 
 
-            this.gridPane.add(emptyLabel, 1, index);
-            this.gridPane.add(recordLabel,2,index);
-            this.gridPane.add(emptyLabel2, 3, index);
+                this.gridPane.add(emptyLabel, 1, index);
+                this.gridPane.add(recordLabel,2,index);
+                this.gridPane.add(emptyLabel2, 3, index);
 
-            this.createMediaPlayerAudioButton(i, index);
-            this.createMediaPlayerRecordButton(i, index);
-            this.displayTimeValue(i, index);
-            this.createDeleteRecordButton(i, index);
-            this.createReRecordButton(i, index);
+                this.createMediaPlayerAudioButton(i, index);
+                this.createMediaPlayerRecordButton(i, index);
+                this.displayTimeValue(i, index);
+                this.createDeleteRecordButton(i, index);
+                this.createReRecordButton(i, index);
 
-            this.gridPane.add(emptyLabel3, 0, index+2);
+                this.gridPane.add(emptyLabel3, 0, index+2);
 
-            index += 3;
+                index += 3;
+            }
         }
     }
 
@@ -473,5 +484,6 @@ public class ListenPane extends BorderPane {
         this.timeLabel.setText(languages.getString("Time"));
         this.deleteLabel.setText(languages.getString("Delete"));
         this.reRecordLabel.setText(languages.getString("ReRecord"));
+        this.noFileLabel.setText(languages.getString("NoFile"));
     }
 }

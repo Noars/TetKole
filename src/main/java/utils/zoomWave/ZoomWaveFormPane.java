@@ -2,6 +2,7 @@ package utils.zoomWave;
 
 import application.Main;
 import application.ui.pane.ButtonsPane;
+import application.ui.pane.ButtonsZoomPane;
 import application.ui.pane.ZoomPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -19,16 +20,16 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 	private Main main;
 	private ZoomPane wavePane;
 	private ZoomWaveFormService zoomWaveFormService;
-	private ButtonsPane buttonsPane;
+	private ButtonsZoomPane buttonsZoomPane;
 	private Stage primaryStage;
 
 	private double leftBorder;
 	private double rightBorder;
 	private final int sizeBorder = 10;
 
-	public ZoomWaveFormPane(ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
+	public ZoomWaveFormPane(ButtonsZoomPane buttonsZoomPane, Stage primaryStage, int width, int height) {
 		this.defaultZoomWave = new float[width];
-		this.buttonsPane = buttonsPane;
+		this.buttonsZoomPane = buttonsZoomPane;
 		this.primaryStage = primaryStage;
 		this.width = width;
 		this.height = height;
@@ -64,7 +65,7 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 		this.timerXPosition = timerXPosition;
 		if (this.timerXPosition > this.rightBorder){
 			this.timerXPosition = this.leftBorder;
-			this.buttonsPane.stopMusic();
+			this.buttonsZoomPane.stopMusic();
 			this.zoomWaveFormService.playStopMediaPlayer("stop");
 			this.zoomWaveFormService.startTimeMediaPlayer(this.getCurrentTime());
 		}

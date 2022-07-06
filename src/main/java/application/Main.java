@@ -55,10 +55,10 @@ public class Main extends Application {
         cutAudio = new CutAudio(this);
         settingsPane = new SettingsPane(this);
         buttonsPane = new ButtonsPane(this, primaryStage);
-        wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
-        zoomPane = new ZoomPane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
-        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath(), settingsPane.getLanguage());
         buttonsZoomPane = new ButtonsZoomPane(this, primaryStage);
+        wavePane = new WavePane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
+        zoomPane = new ZoomPane(this, this.buttonsZoomPane, primaryStage, this.widthScreen, this.heightScreen);
+        recordPane = new RecordPane(this, primaryStage, saveFolder.getFolderPath(), settingsPane.getLanguage());
         loadingPane = new LoadingPane(this.widthScreen);
         listenPane = new ListenPane(this, primaryStage, settingsPane.getLanguage());
         emptyPane = new EmptyPane();
@@ -142,15 +142,22 @@ public class Main extends Application {
 
     public void setNewWavePane(Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
     }
 
     public void setNewZoomWavePane(Stage primaryStage){
-        zoomPane = new ZoomPane(this, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(zoomPane);
+        ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
     }
 
     public void setLoadingPane(Main main, Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(loadingPane);
         wavePane = new WavePane(main, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
+    }
+
+    public void setLoadingZoomPane(Main main, Stage primaryStage){
+        ((BorderPane) primaryStage.getScene().getRoot()).setCenter(loadingPane);
+        zoomPane = new ZoomPane(main, this.buttonsZoomPane, primaryStage, this.widthScreen, this.heightScreen);
     }
 
     public WavePane getWavePane(){
