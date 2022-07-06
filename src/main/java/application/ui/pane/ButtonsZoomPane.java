@@ -82,7 +82,7 @@ public class ButtonsZoomPane extends BorderPane {
         record.setOnAction((e) -> {
             this.stopMusic();
             main.getRecordPane().generateNameFile(main);
-            main.getRecordPane().getCreateJson().setIsZoom(false);
+            main.getRecordPane().getCreateJson().setIsZoom(true);
             main.goToRecord(primaryStage);
         });
         return record;

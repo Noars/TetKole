@@ -102,7 +102,7 @@ public class ButtonsPane extends BorderPane {
         zoom.setPrefWidth(300);
         zoom.setOnAction((e) -> {
             this.stopMusic();
-            main.getCutAudio().cutAudio(main.getWavePane().getWaveService().pathAudioFile, main.getWavePane().getStartTimeChoose(), main.getWavePane().getEndTimeChoose() + 1);
+            main.getCutAudio().cutAudio(main.getWavePane().getWaveService().pathAudioFile, main.getWavePane().getStartTimeChoose(), main.getWavePane().getEndTimeChoose());
             main.setLoadingZoomPane(main, primaryStage);
             main.getZoomPane().getWaveZoomService().startService(main.getCutAudio().getPathAudioCut(), ZoomWaveFormService.WaveZoomFormJob.AMPLITUDES_AND_WAVEFORM);
             main.getZoomPane().getWaveZoomService().setupMediaPlayer(main.getCutAudio().getPathAudioCut());

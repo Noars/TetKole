@@ -162,11 +162,7 @@ public class RecordPane extends BorderPane {
         returnBack.setOnAction((e) -> {
             this.resetValue();
             this.resetButton();
-            if (createJson.getIsZoom()){
-                main.goToZoom(primaryStage);
-            }else {
-                main.goToHome(primaryStage);
-            }
+            this.returnBack(main, primaryStage);
         });
         return  returnBack;
     }
@@ -181,15 +177,23 @@ public class RecordPane extends BorderPane {
         listenAudioFile.setOnAction((e) -> {
             if (runningAudioFile) {
                 runningAudioFile = false;
-                main.getButtonsPane().playStopAudioFile.fire();
+                this.playGoodAudioFile(main);
                 ((ImageView) listenAudioFile.getGraphic()).setImage(new Image("images/playAudioFile.png"));
             } else {
                 runningAudioFile = true;
-                main.getButtonsPane().playStopAudioFile.fire();
+                this.playGoodAudioFile(main);
                 ((ImageView) listenAudioFile.getGraphic()).setImage(new Image("images/stopAudioFile.png"));
             }
         });
         return  listenAudioFile;
+    }
+
+    public void playGoodAudioFile(Main main){
+        if (createJson.getIsZoom()){
+            main.getButtonsZoomPane().playStop.fire();
+        }else {
+            main.getButtonsPane().playStopAudioFile.fire();
+        }
     }
 
     public Button createValidateRecordButton(Main main, Stage primaryStage){
@@ -210,7 +214,7 @@ public class RecordPane extends BorderPane {
                     createJson.createJson(audioFileNameText.getText());
                     this.resetValue();
                     this.resetButton();
-                    main.goToHome(primaryStage);
+                    this.returnBack(main, primaryStage);
                 }
             }
         });
@@ -312,5 +316,13 @@ public class RecordPane extends BorderPane {
 
     public CreateJson getCreateJson(){
         return this.createJson;
+    }
+
+    public void returnBack(Main main, Stage primaryStage){
+        if (createJson.getIsZoom()){
+            main.goToZoom(primaryStage);
+        }else {
+            main.goToHome(primaryStage);
+        }
     }
 }

@@ -176,6 +176,10 @@ public class Main extends Application {
         return this.buttonsPane;
     }
 
+    public ButtonsZoomPane getButtonsZoomPane(){
+        return this.buttonsZoomPane;
+    }
+
     public SaveFolder getSaveFolder(){
         return this.saveFolder;
     }

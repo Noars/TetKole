@@ -140,29 +140,45 @@ public class ZoomWaveFormPane extends ResizableZoomCanvas {
 	}
 
 	public String calculTimeLeftBorder(){
-		int time = (int) (this.leftBorder / zoomWaveFormService.getRatioAudio()) + main.getWavePane().getStartTimeChoose();
-		double milliTime = Math.round((this.leftBorder / zoomWaveFormService.getRatioAudio()) * 100.0) / 100.0;
+		double mainTime = main.getWavePane().getLeftBorder() / main.getWavePane().getRatioAudio();
+		double time = (this.leftBorder / zoomWaveFormService.getRatioAudio()) + mainTime;
+		double milliTime = (Math.round(((this.leftBorder / zoomWaveFormService.getRatioAudio()) + mainTime) * 100.0) / 100.0);
 
-		int hoursLeftBorderTime = time / 3600;
-		int minutesLeftBorderTime = (time % 3600) / 60;
-		int secondsLeftBorderTime = time % 60;
+		double hoursLeftBorderTime = time / 3600;
+		double minutesLeftBorderTime = (time % 3600) / 60;
+		double secondsLeftBorderTime = time % 60;
+
+		String hours = String.valueOf(hoursLeftBorderTime);
+		String onlyHours = hours.split("\\.")[0];
+		String minutes = String.valueOf(minutesLeftBorderTime);
+		String onlyMinutes = minutes.split("\\.")[0];
+		String seconds = String.valueOf(secondsLeftBorderTime);
+		String onlySeconds = seconds.split("\\.")[0];
 		String milliSeconds = String.valueOf(milliTime);
 		String onlyMilliSeconds = milliSeconds.substring(milliSeconds.indexOf(".")).substring(1);
 
-		return hoursLeftBorderTime + "h:" + minutesLeftBorderTime + "min:" + secondsLeftBorderTime + "s:" + onlyMilliSeconds + "ms";
+		return onlyHours + "h:" + onlyMinutes + "min:" + onlySeconds + "s:" + onlyMilliSeconds + "ms";
 	}
 
 	public String calculTimeRightBorder(){
-		int time = (int) (this.rightBorder / zoomWaveFormService.getRatioAudio()) + main.getWavePane().getStartTimeChoose();
-		double milliTime = Math.round((this.rightBorder / zoomWaveFormService.getRatioAudio()) * 100.0) / 100.0;
+		double mainTime = main.getWavePane().getLeftBorder() / main.getWavePane().getRatioAudio();
+		double time = (this.rightBorder / zoomWaveFormService.getRatioAudio()) + mainTime;
+		double milliTime = (Math.round(((this.rightBorder / zoomWaveFormService.getRatioAudio()) + mainTime) * 100.0) / 100.0);
 
-		int hoursRightBorderTime = time / 3600;
-		int minutesRightBorderTime = (time % 3600) / 60;
-		int secondsRightBorderTime = time % 60;
+		double hoursRightBorderTime = time / 3600;
+		double minutesRightBorderTime = (time % 3600) / 60;
+		double secondsRightBorderTime = time % 60;
+
+		String hours = String.valueOf(hoursRightBorderTime);
+		String onlyHours = hours.split("\\.")[0];
+		String minutes = String.valueOf(minutesRightBorderTime);
+		String onlyMinutes = minutes.split("\\.")[0];
+		String seconds = String.valueOf(secondsRightBorderTime);
+		String onlySeconds = seconds.split("\\.")[0];
 		String milliSeconds = String.valueOf(milliTime);
 		String onlyMilliSeconds = milliSeconds.substring(milliSeconds.indexOf(".")).substring(1);
 
-		return hoursRightBorderTime + "h:" + minutesRightBorderTime + "min:" + secondsRightBorderTime + "s:" + onlyMilliSeconds + "ms";
+		return onlyHours + "h:" + onlyMinutes + "min:" + onlySeconds + "s:" + onlyMilliSeconds + "ms";
 	}
 
 	public double getCurrentTime(){
