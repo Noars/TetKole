@@ -22,18 +22,34 @@ public class CutAudio {
     Encoder encoder;
     ConvertProgressListener listener = new ConvertProgressListener();
 
+    /**
+     * Initialize the constructor of this class
+     * And setup all path for files
+     *
+     * @param main
+     */
     public CutAudio(Main main){
         super();
         this.main = main;
         this.setupDestinationFilesName();
     }
 
+    /**
+     * Function that create the path for the future temporary files
+     */
     public void setupDestinationFilesName(){
         String path = main.getSaveFolder().getRecordPath();
         this.destinationFileName = path + "/audioFileCut.wav";
         this.destinationTranscodedFileName = path + "/transcodedFile.wav";
     }
 
+    /**
+     * Function that extract a portion of the audio file
+     *
+     * @param sourceFileName -> original audio file
+     * @param startTime
+     * @param endTime
+     */
     public void cutAudio(String sourceFileName, int startTime, int endTime){
 
         int duration = endTime - startTime;
@@ -43,6 +59,7 @@ public class CutAudio {
         AudioInputStream inputStream = null;
         AudioInputStream exitStream = null;
 
+        // try to extract audio but if the audio file have a wrong extension, then i transcode him in Wav
         try {
             File file = new File(sourceFileName);
             AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
@@ -58,7 +75,7 @@ public class CutAudio {
             this.transcodeToWav(sourceFileName, startTime, endTime);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        } finally { // At the end close all stream open
             if (inputStream != null){
                 try {
                     inputStream.close();
@@ -76,6 +93,15 @@ public class CutAudio {
         }
     }
 
+    /**
+     * Transcode the audio file passed in parameter to Wav
+     * The "startTime" and "endTime" passed in parameter only serve for the "cutAudio" function
+     * It's a recursive call
+     *
+     * @param audioFile -> file we convert in wav
+     * @param startTime
+     * @param endTime
+     */
     public void transcodeToWav(String audioFile, int startTime, int endTime) {
         try {
 
@@ -103,6 +129,9 @@ public class CutAudio {
         }
     }
 
+    /**
+     * Methode needed for transcode function
+     */
     public class ConvertProgressListener implements EncoderProgressListener {
 
         public ConvertProgressListener() {
@@ -119,10 +148,19 @@ public class CutAudio {
         }
     }
 
+    /**
+     * Function that give the path of the audio file cut
+     *
+     * @return the destinationFileName variable
+     */
     public String getPathAudioCut(){
         return this.destinationFileName;
     }
 
+
+    /**
+     * Function that delete al the temporary files created
+     */
     public void deleteTempFiles(){
         File file1 = new File(this.destinationFileName);
         File file2 = new File(this.destinationTranscodedFileName);

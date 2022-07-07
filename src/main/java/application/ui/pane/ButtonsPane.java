@@ -32,13 +32,20 @@ public class ButtonsPane extends BorderPane {
     HBox hbox;
     FileChooser fileChooser = new FileChooser();
 
+    /**
+     * Initialize the constructor of this class
+     * And create the gridPane with all buttons
+     *
+     * @param main
+     * @param primaryStage
+     */
     public ButtonsPane(Main main, Stage primaryStage){
         super();
 
         newAudioFile = createNewAudioFileButton(main, primaryStage);
         playStopAudioFile = createPlayStopAudioFileButton(main);
         record = createRecordButton(main, primaryStage);
-        Button seeJsonFolder = createSeeJsonFolder(main);
+        Button seeJsonFolder = createSeeJsonFolderButton(main);
         zoom = createZoomButton(main, primaryStage);
         listenAudioAndRecord = createListenAudioAndRecordButton(main, primaryStage);
 
@@ -52,6 +59,13 @@ public class ButtonsPane extends BorderPane {
         this.extensionAudioFiles();
     }
 
+    /**
+     * Function that create the playStop button
+     * This button permit listen or pause the audio file
+     *
+     * @param main
+     * @return the button "playStop"
+     */
     public Button createPlayStopAudioFileButton(Main main) {
         Button playStopAudioFile = new Buttons();
         playStopAudioFile.setGraphic(ImageButton.createButtonImageView("images/play.png"));
@@ -76,6 +90,14 @@ public class ButtonsPane extends BorderPane {
         return playStopAudioFile;
     }
 
+    /**
+     * Function that create the record button
+     * This button permit going on the record page
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "record"
+     */
     public Button createRecordButton(Main main, Stage primaryStage){
         Button record = new Buttons();
         record.setGraphic(ImageButton.createButtonImageView("images/record.png"));
@@ -93,6 +115,17 @@ public class ButtonsPane extends BorderPane {
         return record;
     }
 
+    /**
+     * Function that create the zoom button
+     * This button :
+     *  - Create a temporary cut file audio who will be used for the zoom
+     *  - Launch the loading page
+     *  - Then go on the zoom page
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "zoom"
+     */
     public Button createZoomButton(Main main, Stage primaryStage){
         Button zoom = new Button();
         zoom.setGraphic(ImageButton.createButtonImageView("images/zoom+.png"));
@@ -111,6 +144,14 @@ public class ButtonsPane extends BorderPane {
         return zoom;
     }
 
+    /**
+     * Function that create the newAudioFile button
+     * This button permit to add the audio file who will be used to our record
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "newAudioFile"
+     */
     public Button createNewAudioFileButton(Main main, Stage primaryStage){
         Button newAudioFile = new Buttons();
         newAudioFile.setGraphic(ImageButton.createButtonImageView("images/add.png"));
@@ -131,6 +172,11 @@ public class ButtonsPane extends BorderPane {
         return  newAudioFile;
     }
 
+    /**
+     * Function that enable all the disable button
+     * At the start of the application, since we don't have an audio file
+     * I disable all buttons
+     */
     public void enableButton(){
         newAudioFile.setDisable(false);
         record.setDisable(false);
@@ -139,6 +185,14 @@ public class ButtonsPane extends BorderPane {
         playStopAudioFile.setDisable(false);
     }
 
+    /**
+     * Function that create the listenAudioAndRecord button
+     * This button permit going on the Listen page
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "listenAudioAndRecord"
+     */
     public Button createListenAudioAndRecordButton(Main main, Stage primaryStage){
         Button listenAudioAndRecord = new Buttons();
         listenAudioAndRecord.setGraphic(ImageButton.createButtonImageView("images/music.png"));
@@ -154,7 +208,14 @@ public class ButtonsPane extends BorderPane {
         return  listenAudioAndRecord;
     }
 
-    public Button createSeeJsonFolder(Main main){
+    /**
+     * Function that create the seeJsonFolder button
+     * This button permit opening the file explorer according to the good operating system
+     *
+     * @param main
+     * @return the button "seeJsonFolder"
+     */
+    public Button createSeeJsonFolderButton(Main main){
         Button seeJsonFolder = new Buttons();
         seeJsonFolder.setGraphic(ImageButton.createButtonImageView("images/folder.png"));
         seeJsonFolder.getStyleClass().add("blue");
@@ -184,18 +245,30 @@ public class ButtonsPane extends BorderPane {
         return  seeJsonFolder;
     }
 
+    /**
+     * Function that create the extension filter
+     * With this filter actually only .mp3 & .wav files will be visible in the file explorer
+     */
     public void extensionAudioFiles(){
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav")
         );
     }
 
+    /**
+     * Function that stop the music if she is running
+     */
     public void stopMusic(){
         if (runningAudio){
             playStopAudioFile.fire();
         }
     }
 
+    /**
+     * Function that delete all temporary files created
+     *
+     * @param main
+     */
     public void deleteTempFiles(Main main){
         main.getCutAudio().deleteTempFiles();
         main.getRecordPane().deleteTempFiles();

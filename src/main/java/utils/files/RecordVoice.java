@@ -131,7 +131,7 @@ public class RecordVoice {
      * - Copy the temporary recorded file
      * - Rename the copied file with the name given by the user
      *
-     * @param newName -> name gven by the user
+     * @param newName -> name given by the user
      */
     public void renameTempAudioFile(String newName) {
         if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
@@ -172,7 +172,7 @@ public class RecordVoice {
     /**
      * Function that manage the Media Player
      *
-     * @param status -> the order to gi to the Media Player
+     * @param status -> the order to give to the Media Player
      */
     public void playStopMediaPlayer(String status){
         if (audioFile != null){

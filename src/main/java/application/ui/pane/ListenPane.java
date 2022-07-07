@@ -49,6 +49,7 @@ public class ListenPane extends BorderPane {
 
     Button nextLeftPage;
     Button nextRightPage;
+    Button home;
 
     String[] listFiles;
     JSONArray[] listFilesCorrespondingToAudioFile;
@@ -91,6 +92,7 @@ public class ListenPane extends BorderPane {
     }
 
     public void setupListenPane(){
+        this.gridPane.getChildren().clear();
         this.nbCorrespondingFile = 0;
         this.actualPage = 1;
         this.runningRecord = false;
@@ -107,14 +109,15 @@ public class ListenPane extends BorderPane {
     }
 
     public void createHomeButton(){
-        Button home = new Buttons();
+        home = new Buttons();
         home.setGraphic(ImageButton.createButtonImageView("images/home.png"));
         home.getStyleClass().add("blue");
         home.setContentDisplay(ContentDisplay.TOP);
         home.setPrefHeight(50);
         home.setPrefWidth(300);
         home.setOnAction((e) -> {
-                main.goToHome(primaryStage);
+            this.resetButton();
+            main.goToHome(primaryStage);
         });
         this.gridPane.add(home,4,this.rowButtons);
     }
@@ -430,6 +433,7 @@ public class ListenPane extends BorderPane {
             for (Button button : this.listRecordingButton){
                 button.setDisable(true);
             }
+            this.home.setDisable(true);
             this.listRecordingButton[indexTab].setDisable(false);
             this.recordVoice.startRecording();
         }else {
@@ -476,6 +480,15 @@ public class ListenPane extends BorderPane {
 
     public void setPath(String path){
         this.pathAudioFile = path;
+    }
+
+    public void resetButton(){
+        for (MediaPlayer mediaPlayer : listMediaPlayerAudioFile){
+            mediaPlayer.stop();
+        }
+        for (MediaPlayer mediaPlayerRecord : listMediaPlayerRecordFiles){
+            mediaPlayerRecord.stop();
+        }
     }
 
     public void changeLabel(ResourceBundle languages){

@@ -43,6 +43,15 @@ public class RecordPane extends BorderPane {
 
     ResourceBundle language;
 
+    /**
+     * Initialize the constructor of this class
+     * And create the gridPane with all buttons
+     *
+     * @param main
+     * @param primaryStage
+     * @param pathFolder
+     * @param language
+     */
     public RecordPane(Main main, Stage primaryStage, String pathFolder, ResourceBundle language){
         super();
 
@@ -106,6 +115,12 @@ public class RecordPane extends BorderPane {
         this.setStyle("-fx-background-color: #535e65");
     }
 
+    /**
+     * Function that create the playStop button
+     * This button permit listen or pause the audio file recorded
+     *
+     * @return the button "playStop"
+     */
     public Button createPlayStopAudioFileButton() {
         Button playStopAudioFile = new Buttons();
         playStopAudioFile.setGraphic(ImageButton.createButtonImageView("images/play.png"));
@@ -127,6 +142,12 @@ public class RecordPane extends BorderPane {
         return playStopAudioFile;
     }
 
+    /**
+     * Function that create the record button
+     * This button permit recording our voice
+     *
+     * @return the button "record"
+     */
     public Button createRecordButton(){
         Button record = new Buttons();
         record.setGraphic(ImageButton.createButtonImageView("images/record.png"));
@@ -152,6 +173,14 @@ public class RecordPane extends BorderPane {
         return record;
     }
 
+    /**
+     * Function that create the record button
+     * This button permit going on the home page or the zoom page
+     *
+     * @param main
+     * @param primaryStage
+     * @return
+     */
     public Button createReturnBackButton(Main main, Stage primaryStage){
         Button returnBack = new Buttons();
         returnBack.setGraphic(ImageButton.createButtonImageView("images/back.png"));
@@ -167,6 +196,13 @@ public class RecordPane extends BorderPane {
         return  returnBack;
     }
 
+    /**
+     * Function that create the listenAudioFile button
+     * This button permit listen or pause the audio file
+     *
+     * @param main
+     * @return the button "listenAudioFile"
+     */
     public Button createListenAudioFile(Main main){
         Button listenAudioFile = new Buttons();
         listenAudioFile.setGraphic(ImageButton.createButtonImageView("images/playAudioFile.png"));
@@ -188,6 +224,12 @@ public class RecordPane extends BorderPane {
         return  listenAudioFile;
     }
 
+    /**
+     * Function that play or stop the good audio
+     * Audio original or Audio cut
+     *
+     * @param main
+     */
     public void playGoodAudioFile(Main main){
         if (createJson.getIsZoom()){
             main.getButtonsZoomPane().playStop.fire();
@@ -196,6 +238,16 @@ public class RecordPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that validate our record
+     * Check if :
+     * - A record is done
+     * - The name is valid or not already used
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "validateRecord"
+     */
     public Button createValidateRecordButton(Main main, Stage primaryStage){
         Button validateRecord = new Button();
         validateRecord.setGraphic(ImageButton.createButtonImageView("images/validate.png"));
@@ -221,6 +273,12 @@ public class RecordPane extends BorderPane {
         return validateRecord;
     }
 
+    /**
+     * Function that check if the name we want is not already used
+     *
+     * @param recordFileName
+     * @return a boolean
+     */
     public Boolean checkNameAlreadyUse(String recordFileName){
         File recordFile = new File(pathFolder + "//RecordFiles//" + recordFileName + ".wav");
 
@@ -232,15 +290,26 @@ public class RecordPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that set no record audio done text in the label error
+     */
     public void errorStatusAudioMessage(){
         this.errorStatusAudioLabel.setText(language.getString("ErrorRecordAudio"));
     }
 
+    /**
+     * Function that set error in name file text in the label error
+     */
     public void errorAudioMessage(){
         this.errorStatusAudioLabel.setText("");
         this.errorAudioFileNameLabel.setText(language.getString("ErrorNameAudioFile"));
     }
 
+    /**
+     * Function that change the image view for the record
+     *
+     * @param status
+     */
     public void setStatusImageView(boolean status){
         Image statusImage;
 
@@ -252,6 +321,9 @@ public class RecordPane extends BorderPane {
         this.statusImageView.setImage(statusImage);
     }
 
+    /**
+     * Function that reset all value in this class
+     */
     public void resetValue(){
         recordDone = false;
 
@@ -264,11 +336,17 @@ public class RecordPane extends BorderPane {
         this.audioFileNameText.setText(generatedNameFile);
     }
 
+    /**
+     * Function that reset all label in this class
+     */
     public void resetErrorLabel(){
         this.errorStatusAudioLabel.setText("");
         this.errorAudioFileNameLabel.setText("");
     }
 
+    /**
+     * Function that reset all button in this class
+     */
     public void resetButton(){
         if (runningAudioRecorded){
             playStopAudioFile.fire();
@@ -281,6 +359,13 @@ public class RecordPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that generate a name for the record file
+     * It takes the name of the original audio file and add a "_translate"
+     * And he adds a number
+     * If the number is already used, increment the number
+     * Until we find a valid one
+     */
     public void generateNameFile(Main main){
         boolean findNewName = false;
         int number = 1;
@@ -303,6 +388,11 @@ public class RecordPane extends BorderPane {
         this.audioFileNameText.setText(generatedNameFile);
     }
 
+    /**
+     * Function that change the language of label
+     *
+     * @param languages
+     */
     public void changeLabel(ResourceBundle languages){
         this.language = languages;
         this.resetErrorLabel();
@@ -314,10 +404,21 @@ public class RecordPane extends BorderPane {
         this.recordVoice.deleteTempFiles();
     }
 
+    /**
+     * Function that give the instance of createJson
+     *
+     * @return createJson instance
+     */
     public CreateJson getCreateJson(){
         return this.createJson;
     }
 
+    /**
+     * Function that permit to return on the home page or zoom page
+     *
+     * @param main
+     * @param primaryStage
+     */
     public void returnBack(Main main, Stage primaryStage){
         if (createJson.getIsZoom()){
             main.goToZoom(primaryStage);
