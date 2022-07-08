@@ -69,6 +69,14 @@ public class ListenPane extends BorderPane {
 
     boolean runningRecord = false;
 
+    /**
+     * Initialize the constructor of this class
+     * And create the gridPane with all buttons
+     *
+     * @param main
+     * @param primaryStage
+     * @param language
+     */
     public ListenPane(Main main, Stage primaryStage, ResourceBundle language){
         super();
 
@@ -91,6 +99,12 @@ public class ListenPane extends BorderPane {
         this.setStyle("-fx-background-color: #535e65");
     }
 
+    /**
+     * Function that :
+     * - Reset all variables to default
+     * - Create all buttons
+     * - Create all labels
+     */
     public void setupListenPane(){
         this.gridPane.getChildren().clear();
         this.nbCorrespondingFile = 0;
@@ -108,6 +122,10 @@ public class ListenPane extends BorderPane {
         this.setupButtons();
     }
 
+    /**
+     * Function that create the button "home"
+     * This button permit returning on the home page
+     */
     public void createHomeButton(){
         home = new Buttons();
         home.setGraphic(ImageButton.createButtonImageView("images/home.png"));
@@ -122,6 +140,10 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(home,4,this.rowButtons);
     }
 
+    /**
+     * Function that create the button "nextRightPage"
+     * This button permit going on the next page of the listing audio
+     */
     public void createNextRightPageButton(){
         nextRightPage = new Buttons();
         nextRightPage.setGraphic(ImageButton.createButtonImageView("images/nextRight.png"));
@@ -137,6 +159,10 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(nextRightPage,5,this.rowButtons);
     }
 
+    /**
+     * Function that create the button "nextLeftPage"
+     * This button permit going back of the listing audio
+     */
     public void createNextLeftPageButton(){
         nextLeftPage = new Buttons();
         nextLeftPage.setGraphic(ImageButton.createButtonImageView("images/nextLeft.png"));
@@ -152,6 +178,10 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(nextLeftPage,2,this.rowButtons);
     }
 
+    /**
+     * Function that check if we have more than 1 page
+     * If it's the case whe activate "nextLeftPage" & "nextRightPage" buttons
+     */
     public void setupButtons(){
         if ((this.nbPages > 1) && (this.actualPage < this.nbPages)){
             this.nextRightPage.setDisable(false);
@@ -162,6 +192,9 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that get all json file in the folder "JsonFiles"
+     */
     public void getAllJsonFile(){
         File folder = new File(jsonPath);
         listFiles = folder.list();
@@ -169,6 +202,10 @@ public class ListenPane extends BorderPane {
         listNameFilesCorrespondingToAudioFile = new String[listFiles.length];
     }
 
+    /**
+     * Function that get all json file according to the actual audio file imported by the user
+     * Then initialize all tables
+     */
     public void getJsonFileCorrespondingToAudioFile(Main main){
         for (int i = 0; i < listFiles.length; i++){
             String jsonPath = getJsonPathForActualOS(main, i);
@@ -197,6 +234,9 @@ public class ListenPane extends BorderPane {
         this.numberOfPages();
     }
 
+    /**
+     * Function that remove all null value
+     */
     public void filterNameList(){
         String[] temp = new String[nbCorrespondingFile];
         int index = 0;
@@ -209,6 +249,9 @@ public class ListenPane extends BorderPane {
         this.listNameFilesCorrespondingToAudioFile = temp;
     }
 
+    /**
+     * Function that set all value to false in "listStatusMediaPlayerAudioFile" & "listStatusMediaPlayerRecordFiles"
+     */
     public void initBooleanTab(){
         for (int i = 0; i < this.nbCorrespondingFile; i++){
             this.listStatusMediaPlayerAudioFile[i] = false;
@@ -216,6 +259,10 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that calculated the number of page
+     * We have 4 elements per page
+     */
     public void numberOfPages(){
         this.nbPages = this.nbCorrespondingFile / 4;
         if ((this.nbCorrespondingFile % 4) != 0){
@@ -223,6 +270,11 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that all media player for the recorded files
+     *
+     * @param main
+     */
     public void createMediaPlayerRecordFiles(Main main){
         int index = 0;
         for (JSONArray item: listFilesCorrespondingToAudioFile){
@@ -237,6 +289,12 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that set the media player to make it start and end at the right time
+     *
+     * @param item
+     * @param index
+     */
     public void setupAudioFileMediaPlayer(JSONArray item, int index){
         JSONObject startTimeObj = (JSONObject) item.get(2);
         JSONObject endTimeObj = (JSONObject) item.get(3);
@@ -266,6 +324,9 @@ public class ListenPane extends BorderPane {
         this.listMediaPlayerAudioFile[index] = mediaPlayer;
     }
 
+    /**
+     * Function that create all label and add it in the gridPane
+     */
     public void createLabel(){
 
         int index = 0;
@@ -324,6 +385,11 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that calculates how many buttons and labels we will add
+     *
+     * @return
+     */
     public int calculateLimit(){
         if (this.actualPage == this.nbPages){
             this.rowButtons = (this.nbCorrespondingFile % 4) * 3;
@@ -334,6 +400,14 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that create all buttons for start or and media player
+     * It's for all media player who use the original audio file
+     *
+     *
+     * @param indexTab
+     * @param indexGridPane
+     */
     public void createMediaPlayerAudioButton(int indexTab, int indexGridPane){
         Button playStopMediaPlayerAudio = new Buttons();
         playStopMediaPlayerAudio.setGraphic(ImageButton.createButtonImageView("images/play.png"));
@@ -355,6 +429,14 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(playStopMediaPlayerAudio, 0,indexGridPane+1);
     }
 
+    /**
+     * Function that create all buttons for start or and media player
+     * It's for all media player who use the recorded audio file
+     *
+     *
+     * @param indexTab
+     * @param indexGridPane
+     */
     public void createMediaPlayerRecordButton(int indexTab, int indexGridPane){
         Button playStopMediaPlayerRecord = new Buttons();
         playStopMediaPlayerRecord.setGraphic(ImageButton.createButtonImageView("images/play.png"));
@@ -376,6 +458,12 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(playStopMediaPlayerRecord, 2,indexGridPane+1);
     }
 
+    /**
+     * Function that display all the time for each record
+     *
+     * @param indexTab
+     * @param indexGridPane
+     */
     public void displayTimeValue(int indexTab, int indexGridPane){
         Label timeValueLabel = new Label(this.listStartTimeAudioAndRecordFiles[indexTab] + " - " + this.listEndTimeAudioAndRecordFiles[indexTab]);
         timeValueLabel.getStyleClass().add("textLabel");
@@ -383,6 +471,13 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(timeValueLabel, 4, indexGridPane+1);
     }
 
+    /**
+     * Function that create the "deleteRecordButton" button
+     * Permit to delete the json and record file
+     *
+     * @param indexTab
+     * @param indexGridPane
+     */
     public void createDeleteRecordButton(int indexTab, int indexGridPane){
         Button deleteRecordButton = new Button();
         deleteRecordButton.setGraphic(ImageButton.createButtonImageView("images/trash.png"));
@@ -403,6 +498,13 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(deleteRecordButton, 5,indexGridPane+1);
     }
 
+    /**
+     * Function that create the "reRecordButton" button
+     * Permit to re record on the same timeline
+     *
+     * @param indexTab
+     * @param indexGridPane
+     */
     public void createReRecordButton(int indexTab, int indexGridPane){
         Button reRecordButton = new Button();
         reRecordButton.setGraphic(ImageButton.createButtonImageView("images/reRecord.png"));
@@ -428,6 +530,12 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(reRecordButton,6,indexGridPane+1);
     }
 
+    /**
+     * Function that manages the re record
+     *
+     * @param start
+     * @param indexTab
+     */
     public void newRecord(boolean start, int indexTab){
         if (start){
             for (Button button : this.listRecordingButton){
@@ -444,10 +552,16 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that clear the actual gridPane for a new one
+     */
     public void clearGridPane(){
         this.gridPane.getChildren().clear();
     }
 
+    /**
+     * Function that manages the page change
+     */
     public void changePage(){
         this.clearGridPane();
         this.createLabel();
@@ -457,19 +571,36 @@ public class ListenPane extends BorderPane {
         this.setupButtons();
     }
 
+    /**
+     * Function that reload the actual page
+     */
     public void reloadPage(){
         this.clearGridPane();
         this.setupListenPane();
     }
 
-    public String getJsonPathForActualOS(Main main, int i){
+    /**
+     * Function that get the path of the json file according to the operating system of the user
+     *
+     * @param main
+     * @param index
+     * @return
+     */
+    public String getJsonPathForActualOS(Main main, int index){
         if (main.getOs().contains("nux") || main.getOs().contains("mac")){
-            return jsonPath + "/" + listFiles[i];
+            return jsonPath + "/" + listFiles[index];
         }else {
-            return jsonPath + "\\" + listFiles[i];
+            return jsonPath + "\\" + listFiles[index];
         }
     }
 
+    /**
+     * Function that get the path of the recorded file according to the operating system of the user
+     *
+     * @param main
+     * @param nameFile
+     * @return
+     */
     public String getRecordPathForActualOS(Main main, String nameFile){
         if (main.getOs().contains("nux") || main.getOs().contains("mac")){
             return recordPath + "/" + nameFile;
@@ -478,10 +609,18 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that set the path of the original audio file
+     *
+     * @param path
+     */
     public void setPath(String path){
         this.pathAudioFile = path;
     }
 
+    /**
+     * Function that reset all buttons of media player
+     */
     public void resetButton(){
         for (MediaPlayer mediaPlayer : listMediaPlayerAudioFile){
             mediaPlayer.stop();
@@ -491,6 +630,11 @@ public class ListenPane extends BorderPane {
         }
     }
 
+    /**
+     * Function that change all text of the label if the language change
+     *
+     * @param languages
+     */
     public void changeLabel(ResourceBundle languages){
         this.language = languages;
         this.audioLabel.setText(languages.getString("AudioFile"));
