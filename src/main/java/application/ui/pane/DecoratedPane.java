@@ -14,6 +14,14 @@ public class DecoratedPane extends BorderPane {
 
     boolean inSettings = false;
 
+    /**
+     * Initialize the constructor of this class
+     * And create the gridPane with all buttons
+     * It's the headband of the application
+     *
+     * @param main
+     * @param primaryStage
+     */
     public DecoratedPane(Main main, Stage primaryStage) {
 
         Button exit = new Button("Fermer");

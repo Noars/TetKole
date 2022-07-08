@@ -26,12 +26,21 @@ public class RecordVoice {
     Path audioTempFilePath;
     Path audioFilePath;
 
+    /**
+     * Initialize the constructor of this class
+     *
+     * @param main -> the main class
+     * @param pathFolder -> the path to the "TètKole" folder according to the user's operating system
+     */
     public RecordVoice(Main main, String pathFolder){
         super();
         this.main = main;
         this.pathFolder = pathFolder;
     }
 
+    /**
+     * Function that record our voice
+     */
     public void startRecording(){
 
         this.deleteTempAudioFile();
@@ -66,6 +75,10 @@ public class RecordVoice {
         }
     }
 
+    /**
+     * Function that create the temporary record file according to the user's operating system
+     * The name of this temporary file is "TempAudio.wav"
+     */
     public void getWavOutputFile(){
         if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
             wavOutputFile = new File(pathFolder + "/RecordFiles/TempAudio.wav");
@@ -74,12 +87,20 @@ public class RecordVoice {
         }
     }
 
+    /**
+     * Function that stop the record of our voice
+     */
     public void stopRecording(){
         audioRecordThread.stop();
         targetLine.stop();
         targetLine.close();
     }
 
+    /**
+     * Function that set the format of our audio recorded file
+     *
+     * @return format for our audio recorded file
+     */
     public AudioFormat getAudioFormat(){
         float sampleRate = 16000;
         int sampleSizeInBits = 16;
@@ -90,6 +111,9 @@ public class RecordVoice {
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
     }
 
+    /**
+     * Function that delete the temporary audio file
+     */
     public void deleteTempAudioFile(){
         File audioTempFile;
         if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
@@ -102,6 +126,13 @@ public class RecordVoice {
         }
     }
 
+    /**
+     * This function :
+     * - Copy the temporary recorded file
+     * - Rename the copied file with the name given by the user
+     *
+     * @param newName -> name given by the user
+     */
     public void renameTempAudioFile(String newName) {
         if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
             audioTempFilePath = Paths.get(pathFolder + "/RecordFiles/TempAudio.wav");
@@ -118,11 +149,17 @@ public class RecordVoice {
         }
     }
 
+    /**
+     * Function that delete all temporary file created here
+     */
     public void deleteTempFiles(){
         File audioTempFile = new File(String.valueOf(audioTempFilePath));
         audioTempFile.delete();
     }
 
+    /**
+     * Function that set the Media Player with the created recorded file
+     */
     public void setupMediaPlayer(){
         if (this.main.getOs().contains("nux") || this.main.getOs().contains("mac")){
             audioFile = new Media(new File(pathFolder + "/RecordFiles/TempAudio.wav").toURI().toString());
@@ -132,6 +169,11 @@ public class RecordVoice {
         mediaPlayer = new MediaPlayer(audioFile);
     }
 
+    /**
+     * Function that manage the Media Player
+     *
+     * @param status -> the order to give to the Media Player
+     */
     public void playStopMediaPlayer(String status){
         if (audioFile != null){
             switch (status){

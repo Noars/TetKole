@@ -11,6 +11,12 @@ public class LoadingPane extends BorderPane {
     HBox hbox;
     ProgressBar loading;
 
+    /**
+     * Initialize the constructor of this class
+     * Contains the loading bar when we zoom or import audio file
+     *
+     * @param widthScreen
+     */
     public LoadingPane(int widthScreen){
         super();
 
@@ -35,10 +41,18 @@ public class LoadingPane extends BorderPane {
         this.setStyle("-fx-background-color: #535e65");
     }
 
+    /**
+     * Function that advance the loading bar according to the value passed in parameter
+     *
+     * @param value -> a number between 0.0 and 1.0
+     */
     public void updateLoading(double value){
         this.loading.setProgress(value);
     }
 
+    /**
+     * Function that reset the loading bar
+     */
     public void resetLoading(){
         this.loading.setProgress(0.0);
     }

@@ -20,6 +20,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.buttons.Buttons;
 import utils.buttons.ImageButton;
+import utils.files.RecordVoice;
 
 import java.io.File;
 import java.io.FileReader;
@@ -30,6 +31,7 @@ public class ListenPane extends BorderPane {
 
     Main main;
     Stage primaryStage;
+    RecordVoice recordVoice;
     ResourceBundle language;
 
     HBox hbox;
@@ -41,9 +43,13 @@ public class ListenPane extends BorderPane {
 
     Label audioLabel;
     Label timeLabel;
+    Label deleteLabel;
+    Label reRecordLabel;
+    Label noFileLabel;
 
     Button nextLeftPage;
     Button nextRightPage;
+    Button home;
 
     String[] listFiles;
     JSONArray[] listFilesCorrespondingToAudioFile;
@@ -54,17 +60,21 @@ public class ListenPane extends BorderPane {
     MediaPlayer[] listMediaPlayerAudioFile;
     Boolean[] listStatusMediaPlayerRecordFiles;
     Boolean[] listStatusMediaPlayerAudioFile;
+    Button[] listRecordingButton;
 
     int nbCorrespondingFile = 0;
     int nbPages;
     int actualPage = 1;
     int rowButtons = 12;
 
+    boolean runningRecord = false;
+
     public ListenPane(Main main, Stage primaryStage, ResourceBundle language){
         super();
 
         this.main = main;
         this.primaryStage = primaryStage;
+        this.recordVoice = new RecordVoice(main, main.getSaveFolder().getFolderPath());
         this.language = language;
 
         gridPane = new GridPane();
@@ -82,8 +92,10 @@ public class ListenPane extends BorderPane {
     }
 
     public void setupListenPane(){
+        this.gridPane.getChildren().clear();
         this.nbCorrespondingFile = 0;
         this.actualPage = 1;
+        this.runningRecord = false;
         this.jsonPath = main.getSaveFolder().getJsonPath();
         this.recordPath = main.getSaveFolder().getRecordPath();
         this.getAllJsonFile();
@@ -97,16 +109,17 @@ public class ListenPane extends BorderPane {
     }
 
     public void createHomeButton(){
-        Button home = new Buttons();
+        home = new Buttons();
         home.setGraphic(ImageButton.createButtonImageView("images/home.png"));
         home.getStyleClass().add("blue");
         home.setContentDisplay(ContentDisplay.TOP);
         home.setPrefHeight(50);
         home.setPrefWidth(300);
         home.setOnAction((e) -> {
-                main.goToHome(primaryStage);
+            this.resetButton();
+            main.goToHome(primaryStage);
         });
-        this.gridPane.add(home,2,this.rowButtons);
+        this.gridPane.add(home,4,this.rowButtons);
     }
 
     public void createNextRightPageButton(){
@@ -121,7 +134,7 @@ public class ListenPane extends BorderPane {
             this.changePage();
         });
         nextRightPage.setDisable(true);
-        this.gridPane.add(nextRightPage,4,this.rowButtons);
+        this.gridPane.add(nextRightPage,5,this.rowButtons);
     }
 
     public void createNextLeftPageButton(){
@@ -136,7 +149,7 @@ public class ListenPane extends BorderPane {
             this.changePage();
         });
         nextLeftPage.setDisable(true);
-        this.gridPane.add(nextLeftPage,0,this.rowButtons);
+        this.gridPane.add(nextLeftPage,2,this.rowButtons);
     }
 
     public void setupButtons(){
@@ -177,6 +190,7 @@ public class ListenPane extends BorderPane {
         this.listStatusMediaPlayerRecordFiles = new Boolean[this.nbCorrespondingFile];
         this.listStartTimeAudioAndRecordFiles = new String[this.nbCorrespondingFile];
         this.listEndTimeAudioAndRecordFiles = new String[this.nbCorrespondingFile];
+        this.listRecordingButton = new Button[this.nbCorrespondingFile];
 
         this.filterNameList();
         this.initBooleanTab();
@@ -253,39 +267,60 @@ public class ListenPane extends BorderPane {
     }
 
     public void createLabel(){
+
         int index = 0;
         int start = 4 * (this.actualPage - 1);
         int limit = this.calculateLimit();
 
         audioLabel = new Label(language.getString("AudioFile"));
         audioLabel.getStyleClass().add("textLabel");
-        this.gridPane.add(audioLabel,0,index);
 
         timeLabel = new Label(language.getString("Time"));
         timeLabel.getStyleClass().add("textLabel");
-        this.gridPane.add(timeLabel, 4, index);
 
-        for (int i = start; i < limit; i++){
+        deleteLabel = new Label(language.getString("Delete"));
+        deleteLabel.getStyleClass().add("textLabel");
 
-            Label recordLabel = new Label(listNameFilesCorrespondingToAudioFile[i]);
-            recordLabel.getStyleClass().add("textLabel");
+        reRecordLabel = new Label(language.getString("ReRecord"));
+        reRecordLabel.getStyleClass().add("textLabel");
 
-            Label emptyLabel = new Label("");
-            Label emptyLabel2 = new Label("");
-            Label emptyLabel3 = new Label("");
+        noFileLabel = new Label(language.getString("NoFile"));
+        noFileLabel.getStyleClass().add("textLabel");
+
+        if (this.nbCorrespondingFile == 0){
+            this.gridPane.add(noFileLabel, 4, index);
+        }else {
+
+            this.gridPane.add(audioLabel,0,index);
+            this.gridPane.add(timeLabel, 4, index);
+            this.gridPane.add(deleteLabel, 5, index);
+            this.gridPane.add(reRecordLabel, 6, index);
+
+            for (int i = start; i < limit; i++){
+
+                String[] recordName = listNameFilesCorrespondingToAudioFile[i].split("\\.");
+                Label recordLabel = new Label(recordName[0]);
+                recordLabel.getStyleClass().add("textLabel");
+
+                Label emptyLabel = new Label("");
+                Label emptyLabel2 = new Label("");
+                Label emptyLabel3 = new Label("");
 
 
-            this.gridPane.add(emptyLabel, 1, index);
-            this.gridPane.add(recordLabel,2,index);
-            this.gridPane.add(emptyLabel2, 3, index);
+                this.gridPane.add(emptyLabel, 1, index);
+                this.gridPane.add(recordLabel,2,index);
+                this.gridPane.add(emptyLabel2, 3, index);
 
-            this.createMediaPlayerAudioButton(i, index);
-            this.createMediaPlayerRecordButton(i, index);
-            this.displayTimeValue(i, index);
+                this.createMediaPlayerAudioButton(i, index);
+                this.createMediaPlayerRecordButton(i, index);
+                this.displayTimeValue(i, index);
+                this.createDeleteRecordButton(i, index);
+                this.createReRecordButton(i, index);
 
-            this.gridPane.add(emptyLabel3, 0, index+2);
+                this.gridPane.add(emptyLabel3, 0, index+2);
 
-            index += 3;
+                index += 3;
+            }
         }
     }
 
@@ -348,6 +383,67 @@ public class ListenPane extends BorderPane {
         this.gridPane.add(timeValueLabel, 4, indexGridPane+1);
     }
 
+    public void createDeleteRecordButton(int indexTab, int indexGridPane){
+        Button deleteRecordButton = new Button();
+        deleteRecordButton.setGraphic(ImageButton.createButtonImageView("images/trash.png"));
+        deleteRecordButton.getStyleClass().add("blue");
+        deleteRecordButton.setContentDisplay(ContentDisplay.TOP);
+        deleteRecordButton.setPrefHeight(50);
+        deleteRecordButton.setPrefWidth(300);
+        deleteRecordButton.setOnAction((e) -> {
+            this.listMediaPlayerRecordFiles[indexTab].stop();
+            this.listMediaPlayerRecordFiles[indexTab].dispose();
+            String[] nameFile = listNameFilesCorrespondingToAudioFile[indexTab].split("\\.");
+            File jsonNameFile = new File(jsonPath + "/" + nameFile[0] + ".json");
+            File recordNameFile = new File(recordPath + "/" + nameFile[0] + ".wav");
+            jsonNameFile.delete();
+            recordNameFile.delete();
+            this.reloadPage();
+        });
+        this.gridPane.add(deleteRecordButton, 5,indexGridPane+1);
+    }
+
+    public void createReRecordButton(int indexTab, int indexGridPane){
+        Button reRecordButton = new Button();
+        reRecordButton.setGraphic(ImageButton.createButtonImageView("images/reRecord.png"));
+        reRecordButton.getStyleClass().add("blue");
+        reRecordButton.setContentDisplay(ContentDisplay.TOP);
+        reRecordButton.setPrefHeight(50);
+        reRecordButton.setPrefWidth(300);
+        reRecordButton.setOnAction((e) -> {
+            if (this.runningRecord){
+                this.newRecord(false, indexTab);
+            }else {
+                this.runningRecord = true;
+                this.listMediaPlayerRecordFiles[indexTab].stop();
+                this.listMediaPlayerRecordFiles[indexTab].dispose();
+                String[] nameFile = listNameFilesCorrespondingToAudioFile[indexTab].split("\\.");
+                File recordNameFile = new File(recordPath + "/" + nameFile[0] + ".wav");
+                recordNameFile.delete();
+                ((ImageView) reRecordButton.getGraphic()).setImage(new Image("images/stopReRecord.png"));
+                this.newRecord(true, indexTab);
+            }
+        });
+        this.listRecordingButton[indexTab] = reRecordButton;
+        this.gridPane.add(reRecordButton,6,indexGridPane+1);
+    }
+
+    public void newRecord(boolean start, int indexTab){
+        if (start){
+            for (Button button : this.listRecordingButton){
+                button.setDisable(true);
+            }
+            this.home.setDisable(true);
+            this.listRecordingButton[indexTab].setDisable(false);
+            this.recordVoice.startRecording();
+        }else {
+            this.recordVoice.stopRecording();
+            String[] nameFile = listNameFilesCorrespondingToAudioFile[indexTab].split("\\.");
+            this.recordVoice.renameTempAudioFile(nameFile[0]);
+            this.reloadPage();
+        }
+    }
+
     public void clearGridPane(){
         this.gridPane.getChildren().clear();
     }
@@ -359,6 +455,11 @@ public class ListenPane extends BorderPane {
         this.createNextLeftPageButton();
         this.createNextRightPageButton();
         this.setupButtons();
+    }
+
+    public void reloadPage(){
+        this.clearGridPane();
+        this.setupListenPane();
     }
 
     public String getJsonPathForActualOS(Main main, int i){
@@ -381,9 +482,21 @@ public class ListenPane extends BorderPane {
         this.pathAudioFile = path;
     }
 
+    public void resetButton(){
+        for (MediaPlayer mediaPlayer : listMediaPlayerAudioFile){
+            mediaPlayer.stop();
+        }
+        for (MediaPlayer mediaPlayerRecord : listMediaPlayerRecordFiles){
+            mediaPlayerRecord.stop();
+        }
+    }
+
     public void changeLabel(ResourceBundle languages){
         this.language = languages;
         this.audioLabel.setText(languages.getString("AudioFile"));
         this.timeLabel.setText(languages.getString("Time"));
+        this.deleteLabel.setText(languages.getString("Delete"));
+        this.reRecordLabel.setText(languages.getString("ReRecord"));
+        this.noFileLabel.setText(languages.getString("NoFile"));
     }
 }
