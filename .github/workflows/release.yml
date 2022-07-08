@@ -79,6 +79,6 @@ jobs:
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
           files: |
-            ./build/distributions/TètKole-windows-x64-installer.exe
+            ./build/distributions/TetKole-windows-x64-installer.exe
             ./build/distributions/TetKole-linux.tar.gz
           github-token: ${{ secrets.GITHUB_TOKEN }}
