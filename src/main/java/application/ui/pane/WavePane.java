@@ -21,6 +21,16 @@ public class WavePane extends WaveFormPane {
 	private boolean isLeftBorder = false;
 	private boolean isRightBorder = false;
 
+	/**
+	 * Initialize the constructor of this class
+	 * And create all the event for the mouse
+	 *
+	 * @param main
+	 * @param buttonsPane
+	 * @param primaryStage
+	 * @param width
+	 * @param height
+	 */
 	public WavePane(Main main, ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
 		super(buttonsPane, primaryStage, width, height);
 		super.setWaveVisualization(this);
@@ -78,6 +88,11 @@ public class WavePane extends WaveFormPane {
 
 	}
 
+	/**
+	 * Function that move the cursor of the music when playing
+	 *
+	 * @param value
+	 */
 	public void setStep(boolean value){
 		if (value){
             this.stepPixel = waveService.getRatioAudio();
@@ -86,14 +101,27 @@ public class WavePane extends WaveFormPane {
         }
 	}
 
+	/**
+	 * Function that give the instance of "waveService"
+	 *
+	 * @return "waveService" instance
+	 */
 	public WaveFormService getWaveService() {
 		return waveService;
 	}
 
+	/**
+	 * Function that give the instance of "animationService"
+	 *
+	 * @return "animationService" instance
+	 */
 	public PaintService getAnimationService() {
 		return animationService;
 	}
 
+	/**
+	 * Function that start the painter service
+	 */
 	public void startPainterService() {
 		animationService.start();
 		main.setNewWavePane(primaryStage);
@@ -101,11 +129,17 @@ public class WavePane extends WaveFormPane {
 		main.getLoadingPane().resetLoading();
 	}
 
+	/**
+	 * Function that stop the painter service
+	 */
 	public void stopPainterService() {
 		animationService.stop();
 		clear();
 	}
 
+	/**
+	 * Class for the paint the wave form
+	 */
 	public class PaintService extends AnimationTimer {
 
 		private volatile SimpleBooleanProperty running = new SimpleBooleanProperty(false);

@@ -21,6 +21,15 @@ public class ZoomPane extends ZoomWaveFormPane {
 	private boolean isLeftBorder = false;
 	private boolean isRightBorder = false;
 
+	/**
+	 * Initialize the constructor of this class
+	 * And create all the event for the mouse
+	 * @param main
+	 * @param buttonsZoomPane
+	 * @param primaryStage
+	 * @param width
+	 * @param height
+	 */
 	public ZoomPane(Main main, ButtonsZoomPane buttonsZoomPane, Stage primaryStage, int width, int height) {
 		super(buttonsZoomPane, primaryStage, width, height);
 		super.setWaveZoomVisualization(this);
@@ -79,6 +88,11 @@ public class ZoomPane extends ZoomWaveFormPane {
 
 	}
 
+	/**
+	 * Function that move the cursor of the music when playing
+	 *
+	 * @param value
+	 */
 	public void setStep(boolean value){
 		if (value){
             this.stepPixel = zoomWaveService.getRatioAudio();
@@ -87,14 +101,27 @@ public class ZoomPane extends ZoomWaveFormPane {
         }
 	}
 
+	/**
+	 * Function that give the instance of "waveService"
+	 *
+	 * @return "waveService" instance
+	 */
 	public ZoomWaveFormService getWaveZoomService() {
 		return zoomWaveService;
 	}
 
+	/**
+	 * Function that give the instance of "animationService"
+	 *
+	 * @return "animationService" instance
+	 */
 	public PaintZoomService getAnimationService() {
 		return animationZoomService;
 	}
 
+	/**
+	 * Function that start the painter service
+	 */
 	public void startPainterService() {
 		animationZoomService.start();
 		main.setNewZoomWavePane(primaryStage);
@@ -102,11 +129,17 @@ public class ZoomPane extends ZoomWaveFormPane {
 		main.getLoadingPane().resetLoading();
 	}
 
+	/**
+	 * Function that stop the painter service
+	 */
 	public void stopPainterService() {
 		animationZoomService.stop();
 		clear();
 	}
 
+	/**
+	 * Class for the paint the wave form
+	 */
 	public class PaintZoomService extends AnimationTimer {
 
 		private volatile SimpleBooleanProperty running = new SimpleBooleanProperty(false);

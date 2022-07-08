@@ -3,6 +3,9 @@ package utils.wave;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * Class who contains all class needed for the canvas
+ */
 public class ResizableCanvas extends Canvas {
 
     public final GraphicsContext gc = getGraphicsContext2D();
