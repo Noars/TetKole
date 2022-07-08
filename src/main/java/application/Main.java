@@ -32,10 +32,22 @@ public class Main extends Application {
     String lastPane = "home";
     String os = "";
 
+    /**
+     * Launch the application
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * The main function of this application
+     * Create all the instance
+     * Create the scene
+     *
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
 
@@ -75,11 +87,21 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Function that permit going on the settings page
+     *
+     * @param primaryStage
+     */
     public void goToOption(Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(settingsPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
+    /**
+     * Function that permit going on the home page
+     *
+     * @param primaryStage
+     */
     public void goToHome(Stage primaryStage){
         this.lastPane = "home";
         primaryStage.getScene().setRoot(decoratedPane);
@@ -87,24 +109,44 @@ public class Main extends Application {
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
     }
 
+    /**
+     * Function that permit going on the record page
+     *
+     * @param primaryStage
+     */
     public void goToRecord(Stage primaryStage){
         this.lastPane = "record";
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(recordPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
+    /**
+     * Function that permit going on the zoom page
+     *
+     * @param primaryStage
+     */
     public void goToZoom(Stage primaryStage){
         this.lastPane = "zoom";
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(zoomPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
     }
 
+    /**
+     * Function that permit going on the listen page
+     *
+     * @param primaryStage
+     */
     public void goToListen(Stage primaryStage){
         this.lastPane = "listen";
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(listenPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(emptyPane);
     }
 
+    /**
+     * Function that permit to come back to the previous page
+     *
+     * @param primaryStage
+     */
     public void goBack(Stage primaryStage){
         switch (this.lastPane){
 
@@ -129,25 +171,49 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Function that permit going on the wave page
+     *
+     * @param primaryStage
+     */
     public void setNewWavePane(Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(wavePane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsPane);
     }
 
+    /**
+     * Function that permit going on the zoom page
+     *
+     * @param primaryStage
+     */
     public void setNewZoomWavePane(Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(zoomPane);
         ((BorderPane) primaryStage.getScene().getRoot()).setBottom(buttonsZoomPane);
     }
 
+    /**
+     * Function that create a new instance of wave page
+     *
+     * @param main
+     * @param primaryStage
+     */
     public void setLoadingPane(Main main, Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(loadingPane);
         wavePane = new WavePane(main, this.buttonsPane, primaryStage, this.widthScreen, this.heightScreen);
     }
 
+    /**
+     * Function that create a new instance of zoom page
+     *
+     * @param main
+     * @param primaryStage
+     */
     public void setLoadingZoomPane(Main main, Stage primaryStage){
         ((BorderPane) primaryStage.getScene().getRoot()).setCenter(loadingPane);
         zoomPane = new ZoomPane(main, this.buttonsZoomPane, primaryStage, this.widthScreen, this.heightScreen);
     }
+
+    // ------------------- All the getter -------------------------------- //
 
     public WavePane getWavePane(){
         return this.wavePane;

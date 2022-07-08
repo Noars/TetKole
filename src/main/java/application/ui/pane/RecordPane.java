@@ -405,9 +405,9 @@ public class RecordPane extends BorderPane {
     }
 
     /**
-     * Function that give the instance of createJson
+     * Function that give the instance of "createJson"
      *
-     * @return createJson instance
+     * @return "createJson" instance
      */
     public CreateJson getCreateJson(){
         return this.createJson;
