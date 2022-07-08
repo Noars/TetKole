@@ -21,8 +21,8 @@ public class ZoomPane extends ZoomWaveFormPane {
 	private boolean isLeftBorder = false;
 	private boolean isRightBorder = false;
 
-	public ZoomPane(Main main, ButtonsPane buttonsPane, Stage primaryStage, int width, int height) {
-		super(buttonsPane, primaryStage, width, height);
+	public ZoomPane(Main main, ButtonsZoomPane buttonsZoomPane, Stage primaryStage, int width, int height) {
+		super(buttonsZoomPane, primaryStage, width, height);
 		super.setWaveZoomVisualization(this);
 		this.main = main;
 		this.primaryStage = primaryStage;
@@ -55,7 +55,7 @@ public class ZoomPane extends ZoomWaveFormPane {
 			}
 		});
 		setOnMouseDragged(event -> {
-			buttonsPane.stopMusic();
+			buttonsZoomPane.stopMusic();
 			zoomWaveService.playStopMediaPlayer("stop");
 			if (this.isLeftBorder){
 				super.setLeftBorder(event.getX() - (super.getSizeBorder() / 2.0));

@@ -16,15 +16,25 @@ public class ButtonsZoomPane extends BorderPane {
 
     HBox hbox;
 
+    Button playStop;
+
     boolean runningAudio = false;
 
+    /**
+     * Initialize the constructor of this class
+     * And create the gridPane with all buttons
+     *
+     * @param main
+     * @param primaryStage
+     */
     public ButtonsZoomPane(Main main, Stage primaryStage){
         super();
 
         Button zoom = createZoomButton(main, primaryStage);
-        Button playStop = createPlayStopAudioFileButton(main);
+        playStop = createPlayStopAudioFileButton(main);
+        Button record = createRecordButton(main, primaryStage);
 
-        hbox = new HBox(zoom, playStop);
+        hbox = new HBox(zoom, playStop, record);
         hbox.setSpacing(5);
         hbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(hbox, Pos.CENTER);
@@ -33,6 +43,14 @@ public class ButtonsZoomPane extends BorderPane {
         this.setStyle("-fx-background-color: #535e65");
     }
 
+    /**
+     * Function that create the zoom button
+     * This button permit returning to the home
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "zoom"
+     */
     public Button createZoomButton(Main main, Stage primaryStage){
         Button zoom = new Button();
         zoom.setGraphic(ImageButton.createButtonImageView("images/zoom-.png"));
@@ -46,6 +64,13 @@ public class ButtonsZoomPane extends BorderPane {
         return zoom;
     }
 
+    /**
+     * Function that create the playStop button
+     * This button permit listen or pause the audio file
+     *
+     * @param main
+     * @return the button "playStop"
+     */
     public Button createPlayStopAudioFileButton(Main main) {
         Button playStopAudioFile = new Buttons();
         playStopAudioFile.setGraphic(ImageButton.createButtonImageView("images/play.png"));
@@ -67,5 +92,38 @@ public class ButtonsZoomPane extends BorderPane {
             }
         });
         return playStopAudioFile;
+    }
+
+    /**
+     * Function that create the record button
+     * This button permit going on the record page
+     *
+     * @param main
+     * @param primaryStage
+     * @return the button "record"
+     */
+    public Button createRecordButton(Main main, Stage primaryStage){
+        Button record = new Buttons();
+        record.setGraphic(ImageButton.createButtonImageView("images/record.png"));
+        record.getStyleClass().add("blue");
+        record.setContentDisplay(ContentDisplay.TOP);
+        record.setPrefHeight(50);
+        record.setPrefWidth(300);
+        record.setOnAction((e) -> {
+            this.stopMusic();
+            main.getRecordPane().generateNameFile(main);
+            main.getRecordPane().getCreateJson().setIsZoom(true);
+            main.goToRecord(primaryStage);
+        });
+        return record;
+    }
+
+    /**
+     * Function that stop the music if she is running
+     */
+    public void stopMusic(){
+        if (runningAudio){
+            playStop.fire();
+        }
     }
 }
